@@ -2,7 +2,7 @@
 #include "ui_adminwindow.h"
 #include "mainwindow.h"
 #include <qtextcodec.h>
-///dferhg;etrho;
+///dferhg;etrho;dfdheahaehaerhaewrhawrh
 
 AdminWindow::AdminWindow(QWidget *parent) :
     QDialog(parent),
