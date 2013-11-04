@@ -1,0 +1,380 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<STYLE TYPE="text/css">
+<!--
+.z1 {color: black; font-family: Arial; font-size: 8pt;font-weight: bolder } 
+.z2 {color: black; font-family: Arial; font-size: 9pt;font-weight: bolder } 
+.z3 {color: black; font-family: Arial; font-size: 8pt;font-weight: normal }
+.tableout 			{border-left: 0px; border-right: 0px; border-top: 1px solid black; border-bottom: 1px solid black;}
+.tableleft			{border-left: 0px solid black; border-right: 1px solid black; border-top: 0px solid black; border-bottom: 1px solid black;} 
+.tableleft2			{border-left: 0px solid black; border-right: 1px solid black; border-top: 0px solid black; border-bottom: 0px solid black;} 
+.tableright			{border-left: 0px solid black; border-right: 0px solid black; border-top: 0px solid black; border-bottom: 1px solid black;} 
+.tableleftup		{border-left: 1px solid black; border-right: 0px solid black; border-top: 1px solid black; border-bottom: 0px solid black;} 
+.tableleftupright	{border-left: 1px solid black; border-right: 1px solid black; border-top: 1px solid black; border-bottom: 0px solid black;} 
+.tableup			{border-left: 0px solid black; border-right: 0px solid black; border-top: 1px solid black; border-bottom: 0px solid black;} 
+.tableall			{border-left: 1px solid black; border-right: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black;} 
+
+--> 
+
+</STYLE> 
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html;charset=UTF-8">
+<TITLE>TEST</TITLE>
+</HEAD>
+<BODY>
+<TABLE CLASS="tableout" CELLSPACING=0 CELLPADDING=0  WIDTH=100%>
+	<TR>
+		<TD CLASS="tableleft" WIDTH=25% ALIGN=CENTER COLSPAN=1    VALIGN=TOP>
+			<FONT CLASS="z1">
+				Извещение
+				<BR>
+				ЖСК
+			</FONT>
+		</TD>
+		<TD CLASS="tableright">
+		<!--   Верхняя часть квитанции -->
+			<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=2 RULES=NONE WIDTH=100%>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z2">
+							@NameOrganization#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z3">
+							Плательщик @FIO#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=RIGHT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z3">
+							ЛС:  @LSh#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=RIGHT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z3">
+							Прож/кварт/бронь &nbsp;&nbsp;&nbsp;&nbsp;  @RealMen#/@RentMen#/@ReservMen#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z3">
+							Адрес: @Adres#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<!-- Таблица со счётчиками -->
+						<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=2 RULES=NONE WIDTH=100%>
+							<TR>
+								<TD WIDTH=80% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+								</TD>
+								<TD WIDTH=20% ALIGN=RIGHT COLSPAN=1 VALIGN=TOP>
+									<FONT CLASS="z3">
+										@SmallDate#
+									</FONT>
+								</TD>
+							</TR>
+						</TABLE>
+							
+						<TABLE CELLSPACING=0 CELLPADDING=2 WIDTH=100%>
+							<TR>
+								<TD CLASS="tableleftup" WIDTH=20% ALIGN=CENTER COLSPAN=1 ROWSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Услуги
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=40% ALIGN=CENTER COLSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Показания счётчика
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=15% ALIGN=CENTER COLSPAN=1 ROWSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Тариф
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=10% ALIGN=CENTER COLSPAN=1 ROWSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Кол. куб. м.
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftupright" ALIGN=CENTER COLSPAN=1  ROWSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Сумма
+									</FONT>
+								</TD>
+							
+							</TR>
+							<TR>
+								<TD  CLASS="tableleftup" WIDTH=15% ALIGN=CENTER COLSPAN=1 VALIGN=MIDLE>
+									<FONT CLASS="z3">
+										Предыд
+									</FONT>
+								</TD>
+								<TD  CLASS="tableleftup"  WIDTH=15% ALIGN=CENTER COLSPAN=1 VALIGN=MIDLE>
+									<FONT CLASS="z3">
+										Текущие
+									</FONT>
+								</TD>
+							</TR>
+							<!--Список счётчиков-->
+                                                                @tab_sch#
+							<!--конец Список счётчиков -->
+							<TR>
+								<TD  CLASS="tableup" ALIGN=RIGHT COLSPAN=5 ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Итого:
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftupright"  ALIGN=RIGHT COLSPAN=1  ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										
+									</FONT>
+								</TD>
+							</TR>
+							<TR>
+								<TD  ALIGN=RIGHT COLSPAN=5  ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z2">
+										Оплачено:
+									</FONT>
+								</TD>
+								<TD CLASS="tableall"  ALIGN=RIGHT COLSPAN=1  ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										
+									</FONT>
+								</TD>
+							</TR>
+						</TABLE>
+						<!-- Коенц Таблица со счётчиками -->
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z2">
+							К оплате за @DateOpl# @SumOpl#
+							<BR>
+							@DolgOpl#
+						</FONT>
+					</TD>
+				</TR>
+			</TABLE>
+		<!--   Конец Верхняя часть квитанции -->
+		</TD>
+	</TR>
+	<TR>
+		<TD CLASS="tableleft2" ALIGN=CENTER COLSPAN=1 VALIGN=BOTTOM>
+			<FONT CLASS="z1">
+				Оплаченную квитанцию
+				<BR>
+				хранить 3 года
+			</FONT>
+		</TD>
+		<TD>
+			<!--   Нижняя часть часть квитанции -->
+			<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=2 RULES=NONE WIDTH=100%>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z2">
+							@NameOrganization#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z3">
+							Плательщик @FIO#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=RIGHT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z3">
+							ЛС:  @LSh#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=RIGHT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z3">
+							Прож/кварт/бронь &nbsp;&nbsp;&nbsp;&nbsp;  @RealMen#/@RentMen#/@ReservMen#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z3">
+							Адрес: @Adres#
+						</FONT>
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<!-- Таблица с улугами -->
+						<FONT CLASS="z3">
+							Площади&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							Общ.&nbsp;&nbsp;@TotalArea#&nbsp;&nbsp;&nbsp;
+							Жил.&nbsp;&nbsp;&nbsp;@LivedArea#&nbsp;&nbsp;&nbsp;
+							Балкон&nbsp;&nbsp;&nbsp;@Balkon#&nbsp;&nbsp;&nbsp;
+							Лоджия&nbsp;&nbsp;&nbsp;@Lodjia#&nbsp;&nbsp;&nbsp;
+						</FONT>
+						<BR><BR>
+						<TABLE CELLSPACING=0 CELLPADDING=2 WIDTH=100%>
+							<TR>
+								<TD CLASS="tableleftup" WIDTH=30% ALIGN=CENTER COLSPAN=1 VALIGN=TOP>
+									<FONT CLASS="z3">
+										Услуги
+									</FONT>	
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=15% ALIGN=CENTER COLSPAN=1 VALIGN=TOP>
+									<FONT CLASS="z3">
+										Ставка опл.
+									</FONT>	
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=15% ALIGN=CENTER COLSPAN=1 VALIGN=TOP>
+									<FONT CLASS="z3">
+										Начислено
+									</FONT>	
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=15% ALIGN=CENTER COLSPAN=1 VALIGN=TOP>
+									<FONT CLASS="z3">
+										Перерасчёт
+									</FONT>	
+								</TD>
+								<TD CLASS="tableleftupright" WIDTH=25% ALIGN=CENTER COLSPAN=1 VALIGN=TOP>
+									<FONT CLASS="z3">
+										Итого
+									</FONT>	
+								</TD>
+							</TR>
+							<!--Список Услуг -->
+                                                                @tab_usl#
+							<!--Конец Список Услуг -->
+							<TR>
+								<TD CLASS="tableup" ALIGN=RIGHT COLSPAN=3 ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										@prKOpl#
+									</FONT>
+								</TD>
+								<TD CLASS="tableup" ALIGN=RIGHT COLSPAN=2 ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										@ItogKOpl#
+									</FONT>
+								</TD>
+							</TR>
+						</TABLE>
+						<!-- Коенц Таблица с улугами -->
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<!-- Таблица со счётчиками -->
+						<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=2 RULES=NONE WIDTH=100%>
+							<TR>
+								<TD WIDTH=80% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+								</TD>
+								<TD WIDTH=20% ALIGN=RIGHT COLSPAN=1 VALIGN=TOP>
+									<FONT CLASS="z3">
+										@SmallDate#
+									</FONT>
+								</TD>
+							</TR>
+						</TABLE>
+							
+						<TABLE CELLSPACING=0 CELLPADDING=2 WIDTH=100%>
+							<TR>
+								<TD CLASS="tableleftup" WIDTH=20% ALIGN=CENTER COLSPAN=1 ROWSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Услуги
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=40% ALIGN=CENTER COLSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Показания счётчика
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=15% ALIGN=CENTER COLSPAN=1 ROWSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Тариф
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftup" WIDTH=10% ALIGN=CENTER COLSPAN=1 ROWSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Кол. куб. м.
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftupright" ALIGN=CENTER COLSPAN=1  ROWSPAN=2 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Сумма
+									</FONT>
+								</TD>
+							
+							</TR>
+							<TR>
+								<TD  CLASS="tableleftup" WIDTH=15% ALIGN=CENTER COLSPAN=1 VALIGN=MIDLE>
+									<FONT CLASS="z3">
+										Предыд
+									</FONT>
+								</TD>
+								<TD  CLASS="tableleftup"  WIDTH=15% ALIGN=CENTER COLSPAN=1 VALIGN=MIDLE>
+									<FONT CLASS="z3">
+										Текущие
+									</FONT>
+								</TD>
+							</TR>
+							<!--Список счётчиков-->
+                                                                @tab_sch#
+							<!--конец Список счётчиков -->
+							<TR>
+								<TD  CLASS="tableup" ALIGN=RIGHT COLSPAN=5 ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										Итого:
+									</FONT>
+								</TD>
+								<TD CLASS="tableleftupright"  ALIGN=RIGHT COLSPAN=1  ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										
+									</FONT>
+								</TD>
+							</TR>
+							<TR>
+								<TD  ALIGN=RIGHT COLSPAN=5  ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z2">
+										Оплачено:
+									</FONT>
+								</TD>
+								<TD CLASS="tableall"  ALIGN=RIGHT COLSPAN=1  ROWSPAN=1 VALIGN=MIDDLE>
+									<FONT CLASS="z3">
+										
+									</FONT>
+								</TD>
+							</TR>
+						</TABLE>
+						<!-- Коенц Таблица со счётчиками -->
+					</TD>
+				</TR>
+				<TR>
+					<TD WIDTH=100% ALIGN=LEFT COLSPAN=1 VALIGN=TOP>
+						<FONT CLASS="z2">
+							К оплате за @DateOpl# @SumOpl#
+							<BR>
+							@DolgOpl#
+						</FONT>
+					</TD>
+				</TR>
+			</TABLE>
+			<!--   Конец Нижняя часть часть квитанции -->
+			
+		</TD>
+	</TR>
+</TABLE>
+<BR STYLE ="page-break-after:always">
+</HTML>

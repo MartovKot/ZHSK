@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ico/base_calendar_32.png</file>
+        <file>ico/cash_register_6356.ico</file>
+        <file>ico/forward.ico</file>
+        <file>ico/left_end.ico</file>
+        <file>ico/previous.ico</file>
+        <file>ico/right_end.ico</file>
+        <file>ico/print.ico</file>
+        <file>ico/print2.ico</file>
+        <file>ico/print3.ico</file>
+        <file>ico/left_blue.ico</file>
+        <file>ico/leftendblue.ico</file>
+        <file>ico/right_blue.ico</file>
+        <file>ico/rightendblue.ico</file>
+        <file>style.css</file>
+        <file>ICON.rc</file>
+    </qresource>
+</RCC>
