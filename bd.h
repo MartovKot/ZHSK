@@ -94,6 +94,7 @@ public:
     QSqlQueryModel* ModelHome();
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
+    QSqlQueryModel* ModelPensioner(int id_home, int id_org);
 
     int NewApatament(int id_org, int id_home, int num_apart);                           //новая квартира
 
@@ -132,6 +133,8 @@ private:
     void UpdateDataBase_11_to_12();
     void UpdateDataBase_12_to_13();
     void UpdateDataBase_13_to_14();
+    void UpdateDataBase_14_to_15();
+    bool isElectroUsluga(int id_usluga);
 private slots:
     void sl_EditPokazanie(int id_pok, QString value);
 signals:

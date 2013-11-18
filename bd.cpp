@@ -283,15 +283,19 @@ void BD::UpdateDataBase()
         UpdateDataBase_11_to_12();
         UpdateDataBase_12_to_13();
         UpdateDataBase_13_to_14();
+        UpdateDataBase_14_to_15();
     }else if( res == "1.1"){
         UpdateDataBase_11_to_12();
         UpdateDataBase_12_to_13();
         UpdateDataBase_13_to_14();
+        UpdateDataBase_14_to_15();
     }else if( res == "1.2"){
         UpdateDataBase_12_to_13();
         UpdateDataBase_13_to_14();
+        UpdateDataBase_14_to_15();
     }else if( res == "1.3" ){
         UpdateDataBase_13_to_14();
+        UpdateDataBase_14_to_15();
     }
 
 
@@ -719,6 +723,39 @@ void BD::UpdateDataBase_13_to_14()
     }
     //---------------------------------------------------------
     str = "UPDATE version SET version = 1.4 WHERE version = 1.3";
+    if (query.exec(str)) {
+        qDebug()<<"Update Full";
+        LogOut.logout("Update Full");
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+    //-----------сжатие
+    str = "vacuum";
+    if (query.exec(str)) {
+        qDebug()<<"vacuum";
+        LogOut.logout("Vacuum");
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+}
+
+//--------------------------------------------------------------------------------------------------------
+void BD::UpdateDataBase_14_to_15()
+{
+    QString str;
+    QSqlQuery query;
+
+    str = "CREATE TABLE pensioner_living_alone ("
+            "id_apartament INTEGER NOT NULL,"
+            "id_org INTEGER NOT NULL,"
+            "id_home INTEGER NOT NULL,"
+            "UNIQUE (id_apartament)"
+            ")";
+
+    //---------------------------------------------------------
+    str = "UPDATE version SET version = 1.5 WHERE version = 1.4";
     if (query.exec(str)) {
         qDebug()<<"Update Full";
         LogOut.logout("Update Full");
@@ -1526,6 +1563,14 @@ QSqlQueryModel* BD::ModelBay(int id_apartament)
 
     return model;
 }
+QSqlQueryModel* BD::ModelPensioner(int id_home, int id_org)
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    QString str;
+
+    str = "SELECT * FROM pensioner_living_alone";
+    return model;
+}
 
 QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
 {
@@ -1547,8 +1592,8 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
 
     if(model->rowCount()==0){//  если строки не найдены, скорее всего нет тарифов - сделаем без них
         QWidget *wgt = new QWidget;
-        QMessageBox::information(wgt,trUtf8("Предупреждение"),
-                             trUtf8("Возможно не установленны тарифы. \n "),QMessageBox::Ok);
+//        QMessageBox::information(wgt,trUtf8("Предупреждение"),
+//                             trUtf8("Возможно не установленны тарифы. \n "),QMessageBox::Ok);
         delete wgt;
         QString str2 = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end "
             "FROM list_app_usluga lau, usluga u, pokazanie p "
@@ -1853,7 +1898,7 @@ void BD::CreditedOfService(int month, int year, int id_apartament)  //расчё
     QList<int> ListService;
     QString str;
     QSqlQuery query;
-    ListService = is_ApartamentService(id_apartament);                  // список ид услуг квартир
+    ListService = is_ApartamentService(id_apartament);                  // список ид услуг по квартире
     for(int i=0;i<ListService.size();i++){
         int id_list_ap_usl = 0;
         id_list_ap_usl = is_idListAppUsluga(id_apartament, ListService[i]);
@@ -2227,6 +2272,25 @@ double BD::AmountForServices(int id_apart, int month, int year)
 
     return out;
 }
+bool BD::isElectroUsluga(int id_usluga)
+{
+//    int id_usluga;
+//    QString str;
+
+//    str = "SELECT id_usluga FROM list_app_usluga WHERE id_list_app_usluga=%1";
+//    str = str.arg(id_list_app_usluga);
+//    QVariant t = SelectFromTable(str);
+//    if(!t.isNull()){
+//        id_usluga = t.toInt();
+//    }
+
+//    qDebug() <<"id_usluga = " << id_usluga;
+    if(id_usluga == 4 || id_usluga == 6 || id_usluga == 7){
+        return true;
+    }
+
+    return false;
+}
 
 double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //расчёт оплаты за счётчик
 {
@@ -2271,6 +2335,7 @@ double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //ра�
         LogOut.logout(query.lastError().text());
         return -1;
     }
+
     if(is_TypeUsluga(id_usluga)==1){
         str = "SELECT pokazanie_end, pokazanie_home FROM pokazanie "
                 "WHERE id_list_app_usluga=%1 "
@@ -2281,11 +2346,16 @@ double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //ра�
         if (query.exec(str)){
             if (query.next()){
                 int count = query.value(0).toDouble() - query.value(1).toDouble();
-                if(count <= norma*is_RealMen(id_apartament,year,month)|| norma==0){
+                if(isElectroUsluga(id_usluga)){//
+                    if(count <= norma*is_RealMen(id_apartament,year,month)|| norma==0){
+                        out = tarif * count;
+                    }else if (count > norma*is_RealMen(id_apartament,year,month)&& norma!=0){
+                        out = norma * is_RealMen(id_apartament,year,month) * (tarif - tarif2) + count * tarif2;
+                    }
+                }else{
                     out = tarif * count;
-                }else if (count > norma*is_RealMen(id_apartament,year,month)&& norma!=0){
-                    out = norma * is_RealMen(id_apartament,year,month) * (tarif - tarif2) + count * tarif2;
                 }
+
             }else{
                 return -1;
             }

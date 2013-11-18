@@ -190,3 +190,8 @@ void MainWindow::sl_setCurDirArh(QString CurDir)
 {
     CurentDirArhiv = CurDir;
 }
+
+void MainWindow::on_pBtnPrint_clicked()
+{
+
+}

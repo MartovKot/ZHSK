@@ -46,6 +46,7 @@ private slots:
     void sl_OpenArhiv();
 
 
+    void on_pBtnPrint_clicked();
 };
 
 #endif // MAINWINDOW_H

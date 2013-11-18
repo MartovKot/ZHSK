@@ -2,7 +2,6 @@
 #include "ui_adminwindow.h"
 #include "mainwindow.h"
 #include <qtextcodec.h>
-///dferhg;etrho;dfdheahaehaerhaewrhawrh
 
 AdminWindow::AdminWindow(QWidget *parent) :
     QDialog(parent),
@@ -93,6 +92,16 @@ AdminWindow::AdminWindow(QWidget *parent) :
     AdminWindow::connect(ui->pBtn_TarifEdit,SIGNAL(clicked()),SLOT(TarifEdit()));
     AdminWindow::connect(ui->pBtn_Fill,SIGNAL(clicked()),SLOT(FillTarif()));
     //---------------------------------------
+
+    //настройка пенсионеры
+
+    ui->tab_Pensioner->setLayout(ui->mainLay_Pens);
+//    ui->cmBx_PensApart->setModel(db.ModelApartament(ID_HOME,ID_ORG));
+    QTableView *table = new QTableView;
+    table->setModel(db.ModelApartament(ID_HOME,ID_ORG));
+    ui->cmBx_PensApart->setView(table);
+    qDebug() << ID_HOME << ID_ORG;
+
 
 }
 
@@ -851,4 +860,19 @@ void AdminWindow::sl_SaveHome()
     db.UpdateHome(ID_HOME,ui->lEdHome->text());
     Refresh_Home();
     Mode("home_default");
+}
+
+void AdminWindow::on_pBtn_addPens_clicked()
+{
+
+}
+
+void AdminWindow::on_pBtn_delPens_clicked()
+{
+
+}
+
+void AdminWindow::on_cmBx_PensApart_activated(const QString &arg1)
+{
+    qDebug() << "test";
 }

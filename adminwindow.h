@@ -64,6 +64,9 @@ private slots:
     void sl_DeleteUsluga();
     void sl_CancelOrg();
     void sl_CancelHome();
+    void on_pBtn_addPens_clicked();
+    void on_pBtn_delPens_clicked();
+    void on_cmBx_PensApart_activated(const QString &arg1);
 };
 
 #endif // ADMINWINDOW_H
