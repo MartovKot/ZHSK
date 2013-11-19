@@ -95,12 +95,14 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
     //настройка пенсионеры
 
+
     ui->tab_Pensioner->setLayout(ui->mainLay_Pens);
-//    ui->cmBx_PensApart->setModel(db.ModelApartament(ID_HOME,ID_ORG));
-    QTableView *table = new QTableView;
-    table->setModel(db.ModelApartament(ID_HOME,ID_ORG));
-    ui->cmBx_PensApart->setView(table);
-    qDebug() << ID_HOME << ID_ORG;
+    Refresh_Pensioner();
+    ui->cmBx_PensApart->setModel(
+                db.ModelApartament(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
+                                   ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
+    ui->cmBx_PensApart->addItem("");
+
 
 
 }
@@ -678,6 +680,18 @@ void AdminWindow::Refresh_Uslugi()
 
 }
 
+void AdminWindow::Refresh_Pensioner()
+{
+    ui->cmBx_Org_on_Pens->setModel(db.Model("organiz"));
+    ui->cmBx_Home_on_Pens->setModel(db.Model("homes"));
+    ui->tblV_on_Pens->setModel(db.ModelPensioner(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
+                                                 ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
+    ui->tblV_on_Pens->hideColumn(0);
+    ui->tblV_on_Pens->horizontalHeader()->setStretchLastSection(false);
+    ui->tblV_on_Pens->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    ui->tblV_on_Pens->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
+}
+
 void AdminWindow::Refresh_cmbNumApp_onUslugi()
 {
     int OrganiztionID = -1, HomeID = -1;
@@ -864,15 +878,32 @@ void AdminWindow::sl_SaveHome()
 
 void AdminWindow::on_pBtn_addPens_clicked()
 {
-
+    QString id_apart;
+    id_apart = ui->cmBx_PensApart->model()->index(ui->cmBx_PensApart->currentIndex(),1).data().toString();
+    db.add("pensioner_living_alone","id_apartament",id_apart);
+    ui->pBtn_addPens->setEnabled(false);
+    ui->pBtn_delPens->setEnabled(false);
+    Refresh_Pensioner();
 }
 
 void AdminWindow::on_pBtn_delPens_clicked()
 {
-
+    qDebug() << db.DeletePension(ui->tblV_on_Pens->model()->index(ui->tblV_on_Pens->currentIndex().row(),0).data().toInt());
+    ui->pBtn_addPens->setEnabled(false);
+    ui->pBtn_delPens->setEnabled(false);
+    Refresh_Pensioner();
 }
 
 void AdminWindow::on_cmBx_PensApart_activated(const QString &arg1)
 {
-    qDebug() << "test";
+    Q_UNUSED(arg1);
+    ui->pBtn_addPens->setEnabled(true);
+    ui->pBtn_delPens->setEnabled(false);
+}
+
+void AdminWindow::on_tblV_on_Pens_clicked(const QModelIndex &index)
+{
+    Q_UNUSED(index);
+    ui->pBtn_addPens->setEnabled(false);
+    ui->pBtn_delPens->setEnabled(true);
 }

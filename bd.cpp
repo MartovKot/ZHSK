@@ -296,6 +296,8 @@ void BD::UpdateDataBase()
     }else if( res == "1.3" ){
         UpdateDataBase_13_to_14();
         UpdateDataBase_14_to_15();
+    }else if (res == "1.4"){
+        UpdateDataBase_14_to_15();
     }
 
 
@@ -749,11 +751,14 @@ void BD::UpdateDataBase_14_to_15()
 
     str = "CREATE TABLE pensioner_living_alone ("
             "id_apartament INTEGER NOT NULL,"
-            "id_org INTEGER NOT NULL,"
-            "id_home INTEGER NOT NULL,"
             "UNIQUE (id_apartament)"
             ")";
-
+    if (query.exec(str)) {
+        qDebug()<<"create";
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
     //---------------------------------------------------------
     str = "UPDATE version SET version = 1.5 WHERE version = 1.4";
     if (query.exec(str)) {
@@ -1568,8 +1573,35 @@ QSqlQueryModel* BD::ModelPensioner(int id_home, int id_org)
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
 
-    str = "SELECT * FROM pensioner_living_alone";
+    str = "SELECT pla.id_apartament,"
+            " a.surname || ' ' || a.name || ' ' || a.patronymic, "
+            " a.number "
+            " FROM pensioner_living_alone pla, apartament a "
+            " WHERE a.id_apartament = pla.id_apartament "
+            " AND a.id_organiz = %1"
+            " AND a.id_homes = %2";
+    str = str.arg(id_org)
+            .arg(id_home);
+    model->setQuery(QSqlQuery(str));
+    qDebug()<<model->lastError();
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("ID"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("ФИО"));
+    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("№ Квартиры"));
+//    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Сумма"));
     return model;
+}
+QSqlError BD::DeletePension(int id_apart)
+{
+    QString str;
+    QSqlQuery query;
+    QSqlError out;
+
+    str = "DELETE FROM pensioner_living_alone WHERE id_apartament=%1";
+    str = str.arg(id_apart);
+    if (!query.exec(str)){
+        out = query.lastError();
+    }
+    return out;
 }
 
 QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
@@ -2274,22 +2306,31 @@ double BD::AmountForServices(int id_apart, int month, int year)
 }
 bool BD::isElectroUsluga(int id_usluga)
 {
-//    int id_usluga;
-//    QString str;
-
-//    str = "SELECT id_usluga FROM list_app_usluga WHERE id_list_app_usluga=%1";
-//    str = str.arg(id_list_app_usluga);
-//    QVariant t = SelectFromTable(str);
-//    if(!t.isNull()){
-//        id_usluga = t.toInt();
-//    }
-
-//    qDebug() <<"id_usluga = " << id_usluga;
     if(id_usluga == 4 || id_usluga == 6 || id_usluga == 7){
         return true;
     }
 
     return false;
+}
+
+bool BD::is_pensioner_living_alone(int id_apartament)
+{
+    QString str;
+    int count = -1;
+
+    str = "SELECT COUNT(*) FROM pensioner_living_alone WHERE id_apartament = %1";
+    str = str.arg(id_apartament);
+
+    QVariant t = SelectFromTable(str);
+    if(!t.isNull()){
+        count = t.toInt();
+    }
+    if (count>0){
+        return true;
+    }
+
+    return false;
+
 }
 
 double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //расчёт оплаты за счётчик
@@ -2346,8 +2387,8 @@ double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //ра�
         if (query.exec(str)){
             if (query.next()){
                 int count = query.value(0).toDouble() - query.value(1).toDouble();
-                if(isElectroUsluga(id_usluga)){//
-                    if(count <= norma*is_RealMen(id_apartament,year,month)|| norma==0){
+                if(isElectroUsluga(id_usluga)){// Электричество
+                    if(count <= norma*is_RealMen(id_apartament,year,month)|| norma==0 || is_pensioner_living_alone(id_apartament)){
                         out = tarif * count;
                     }else if (count > norma*is_RealMen(id_apartament,year,month)&& norma!=0){
                         out = norma * is_RealMen(id_apartament,year,month) * (tarif - tarif2) + count * tarif2;

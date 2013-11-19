@@ -35,6 +35,7 @@ private:
     void Refresh_Home();
     void Refresh_Appartament(int id_apartament=-1);
     void Refresh_Uslugi();
+    void Refresh_Pensioner();
     QList<QHBoxLayout> list;
     QDialog *dlg;
     QLineEdit *lEd_tarif;
@@ -67,6 +68,7 @@ private slots:
     void on_pBtn_addPens_clicked();
     void on_pBtn_delPens_clicked();
     void on_cmBx_PensApart_activated(const QString &arg1);
+    void on_tblV_on_Pens_clicked(const QModelIndex &index);
 };
 
 #endif // ADMINWINDOW_H

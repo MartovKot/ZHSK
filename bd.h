@@ -105,6 +105,7 @@ public:
 
     QString DeleteOrg(int id_org);
     QString DeleteHome(int id_home);
+    QSqlError DeletePension(int id_apart);
 
     void UpdateDataBase();
     void new_pokazanie(int id_apartament, int month, int year);
@@ -135,6 +136,7 @@ private:
     void UpdateDataBase_13_to_14();
     void UpdateDataBase_14_to_15();
     bool isElectroUsluga(int id_usluga);
+    bool is_pensioner_living_alone(int id_apartament);
 private slots:
     void sl_EditPokazanie(int id_pok, QString value);
 signals:
