@@ -313,41 +313,41 @@ void BD::UpdateDataBase()
 //-------------------------------------------------------------------------------------------------------
 void BD::UpdateDataBase_10_to_11()
 {
-    QString str;
-    QSqlQuery query;
+//    QString str;
+//    QSqlQuery query;
 
-    str = "ALTER TABLE apartament RENAME TO apartament_temp;";
-    if (query.exec(str)) {
-        qDebug()<<"rename";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
+//    str = "ALTER TABLE apartament RENAME TO apartament_temp;";
+//    if (query.exec(str)) {
+//        qDebug()<<"rename";
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
 
-    str = "CREATE TABLE apartament ( "
-            "id_apartament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-            "id_homes INTEGER, "
-            "id_organiz INTEGER, "
-            "number INTEGER, "
-            "personal_account INTEGER DEFAULT '0', "
-            "total_area DECIMAL(6,2) DEFAULT '0.0', "
-            "inhabed_area DECIMAL(6,2) DEFAULT '0.0', "
-            "balkon DECIMAL(6,2) DEFAULT '0.0', "
-            "loggia DECIMAL(6,2) DEFAULT '0.0', "
-            "real_men INTEGER DEFAULT '0', "
-            "rent_men INTEGER DEFAULT '0', "
-            "reserv_men INTEGER DEFAULT '0', "
-            "surname   VARCHAR(15) DEFAULT '', "
-            "name   VARCHAR(15) DEFAULT '', "
-            "patronymic   VARCHAR(15)  DEFAULT '' "
-            ", FOREIGN KEY(id_organiz) REFERENCES organiz(id_organiz) ON DELETE RESTRICT"
-         ");";
-    if (query.exec(str)) {
-        qDebug()<<"create";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
+//    str = "CREATE TABLE apartament ( "
+//            "id_apartament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+//            "id_homes INTEGER, "
+//            "id_organiz INTEGER, "
+//            "number INTEGER, "
+//            "personal_account INTEGER DEFAULT '0', "
+//            "total_area DECIMAL(6,2) DEFAULT '0.0', "
+//            "inhabed_area DECIMAL(6,2) DEFAULT '0.0', "
+//            "balkon DECIMAL(6,2) DEFAULT '0.0', "
+//            "loggia DECIMAL(6,2) DEFAULT '0.0', "
+//            "real_men INTEGER DEFAULT '0', "
+//            "rent_men INTEGER DEFAULT '0', "
+//            "reserv_men INTEGER DEFAULT '0', "
+//            "surname   VARCHAR(15) DEFAULT '', "
+//            "name   VARCHAR(15) DEFAULT '', "
+//            "patronymic   VARCHAR(15)  DEFAULT '' "
+//            ", FOREIGN KEY(id_organiz) REFERENCES organiz(id_organiz) ON DELETE RESTRICT"
+//         ");";
+//    if (query.exec(str)) {
+//        qDebug()<<"create";
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
 
     str = "REPLACE INTO apartament(id_apartament,id_homes,id_organiz,number,personal_account, "
             "total_area, inhabed_area, balkon, loggia, real_men, rent_men, reserv_men, surname, "
