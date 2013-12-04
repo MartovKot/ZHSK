@@ -130,11 +130,7 @@ private:
 
     void SumCount(int id_pokazanie, bool New = false);                                                    //Расчёт показаний канализации
     void DataProcessing(int id_org, int id_home, int month, int year);                  //начало оптимизированного расчёта
-    void UpdateDataBase_10_to_11();
-    void UpdateDataBase_11_to_12();
-    void UpdateDataBase_12_to_13();
-    void UpdateDataBase_13_to_14();
-    void UpdateDataBase_14_to_15();
+
     bool isElectroUsluga(int id_usluga);
     bool is_pensioner_living_alone(int id_apartament);
 private slots:
