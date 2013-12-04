@@ -6,6 +6,27 @@
 #include "logreport.h"
 static bool createConnection() //подключение к БД
 {
+    /// Временный блок для востановления БД
+    QFile file("backup.qsl");
+    file.open(QIODevice::ReadOnly);
+    if (file.isReadable()){
+        QFile oldDB("kvitdb.qsl");
+        oldDB.open(QIODevice::ReadOnly);
+        if (oldDB.isReadable()){
+            if (oldDB.remove()){
+                file.copy("kvitdb.qsl");
+            }else{
+                qDebug() << "no delete "<< file.errorString();
+            }
+        }else{
+            qDebug()<< "no read old" << oldDB.errorString();
+        }
+    }else{
+        qDebug()<< "no read backup" << file.errorString();
+    }
+    //------------------------
+
+
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("kvitdb.qsl");
     LogReport out;
@@ -50,6 +71,7 @@ int main(int argc, char *argv[])
     if (query.exec(str)){
         out.logout(QObject::trUtf8("Успешно"));
     }
+
     query.finish();
     out.logout(QObject::trUtf8("Проверка обновлений ..."));
     bd.UpdateDataBase();
