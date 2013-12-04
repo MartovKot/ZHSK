@@ -9,6 +9,156 @@ BD::~BD()
 {
     db.close();
 }
+//<<<<<<< HEAD
+//QVariant BD::SelectFromTable(QString str)
+//{
+//    QSqlQuery query;
+//    QVariant out = -1;
+
+//    if (query.exec(str)){
+//        if (query.next()){
+//            out = query.value(0);
+//        }else{
+//            qDebug()<<"In query "<<str<<" not found line ";
+//            LogOut.logout("In query " + str + " not found line ");
+//        }
+//    } else{
+//        qDebug() << query.lastError() << str;
+//        LogOut.logout(query.lastError().text());
+//    }
+//    query.finish();
+//    return out;
+//}
+//=======
+//>>>>>>> reconfig work with DB
+
+void BD::Create()
+{
+    QSqlQuery query;
+    QFile sqlfile("./update_db/baseline.sql");
+    sqlfile.open(QIODevice::ReadOnly);
+    if(sqlfile.isReadable()){
+        QByteArray bArrSqlFile;
+        bArrSqlFile = sqlfile.readAll();
+
+        int pos = 0;
+        int count = bArrSqlFile.indexOf(";",pos);
+        while (count >= 0){
+            QString str = bArrSqlFile.mid(pos,count - pos);
+//            qDebug() << str;
+//            qDebug() << pos;
+//            qDebug() << count;
+            if (!query.exec(str)) {
+                qDebug() << query.lastError();
+                LogOut.logout(query.lastError().text());
+                return;
+            }
+            pos = count+1;
+            count = bArrSqlFile.indexOf(";",pos);
+        }
+    }else{
+        qDebug() << "not read baseline.sql";
+    }
+
+}
+//------------------------------------------------------------------------------------------------------
+void BD::UpdateDataBase()
+{
+//<<<<<<< HEAD
+//    QString str;
+//    QSqlQuery query;
+//    QString res = "";
+
+//    str = "SELECT version FROM version";
+//    if (query.exec(str)) {
+//        if (query.next()){
+//            res = query.value(0).toString();
+//        }else{
+//            qDebug()<<"Version not found";
+//            LogOut.logout("Version not found");
+//            return;
+//        }
+//    }else{
+//        qDebug() << query.lastError();
+//        LogOut.logout(query.lastError().text());
+//        return;
+//    }
+//    query.finish();
+//    if(res == "1.0"){
+//        UpdateDataBase_10_to_11();
+//        UpdateDataBase_11_to_12();
+//        UpdateDataBase_12_to_13();
+//        UpdateDataBase_13_to_14();
+//        UpdateDataBase_14_to_15();
+//        UpdateDataBase_15_to_151();
+//    }else if( res == "1.1"){
+//        UpdateDataBase_11_to_12();
+//        UpdateDataBase_12_to_13();
+//        UpdateDataBase_13_to_14();
+//        UpdateDataBase_14_to_15();
+//        UpdateDataBase_15_to_151();
+//    }else if( res == "1.2"){
+//        UpdateDataBase_12_to_13();
+//        UpdateDataBase_13_to_14();
+//        UpdateDataBase_14_to_15();
+//        UpdateDataBase_15_to_151();
+//    }else if( res == "1.3" ){
+//        UpdateDataBase_13_to_14();
+//        UpdateDataBase_14_to_15();
+//        UpdateDataBase_15_to_151();
+//    }else if (res == "1.4"){
+//        UpdateDataBase_14_to_15();
+//        UpdateDataBase_15_to_151();
+//    }else if (res == "1.5"){
+//        UpdateDataBase_15_to_151();
+//    }
+//=======
+//    QString str;
+//    QSqlQuery query;
+//    QString res = "";
+
+//    str = "SELECT version FROM version";
+//    if (query.exec(str)) {
+//        if (query.next()){
+//            res = query.value(0).toString();
+//        }else{
+//            qDebug()<<"Version not found";
+//            LogOut.logout("Version not found");
+//            return;
+//        }
+//    }else{
+//        qDebug() << query.lastError();
+//        LogOut.logout(query.lastError().text());
+//        return;
+//    }
+//    query.finish();
+//    if(res == "1.0"){
+//        UpdateDataBase_10_to_11();
+//        UpdateDataBase_11_to_12();
+//        UpdateDataBase_12_to_13();
+//        UpdateDataBase_13_to_14();
+//        UpdateDataBase_14_to_15();
+//    }else if( res == "1.1"){
+//        UpdateDataBase_11_to_12();
+//        UpdateDataBase_12_to_13();
+//        UpdateDataBase_13_to_14();
+//        UpdateDataBase_14_to_15();
+//    }else if( res == "1.2"){
+//        UpdateDataBase_12_to_13();
+//        UpdateDataBase_13_to_14();
+//        UpdateDataBase_14_to_15();
+//    }else if( res == "1.3" ){
+//        UpdateDataBase_13_to_14();
+//        UpdateDataBase_14_to_15();
+//    }else if (res == "1.4"){
+//        UpdateDataBase_14_to_15();
+//    }
+//>>>>>>> reconfig work with DB
+
+
+}
+//-------------------------------------------------------------------------------------------------------
+
 QVariant BD::SelectFromTable(QString str)
 {
     QSqlQuery query;
@@ -25,642 +175,97 @@ QVariant BD::SelectFromTable(QString str)
         qDebug() << query.lastError() << str;
         LogOut.logout(query.lastError().text());
     }
-    query.finish();
     return out;
 }
+//<<<<<<< HEAD
+////--------------------------------------------------------------------------------------------------------
+//void BD::UpdateDataBase_15_to_151() //Структура не меняется, идёт смена внешнего ключа
+//{
+//    QString str;
+//    QSqlQuery query;
+//    //--------------------------------
+//    str = "PRAGMA foreign_keys = off";
+//    if (query.exec(str)) {
+//        qDebug()<<"PRAGMA foreign_keys";
+//        LogOut.logout("PRAGMA foreign_keys");
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
+//    //----------------переименовать таблицу
 
-void BD::Create()
-{
-    QSqlQuery query;
-    QFile sqlfile("./update_db/baseline.sql");
-    sqlfile.open(QIODevice::ReadOnly);
-    if(sqlfile.isReadable()){
-        QByteArray bArrSqlFile;
-        bArrSqlFile = sqlfile.readAll();
-        int count = bArrSqlFile.indexOf(";");
-        QString str = bArrSqlFile.left(count);
-        qDebug() << str;
+//    str = "ALTER TABLE men_in_apartament RENAME TO men_in_apartament_temp;";
+//    if (query.exec(str)) {
+//        qDebug()<<"rename";
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
+//    //--------------создание таблицы
+//    str = "CREATE TABLE men_in_apartament ("
+//            "id_apartament INTEGER NOT NULL,"
+//            "real_men INTEGER DEFAULT '0', "
+//            "rent_men INTEGER DEFAULT '0', "
+//            "reserv_men INTEGER DEFAULT '0', "
+//            "month INTEGER DEFAULT '0', "
+//            "year INTEGER DEFAULT '1900', "
+//            "UNIQUE (id_apartament,month,year), "
+//            "FOREIGN KEY(id_apartament) REFERENCES apartament(id_apartament) ON DELETE RESTRICT"
+//            ");";
+//    if (!query.exec(str)) {
+//        qDebug() << "Unable to create a table men_in_apartament" << query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
 
-    }else{
-        qDebug() << "not read baseline.sql";
-    }
+//    //-----перенос количества проживающих в новую таблицу
+//    str = "REPLACE INTO men_in_apartament(id_apartament, real_men, rent_men, reserv_men, month, year) "
+//            "SELECT id_apartament, real_men, rent_men, reserv_men, month, year "
+//            "FROM men_in_apartament_temp";
+//    if (query.exec(str)) {
+//        qDebug()<<"copy men_in_apartament";
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
+//    //--------------------------------
+//    str = "DROP TABLE IF EXISTS men_in_apartament_temp";
+//    if (query.exec(str)) {
+//        qDebug()<<"delete";
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
+//    //--------------------------------
+//    str = "PRAGMA foreign_keys = on";
+//    if (query.exec(str)) {
+//        qDebug()<<"PRAGMA foreign_keys";
+//        LogOut.logout("PRAGMA foreign_keys");
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
+//    //---------------------------------------------------------
+//    str = "UPDATE version SET version = '1.5.1' WHERE version = '1.5'";
+//    if (query.exec(str)) {
+//        qDebug()<<"Update Full";
+//        LogOut.logout("Update Full");
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
+//    //-----------сжатие
+//    str = "vacuum";
+//    if (query.exec(str)) {
+//        qDebug()<<"vacuum";
+//        LogOut.logout("Vacuum");
+//    }else{
+//        qDebug()<<query.lastError();
+//        LogOut.logout(query.lastError().text());
+//    }
+//}
 
-}
-//------------------------------------------------------------------------------------------------------
-void BD::UpdateDataBase()
-{
-    QString str;
-    QSqlQuery query;
-    QString res = "";
-
-    str = "SELECT version FROM version";
-    if (query.exec(str)) {
-        if (query.next()){
-            res = query.value(0).toString();
-        }else{
-            qDebug()<<"Version not found";
-            LogOut.logout("Version not found");
-            return;
-        }
-    }else{
-        qDebug() << query.lastError();
-        LogOut.logout(query.lastError().text());
-        return;
-    }
-    query.finish();
-    if(res == "1.0"){
-        UpdateDataBase_10_to_11();
-        UpdateDataBase_11_to_12();
-        UpdateDataBase_12_to_13();
-        UpdateDataBase_13_to_14();
-        UpdateDataBase_14_to_15();
-        UpdateDataBase_15_to_151();
-    }else if( res == "1.1"){
-        UpdateDataBase_11_to_12();
-        UpdateDataBase_12_to_13();
-        UpdateDataBase_13_to_14();
-        UpdateDataBase_14_to_15();
-        UpdateDataBase_15_to_151();
-    }else if( res == "1.2"){
-        UpdateDataBase_12_to_13();
-        UpdateDataBase_13_to_14();
-        UpdateDataBase_14_to_15();
-        UpdateDataBase_15_to_151();
-    }else if( res == "1.3" ){
-        UpdateDataBase_13_to_14();
-        UpdateDataBase_14_to_15();
-        UpdateDataBase_15_to_151();
-    }else if (res == "1.4"){
-        UpdateDataBase_14_to_15();
-        UpdateDataBase_15_to_151();
-    }else if (res == "1.5"){
-        UpdateDataBase_15_to_151();
-    }
-
-
-}
-//-------------------------------------------------------------------------------------------------------
-void BD::UpdateDataBase_10_to_11()
-{
-    QString str;
-    QSqlQuery query;
-
-    str = "ALTER TABLE apartament RENAME TO apartament_temp;";
-    if (query.exec(str)) {
-        qDebug()<<"rename";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str = "CREATE TABLE apartament ( "
-            "id_apartament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-            "id_homes INTEGER, "
-            "id_organiz INTEGER, "
-            "number INTEGER, "
-            "personal_account INTEGER DEFAULT '0', "
-            "total_area DECIMAL(6,2) DEFAULT '0.0', "
-            "inhabed_area DECIMAL(6,2) DEFAULT '0.0', "
-            "balkon DECIMAL(6,2) DEFAULT '0.0', "
-            "loggia DECIMAL(6,2) DEFAULT '0.0', "
-            "real_men INTEGER DEFAULT '0', "
-            "rent_men INTEGER DEFAULT '0', "
-            "reserv_men INTEGER DEFAULT '0', "
-            "surname   VARCHAR(15) DEFAULT '', "
-            "name   VARCHAR(15) DEFAULT '', "
-            "patronymic   VARCHAR(15)  DEFAULT '' "
-            ", FOREIGN KEY(id_organiz) REFERENCES organiz(id_organiz) ON DELETE RESTRICT"
-         ");";
-    if (query.exec(str)) {
-        qDebug()<<"create";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str = "REPLACE INTO apartament(id_apartament,id_homes,id_organiz,number,personal_account, "
-            "total_area, inhabed_area, balkon, loggia, real_men, rent_men, reserv_men, surname, "
-            " name, patronymic) SELECT id_apartament,id_homes,id_organiz,number,personal_account, "
-            "total_area, inhabed_area, balkon, loggia, real_men, rent_men, reserv_men, surname, "
-            " name, patronymic FROM apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"copy";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    query.finish();
-    str = "DROP TABLE apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"delete";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str = "UPDATE version SET version = 1.1 WHERE version = 1.0";
-    if (query.exec(str)) {
-        qDebug()<<"Update Full";
-        LogOut.logout("Update Full");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-}
-//--------------------------------------------------------------------------------------------------------
-void BD::UpdateDataBase_11_to_12()
-{
-    QString str;
-    QSqlQuery query;
-    //-------------------------------
-    str = "ALTER TABLE credited_of_apartament RENAME TO credited_of_apartament_temp;";
-    if (query.exec(str)) {
-        qDebug()<<"rename credited_of_apartament";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str  = " CREATE TABLE credited_of_apartament ( "
-            " id_credited_of_apartament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-            " id_apartament INTEGER NOT NULL, "
-            " month INTEGER NOT NULL,"
-            " year INTEGER NOT NULL,"
-            " credited_with_counter REAL DEFAULT 0.0, "
-            " credited_out_counter REAL DEFAULT 0.0, "
-            " UNIQUE (id_apartament,month,year)"
-           " );";
-    if (query.exec(str)) {
-        qDebug()<<"create";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str = " REPLACE INTO credited_of_apartament( "
-            " id_credited_of_apartament, id_apartament, month, year, credited_with_counter, credited_out_counter)"
-           " SELECT "
-            " id_credited_of_apartament, id_apartament, month,year, credited_with_counter, credited_out_counter "
-           " FROM credited_of_apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"copy";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    query.finish();
-    str = "DROP TABLE credited_of_apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"delete";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str = "UPDATE version SET version = 1.2 WHERE version = 1.1";
-    if (query.exec(str)) {
-        qDebug()<<"Update Full";
-        LogOut.logout("Update Full 1.2");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-    str = "ALTER TABLE debt RENAME TO debt_temp;";
-    if (query.exec(str)) {
-        qDebug()<<"rename debt";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str  = "CREATE TABLE debt ( "
-            "id_debt INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-            "year_debt INTEGER, "
-            "month_debt INTEGER,"
-            "id_apartament INTEGER,"
-            "debt REAL, "
-            "UNIQUE (year_debt,month_debt,id_apartament)"
-         ");";
-    if (query.exec(str)) {
-        qDebug()<<"create";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str = " REPLACE INTO debt( "
-            " id_debt, year_debt, month_debt, id_apartament, debt)"
-           " SELECT "
-            " id_debt, year_debt, month_debt, id_apartament, debt "
-           " FROM debt_temp";
-    if (query.exec(str)) {
-        qDebug()<<"copy";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    query.finish();
-    str = "DROP TABLE debt_temp";
-    if (query.exec(str)) {
-        qDebug()<<"delete";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str = "UPDATE version SET version = 1.2 WHERE version = 1.1";
-    if (query.exec(str)) {
-        qDebug()<<"Update Full";
-        LogOut.logout("Update Full 1.2");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-
-    str = "vacuum";
-    if (query.exec(str)) {
-        qDebug()<<"vacuum";
-        LogOut.logout("Vacuum");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-}
-//--------------------------------------------------------------------------------------------------------
-void BD::UpdateDataBase_12_to_13()
-{
-    QString str;
-    QSqlQuery query;
-    //--------------создвние таблицы
-    str = "CREATE TABLE men_in_apartament ("
-            "id_apartament INTEGER NOT NULL,"
-            "real_men INTEGER DEFAULT '0', "
-            "rent_men INTEGER DEFAULT '0', "
-            "reserv_men INTEGER DEFAULT '0', "
-            "month INTEGER DEFAULT '0', "
-            "year INTEGER DEFAULT '1900', "
-            "UNIQUE (id_apartament,month,year), "
-            "FOREIGN KEY(id_apartament) REFERENCES apartament(id_apartament) ON DELETE RESTRICT"
-            ");";
-    if (!query.exec(str)) {
-        qDebug() << "Unable to create a table men_in_apartament" << query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-    str = "PRAGMA foreign_keys = off";
-    if (query.exec(str)) {
-        qDebug()<<"PRAGMA foreign_keys";
-        LogOut.logout("PRAGMA foreign_keys");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-
-    str = "ALTER TABLE apartament RENAME TO apartament_temp;";
-    if (query.exec(str)) {
-        qDebug()<<"rename";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-    str = "PRAGMA foreign_keys = on";
-    if (query.exec(str)) {
-        qDebug()<<"PRAGMA foreign_keys";
-        LogOut.logout("PRAGMA foreign_keys");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //----------------------------------------------------------
-    str = "CREATE TABLE apartament ( "
-            "id_apartament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-            "id_homes INTEGER, "
-            "id_organiz INTEGER, "
-            "number INTEGER, "
-            "personal_account INTEGER DEFAULT '0', "
-            "total_area DECIMAL(6,2) DEFAULT '0.0', "
-            "inhabed_area DECIMAL(6,2) DEFAULT '0.0', "
-            "balkon DECIMAL(6,2) DEFAULT '0.0', "
-            "loggia DECIMAL(6,2) DEFAULT '0.0', "
-            "surname   VARCHAR(15) DEFAULT '', "
-            "name   VARCHAR(15) DEFAULT '', "
-            "patronymic   VARCHAR(15)  DEFAULT '' "
-            ", FOREIGN KEY(id_organiz) REFERENCES organiz(id_organiz) ON DELETE RESTRICT"
-         ");";
-    if (query.exec(str)) {
-        qDebug()<<"create";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //------
-    str = "REPLACE INTO apartament(id_apartament,id_homes,id_organiz,number,personal_account, "
-            "total_area, inhabed_area, balkon, loggia, surname, name, patronymic) "
-            "SELECT id_apartament,id_homes,id_organiz,number,personal_account, "
-            "total_area, inhabed_area, balkon, loggia, surname, name, patronymic "
-            "FROM apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"copy apartament";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //-----перенос количества проживающих в новую таблицу
-    str = "REPLACE INTO men_in_apartament(id_apartament, real_men, rent_men, reserv_men) "
-            "SELECT id_apartament, real_men, rent_men, reserv_men "
-            "FROM apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"copy men_in_apartament";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //-----------
-    str = "UPDATE men_in_apartament SET year=%1, month=%2";
-    str = str.arg(QDate::currentDate().year())
-            .arg(QDate::currentDate().month());
-    if (query.exec(str)) {
-        qDebug()<<"UPDATE men_in_apartament";
-        LogOut.logout("UPDATE men_in_apartament");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //----------откдючение внешних ключей
-    str = "PRAGMA foreign_keys = off";
-    if (query.exec(str)) {
-        qDebug()<<"PRAGMA foreign_keys";
-        LogOut.logout("PRAGMA foreign_keys");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //-------удаление старой таблицы
-    query.finish();
-    str = "DROP TABLE IF EXISTS apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"DROP TABLE";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-        return;
-    }
-    //---------включение внешних ключей
-    str = "PRAGMA foreign_keys = on";
-    if (query.exec(str)) {
-        qDebug()<<"PRAGMA foreign_keys";
-        LogOut.logout("PRAGMA foreign_keys");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //-----------версия
-    str = "UPDATE version SET version = 1.3 WHERE version = 1.2";
-    if (query.exec(str)) {
-        qDebug()<<"Update Full";
-        LogOut.logout("Update Full");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //-----------сжатие
-    str = "vacuum";
-    if (query.exec(str)) {
-        qDebug()<<"vacuum";
-        LogOut.logout("Vacuum");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-}
-
-//--------------------------------------------------------------------------------------------------------
-void BD::UpdateDataBase_13_to_14()
-{
-    QString str;
-    QSqlQuery query;
-
-    str = "ALTER TABLE apartament RENAME TO apartament_temp;";
-    if (query.exec(str)) {
-        qDebug()<<"rename";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    str = "CREATE TABLE apartament ( "
-            "id_apartament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-            "id_homes INTEGER, "
-            "id_organiz INTEGER, "
-            "number INTEGER, "
-            "personal_account INTEGER DEFAULT '0', "
-            "total_area DECIMAL(6,2) DEFAULT '0.0', "
-            "inhabed_area DECIMAL(6,2) DEFAULT '0.0', "
-            "balkon DECIMAL(6,2) DEFAULT '0.0', "
-            "loggia DECIMAL(6,2) DEFAULT '0.0', "
-            "surname   VARCHAR(15) DEFAULT '', "
-            "name   VARCHAR(15) DEFAULT '', "
-            "patronymic   VARCHAR(15)  DEFAULT '', "
-            "FOREIGN KEY(id_organiz) REFERENCES organiz(id_organiz) ON DELETE RESTRICT, "
-            "FOREIGN KEY(id_homes) REFERENCES homes(id_homes) ON DELETE RESTRICT "
-            ");";
-    if (query.exec(str)) {
-        qDebug()<<"create";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    //---------------------------------------------------------
-    str = "PRAGMA foreign_keys = off";
-    if (query.exec(str)) {
-        qDebug()<<"PRAGMA foreign_keys";
-        LogOut.logout("PRAGMA foreign_keys");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-    str = "REPLACE INTO apartament(id_apartament,id_homes,id_organiz,number,personal_account, "
-            "total_area, inhabed_area, balkon, loggia, surname, name, patronymic) "
-            "SELECT id_apartament,id_homes,id_organiz,number,personal_account, "
-            "total_area, inhabed_area, balkon, loggia, surname, name, patronymic "
-            "FROM apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"copy";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    query.finish();
-    str = "DROP TABLE IF EXISTS apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"delete";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    //---------------------------------------------------------
-    str = "PRAGMA foreign_keys = on";
-    if (query.exec(str)) {
-        qDebug()<<"PRAGMA foreign_keys";
-        LogOut.logout("PRAGMA foreign_keys");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-    str = "UPDATE version SET version = 1.4 WHERE version = 1.3";
-    if (query.exec(str)) {
-        qDebug()<<"Update Full";
-        LogOut.logout("Update Full");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //-----------сжатие
-    str = "vacuum";
-    if (query.exec(str)) {
-        qDebug()<<"vacuum";
-        LogOut.logout("Vacuum");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-}
-
-//--------------------------------------------------------------------------------------------------------
-void BD::UpdateDataBase_14_to_15()
-{
-    QString str;
-    QSqlQuery query;
-
-    str = "CREATE TABLE pensioner_living_alone ("
-            "id_apartament INTEGER NOT NULL,"
-            "UNIQUE (id_apartament)"
-            ")";
-    if (query.exec(str)) {
-        qDebug()<<"create";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-    str = "UPDATE version SET version = 1.5 WHERE version = 1.4";
-    if (query.exec(str)) {
-        qDebug()<<"Update Full";
-        LogOut.logout("Update Full");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //-----------сжатие
-    str = "vacuum";
-    if (query.exec(str)) {
-        qDebug()<<"vacuum";
-        LogOut.logout("Vacuum");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-}
-//--------------------------------------------------------------------------------------------------------
-void BD::UpdateDataBase_15_to_151() //Структура не меняется, идёт смена внешнего ключа
-{
-    QString str;
-    QSqlQuery query;
-    //--------------------------------
-    str = "PRAGMA foreign_keys = off";
-    if (query.exec(str)) {
-        qDebug()<<"PRAGMA foreign_keys";
-        LogOut.logout("PRAGMA foreign_keys");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //----------------переименовать таблицу
-
-    str = "ALTER TABLE men_in_apartament RENAME TO men_in_apartament_temp;";
-    if (query.exec(str)) {
-        qDebug()<<"rename";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //--------------создание таблицы
-    str = "CREATE TABLE men_in_apartament ("
-            "id_apartament INTEGER NOT NULL,"
-            "real_men INTEGER DEFAULT '0', "
-            "rent_men INTEGER DEFAULT '0', "
-            "reserv_men INTEGER DEFAULT '0', "
-            "month INTEGER DEFAULT '0', "
-            "year INTEGER DEFAULT '1900', "
-            "UNIQUE (id_apartament,month,year), "
-            "FOREIGN KEY(id_apartament) REFERENCES apartament(id_apartament) ON DELETE RESTRICT"
-            ");";
-    if (!query.exec(str)) {
-        qDebug() << "Unable to create a table men_in_apartament" << query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    //-----перенос количества проживающих в новую таблицу
-    str = "REPLACE INTO men_in_apartament(id_apartament, real_men, rent_men, reserv_men, month, year) "
-            "SELECT id_apartament, real_men, rent_men, reserv_men, month, year "
-            "FROM men_in_apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"copy men_in_apartament";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //--------------------------------
-    str = "DROP TABLE IF EXISTS men_in_apartament_temp";
-    if (query.exec(str)) {
-        qDebug()<<"delete";
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //--------------------------------
-    str = "PRAGMA foreign_keys = on";
-    if (query.exec(str)) {
-        qDebug()<<"PRAGMA foreign_keys";
-        LogOut.logout("PRAGMA foreign_keys");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //---------------------------------------------------------
-    str = "UPDATE version SET version = '1.5.1' WHERE version = '1.5'";
-    if (query.exec(str)) {
-        qDebug()<<"Update Full";
-        LogOut.logout("Update Full");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    //-----------сжатие
-    str = "vacuum";
-    if (query.exec(str)) {
-        qDebug()<<"vacuum";
-        LogOut.logout("Vacuum");
-    }else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-}
-
+//=======
+//>>>>>>> reconfig work with DB
 //--------------------------------------------------------------------------------------------------------
 int BD::add(QString table, QString column, QString value)
 {
