@@ -9,28 +9,6 @@ BD::~BD()
 {
     db.close();
 }
-//<<<<<<< HEAD
-//QVariant BD::SelectFromTable(QString str)
-//{
-//    QSqlQuery query;
-//    QVariant out = -1;
-
-//    if (query.exec(str)){
-//        if (query.next()){
-//            out = query.value(0);
-//        }else{
-//            qDebug()<<"In query "<<str<<" not found line ";
-//            LogOut.logout("In query " + str + " not found line ");
-//        }
-//    } else{
-//        qDebug() << query.lastError() << str;
-//        LogOut.logout(query.lastError().text());
-//    }
-//    query.finish();
-//    return out;
-//}
-//=======
-//>>>>>>> reconfig work with DB
 
 void BD::Create()
 {
@@ -64,97 +42,28 @@ void BD::Create()
 //------------------------------------------------------------------------------------------------------
 void BD::UpdateDataBase()
 {
-//<<<<<<< HEAD
-//    QString str;
-//    QSqlQuery query;
-//    QString res = "";
+    QString str;
+    QSqlQuery query;
+    QString res = "";
 
-//    str = "SELECT version FROM version";
-//    if (query.exec(str)) {
-//        if (query.next()){
-//            res = query.value(0).toString();
-//        }else{
-//            qDebug()<<"Version not found";
-//            LogOut.logout("Version not found");
-//            return;
-//        }
-//    }else{
-//        qDebug() << query.lastError();
-//        LogOut.logout(query.lastError().text());
-//        return;
-//    }
-//    query.finish();
-//    if(res == "1.0"){
-//        UpdateDataBase_10_to_11();
-//        UpdateDataBase_11_to_12();
-//        UpdateDataBase_12_to_13();
-//        UpdateDataBase_13_to_14();
-//        UpdateDataBase_14_to_15();
-//        UpdateDataBase_15_to_151();
-//    }else if( res == "1.1"){
-//        UpdateDataBase_11_to_12();
-//        UpdateDataBase_12_to_13();
-//        UpdateDataBase_13_to_14();
-//        UpdateDataBase_14_to_15();
-//        UpdateDataBase_15_to_151();
-//    }else if( res == "1.2"){
-//        UpdateDataBase_12_to_13();
-//        UpdateDataBase_13_to_14();
-//        UpdateDataBase_14_to_15();
-//        UpdateDataBase_15_to_151();
-//    }else if( res == "1.3" ){
-//        UpdateDataBase_13_to_14();
-//        UpdateDataBase_14_to_15();
-//        UpdateDataBase_15_to_151();
-//    }else if (res == "1.4"){
-//        UpdateDataBase_14_to_15();
-//        UpdateDataBase_15_to_151();
-//    }else if (res == "1.5"){
-//        UpdateDataBase_15_to_151();
-//    }
-//=======
-//    QString str;
-//    QSqlQuery query;
-//    QString res = "";
+    str = "SELECT version FROM version";
+    if (query.exec(str)) {
+        if (query.next()){
+            res = query.value(0).toString();
+        }else{
+            qDebug()<<"Version not found";
+            LogOut.logout("Version not found");
+            return;
+        }
+    }else{
+        qDebug() << query.lastError();
+        LogOut.logout(query.lastError().text());
+        return;
+    }
+    query.finish();
+    if (res == "1.5"){
 
-//    str = "SELECT version FROM version";
-//    if (query.exec(str)) {
-//        if (query.next()){
-//            res = query.value(0).toString();
-//        }else{
-//            qDebug()<<"Version not found";
-//            LogOut.logout("Version not found");
-//            return;
-//        }
-//    }else{
-//        qDebug() << query.lastError();
-//        LogOut.logout(query.lastError().text());
-//        return;
-//    }
-//    query.finish();
-//    if(res == "1.0"){
-//        UpdateDataBase_10_to_11();
-//        UpdateDataBase_11_to_12();
-//        UpdateDataBase_12_to_13();
-//        UpdateDataBase_13_to_14();
-//        UpdateDataBase_14_to_15();
-//    }else if( res == "1.1"){
-//        UpdateDataBase_11_to_12();
-//        UpdateDataBase_12_to_13();
-//        UpdateDataBase_13_to_14();
-//        UpdateDataBase_14_to_15();
-//    }else if( res == "1.2"){
-//        UpdateDataBase_12_to_13();
-//        UpdateDataBase_13_to_14();
-//        UpdateDataBase_14_to_15();
-//    }else if( res == "1.3" ){
-//        UpdateDataBase_13_to_14();
-//        UpdateDataBase_14_to_15();
-//    }else if (res == "1.4"){
-//        UpdateDataBase_14_to_15();
-//    }
-//>>>>>>> reconfig work with DB
-
+    }
 
 }
 //-------------------------------------------------------------------------------------------------------
@@ -177,95 +86,6 @@ QVariant BD::SelectFromTable(QString str)
     }
     return out;
 }
-//<<<<<<< HEAD
-////--------------------------------------------------------------------------------------------------------
-//void BD::UpdateDataBase_15_to_151() //Структура не меняется, идёт смена внешнего ключа
-//{
-//    QString str;
-//    QSqlQuery query;
-//    //--------------------------------
-//    str = "PRAGMA foreign_keys = off";
-//    if (query.exec(str)) {
-//        qDebug()<<"PRAGMA foreign_keys";
-//        LogOut.logout("PRAGMA foreign_keys");
-//    }else{
-//        qDebug()<<query.lastError();
-//        LogOut.logout(query.lastError().text());
-//    }
-//    //----------------переименовать таблицу
-
-//    str = "ALTER TABLE men_in_apartament RENAME TO men_in_apartament_temp;";
-//    if (query.exec(str)) {
-//        qDebug()<<"rename";
-//    }else{
-//        qDebug()<<query.lastError();
-//        LogOut.logout(query.lastError().text());
-//    }
-//    //--------------создание таблицы
-//    str = "CREATE TABLE men_in_apartament ("
-//            "id_apartament INTEGER NOT NULL,"
-//            "real_men INTEGER DEFAULT '0', "
-//            "rent_men INTEGER DEFAULT '0', "
-//            "reserv_men INTEGER DEFAULT '0', "
-//            "month INTEGER DEFAULT '0', "
-//            "year INTEGER DEFAULT '1900', "
-//            "UNIQUE (id_apartament,month,year), "
-//            "FOREIGN KEY(id_apartament) REFERENCES apartament(id_apartament) ON DELETE RESTRICT"
-//            ");";
-//    if (!query.exec(str)) {
-//        qDebug() << "Unable to create a table men_in_apartament" << query.lastError();
-//        LogOut.logout(query.lastError().text());
-//    }
-
-//    //-----перенос количества проживающих в новую таблицу
-//    str = "REPLACE INTO men_in_apartament(id_apartament, real_men, rent_men, reserv_men, month, year) "
-//            "SELECT id_apartament, real_men, rent_men, reserv_men, month, year "
-//            "FROM men_in_apartament_temp";
-//    if (query.exec(str)) {
-//        qDebug()<<"copy men_in_apartament";
-//    }else{
-//        qDebug()<<query.lastError();
-//        LogOut.logout(query.lastError().text());
-//    }
-//    //--------------------------------
-//    str = "DROP TABLE IF EXISTS men_in_apartament_temp";
-//    if (query.exec(str)) {
-//        qDebug()<<"delete";
-//    }else{
-//        qDebug()<<query.lastError();
-//        LogOut.logout(query.lastError().text());
-//    }
-//    //--------------------------------
-//    str = "PRAGMA foreign_keys = on";
-//    if (query.exec(str)) {
-//        qDebug()<<"PRAGMA foreign_keys";
-//        LogOut.logout("PRAGMA foreign_keys");
-//    }else{
-//        qDebug()<<query.lastError();
-//        LogOut.logout(query.lastError().text());
-//    }
-//    //---------------------------------------------------------
-//    str = "UPDATE version SET version = '1.5.1' WHERE version = '1.5'";
-//    if (query.exec(str)) {
-//        qDebug()<<"Update Full";
-//        LogOut.logout("Update Full");
-//    }else{
-//        qDebug()<<query.lastError();
-//        LogOut.logout(query.lastError().text());
-//    }
-//    //-----------сжатие
-//    str = "vacuum";
-//    if (query.exec(str)) {
-//        qDebug()<<"vacuum";
-//        LogOut.logout("Vacuum");
-//    }else{
-//        qDebug()<<query.lastError();
-//        LogOut.logout(query.lastError().text());
-//    }
-//}
-
-//=======
-//>>>>>>> reconfig work with DB
 //--------------------------------------------------------------------------------------------------------
 int BD::add(QString table, QString column, QString value)
 {
@@ -274,8 +94,6 @@ int BD::add(QString table, QString column, QString value)
     V_sl<<value;
     return add(table,C_sl,V_sl);
 }
-
-
 //--------------------------------------------------------------------------------------------------------
 int BD::add(QString table,QStringList column,QStringList value)
 {
