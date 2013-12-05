@@ -48,4 +48,5 @@ OTHER_FILES += \
     logika.txt \
     future.txt \
     exaple_qss.txt \
-    update_db/baseline.sql
+    update_db/baseline.sql \
+    update_db/001_01_06.sql

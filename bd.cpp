@@ -42,25 +42,28 @@ void BD::Create()
 //------------------------------------------------------------------------------------------------------
 void BD::UpdateDataBase()
 {
-//    QString str;
-//    QSqlQuery query;
-//    QString res = "";
+    QString str;
+    QSqlQuery query;
+    QString res = "";
 
-//    str = "SELECT version FROM version";
-//    if (query.exec(str)) {
-//        if (query.next()){
-//            res = query.value(0).toString();
-//        }else{
-//            qDebug()<<"Version not found";
-//            LogOut.logout("Version not found");
-//            return;
-//        }
-//    }else{
-//        qDebug() << query.lastError();
-//        LogOut.logout(query.lastError().text());
-//        return;
-//    }
-//    query.finish();
+    str = "SELECT version FROM version";
+    if (query.exec(str)) {
+        if (query.next()){
+            res = query.value(0).toString();
+        }else{
+            qDebug()<<"Version not found";
+            LogOut.logout("Version not found");
+            return;
+        }
+    }else{
+        qDebug() << query.lastError();
+        LogOut.logout(query.lastError().text());
+        return;
+    }
+    query.finish();
+    if (res == "1.5"){
+
+    }
 //    if(res == "1.0"){
 //        UpdateDataBase_10_to_11();
 //        UpdateDataBase_11_to_12();
