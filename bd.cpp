@@ -10,10 +10,10 @@ BD::~BD()
     db.close();
 }
 
-void BD::Create()
+bool BD::RunScript(QString sqlfilename)
 {
     QSqlQuery query;
-    QFile sqlfile("./update_db/baseline.sql");
+    QFile sqlfile(sqlfilename);
     sqlfile.open(QIODevice::ReadOnly);
     if(sqlfile.isReadable()){
         QByteArray bArrSqlFile;
@@ -23,19 +23,25 @@ void BD::Create()
         int count = bArrSqlFile.indexOf(";",pos);
         while (count >= 0){
             QString str = bArrSqlFile.mid(pos,count - pos);
-//            qDebug() << str;
-//            qDebug() << pos;
-//            qDebug() << count;
             if (!query.exec(str)) {
-                qDebug() << query.lastError();
+                qDebug() << str << query.lastError();
                 LogOut.logout(query.lastError().text());
-                return;
+                return false;
             }
             pos = count+1;
             count = bArrSqlFile.indexOf(";",pos);
         }
     }else{
-        qDebug() << "not read baseline.sql";
+        qDebug() << "not read " << sqlfile.fileName();
+        return false;
+    }
+    return true;
+}
+
+void BD::Create()
+{
+    if (!RunScript("./update_db/baseline.sql")){
+        qDebug() << "Error run " << "./update_db/baseline.sql";
     }
 
 }
@@ -62,8 +68,52 @@ void BD::UpdateDataBase()
     }
     query.finish();
     if (res == "1.5"){
-
+        str = "UPDATE version SET version = '01.05.000' WHERE version = 1.5";
+        if (!query.exec(str)) {
+            qDebug()<<query.lastError();
+            LogOut.logout(query.lastError().text());
+        }
+        UpdateDataBase();
+        return;
     }
+
+    QDir dir_with_sql("./update_db");
+    QStringList filters;
+    QStringList list_with_sql;
+    QStringList list_update;
+    filters << "??_??_???.sql";
+    list_with_sql = dir_with_sql.entryList(filters,QDir::Files,QDir::Name);
+
+    QString major;
+    QString minor;
+    QString subversion;
+
+    major = res.left(2);
+    minor = res.mid(3,2);
+    subversion = res.right(3);
+
+    for(int i = 0;i < list_with_sql.count();i++){
+        if(list_with_sql.at(i).left(2).toInt() > major.toInt()){
+            list_update << dir_with_sql.absoluteFilePath(list_with_sql.at(i));
+        }else if(list_with_sql.at(i).left(2).toInt() == major.toInt()){
+            if(list_with_sql.at(i).mid(3,2).toInt() > minor.toInt()){
+                list_update << dir_with_sql.absoluteFilePath(list_with_sql.at(i));
+            }else if (list_with_sql.at(i).mid(3,2).toInt() == minor.toInt()){
+                if((list_with_sql.at(i).right(3).toInt() > subversion.toInt())){
+                    list_update << dir_with_sql.absoluteFilePath(list_with_sql.at(i));
+                }
+            }
+        }
+    }
+<<<<<<< HEAD
+=======
+
+    for (int i=0;i<list_update.count();i++){
+        if (!RunScript(list_update.at(i))){
+            qDebug() << "Error run " << list_update.at(i);
+        }
+    }
+>>>>>>> db 05.12 work
 
 }
 //-------------------------------------------------------------------------------------------------------

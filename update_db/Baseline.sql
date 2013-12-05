@@ -11,29 +11,29 @@ CREATE TABLE organiz (
 );
 
 CREATE TABLE apartament (
-            id_apartament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            id_homes INTEGER,
-            id_organiz INTEGER,
-            number INTEGER,
-            personal_account INTEGER DEFAULT '0',
-            total_area DECIMAL(6,2) DEFAULT '0.0',
-            inhabed_area DECIMAL(6,2) DEFAULT '0.0',
-            balkon DECIMAL(6,2) DEFAULT '0.0',
-            loggia DECIMAL(6,2) DEFAULT '0.0',
-            surname   VARCHAR(15) DEFAULT '',
-            name   VARCHAR(15) DEFAULT '',
-            patronymic   VARCHAR(15)  DEFAULT '',
-            FOREIGN KEY(id_organiz) REFERENCES organiz(id_organiz) ON DELETE RESTRICT,
-            FOREIGN KEY(id_homes) REFERENCES homes(id_homes) ON DELETE RESTRICT
+    id_apartament INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    id_homes INTEGER,
+    id_organiz INTEGER,
+    number INTEGER,
+    personal_account INTEGER DEFAULT '0',
+    total_area DECIMAL(6,2) DEFAULT '0.0',
+    inhabed_area DECIMAL(6,2) DEFAULT '0.0',
+    balkon DECIMAL(6,2) DEFAULT '0.0',
+    loggia DECIMAL(6,2) DEFAULT '0.0',
+    surname   VARCHAR(15) DEFAULT '',
+    name   VARCHAR(15) DEFAULT '',
+    patronymic   VARCHAR(15)  DEFAULT '',
+    FOREIGN KEY(id_organiz) REFERENCES organiz(id_organiz) ON DELETE RESTRICT,
+    FOREIGN KEY(id_homes) REFERENCES homes(id_homes) ON DELETE RESTRICT
 );
 
 CREATE TABLE bay (
-            id_apartament INTEGER NOT NULL,
-            year_bay INTEGER NOT NULL,
-            month_bay INTEGER NOT NULL,
-            day_bay INTEGER NOT NULL,
-            bay REAL,
-            UNIQUE (id_apartament, year_bay, month_bay, day_bay)
+    id_apartament INTEGER NOT NULL,
+    year_bay INTEGER NOT NULL,
+    month_bay INTEGER NOT NULL,
+    day_bay INTEGER NOT NULL,
+    bay REAL,
+    UNIQUE (id_apartament, year_bay, month_bay, day_bay)
 );
 
 CREATE TABLE tarif (
