@@ -13,10 +13,6 @@ class BD : public  QObject
     Q_OBJECT
 public:
 
-    //!!!!!!!!!!!!!!!!!!!!!DELETE
-
-   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     BD();
     ~BD();
     void Create();
@@ -114,6 +110,7 @@ private:
     QSqlDatabase db;
     LogReport LogOut;
     QVariant SelectFromTable (QString str);
+    bool RunScript(QString filename);
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
