@@ -73,7 +73,7 @@ public:
     double is_Lodjia(int id_app);
     int is_NumberAppartament(int id_app);
     QString is_DatabaseVersoin();
-    QString delete_Bay(int id_apartament, int year_bay,int month_bay,int day_bay);
+    QString delete_Bay(int id_apartament, int year,int month,int day);
 
 
 
@@ -104,7 +104,7 @@ public:
     QSqlQueryModel* ModelApartament(int id_home, int id_org);                           //модель квартир для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
     QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
-    QSqlQueryModel* ModelBay(int id_apartament);                                        //все платежи по квартире
+//    QSqlQueryModel* ModelBay(int id_apartament);                                        //все платежи по квартире
     QSqlQueryModel* ModelOrganiz();
     QSqlQueryModel* ModelHome();
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания

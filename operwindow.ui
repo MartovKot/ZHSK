@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>568</width>
-     <height>638</height>
+     <height>671</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="mainLayout">
@@ -445,25 +445,6 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QTableView" name="tblV_Bay">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="selectionBehavior">
-               <enum>QAbstractItemView::SelectItems</enum>
-              </property>
-              <attribute name="horizontalHeaderMinimumSectionSize">
-               <number>10</number>
-              </attribute>
-             </widget>
-            </item>
-            <item>
              <spacer name="horizontalSpacer">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -475,6 +456,28 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item>
+             <widget class="QTableView" name="tblV_Bay">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOn</enum>
+              </property>
+              <property name="selectionBehavior">
+               <enum>QAbstractItemView::SelectItems</enum>
+              </property>
+              <attribute name="horizontalHeaderMinimumSectionSize">
+               <number>10</number>
+              </attribute>
+             </widget>
             </item>
            </layout>
           </item>
@@ -834,7 +837,6 @@
   <tabstop>pBtn_AddBay</tabstop>
   <tabstop>tblV_Count</tabstop>
   <tabstop>pBtn_EditPokazanie</tabstop>
-  <tabstop>tblV_Bay</tabstop>
  </tabstops>
  <resources>
   <include location="qrc.qrc"/>

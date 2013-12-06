@@ -13,6 +13,7 @@
 #include"bd.h"
 #include "tableviewpokazanie.h"
 #include "newcounter.h"
+#include "table_bay.h"
 
 namespace Ui {
     class OperWindow;
@@ -25,7 +26,6 @@ class OperWindow : public QDialog
 public:
     explicit OperWindow(QWidget *parent = 0);
     ~OperWindow();
-
     void set_parametr(int id_org, int id_home);
 
 private:
@@ -36,6 +36,7 @@ private:
     QDialog *dlg;
     int HomeID, OrganizationID;
     int p_id_pokazanie, p_pokazanie;
+    table_bay t_bay;
 
 
 private slots:
