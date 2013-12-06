@@ -2,6 +2,7 @@
 #include "ui_operwindow.h"
 #include "myitemdelegate.h"
 
+
 OperWindow::OperWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::OperWindow)
@@ -45,7 +46,7 @@ OperWindow::~OperWindow()
 
 void OperWindow::Refresh_tblVBay(int ApartamenID)
 {
-    ui->tblV_Bay->setModel(db.ModelBay(ApartamenID));
+    ui->tblV_Bay->setModel(t_bay.ModelBay(ApartamenID));
     ui->tblV_Bay->horizontalHeader()->setStretchLastSection(false);
     ui->tblV_Bay->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     ui->tblV_Bay->horizontalHeader()->setResizeMode( 3, QHeaderView::Interactive);
@@ -78,10 +79,8 @@ void OperWindow::sl_addBay()
         return;
     }
 
-    QStringList column, value;
-    column<<"id_apartament"<<"year_bay"<<"month_bay"<<"day_bay"<<"bay";
-    value<<QString::number(num)<<QString::number(year)<<QString::number(month)<<QString::number(day)<<bay;
-    db.add("bay",column,value);
+    t_bay.add_line(QString::number(num),QString::number(year),QString::number(month),QString::number(day),bay);
+
     Refresh_tblVBay(num);
 }
 

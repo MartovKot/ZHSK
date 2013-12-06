@@ -1,4 +1,4 @@
-ALTER TABLE bay RENAME TO bay_temp;
+ALTER TABLE bay RENAME TO bay_temp2;
 
 CREATE TABLE bay (
     id_apartament INTEGER NOT NULL,
@@ -10,18 +10,29 @@ CREATE TABLE bay (
 );
 
 REPLACE INTO bay (id_apartament, year_bay, month_bay, day_bay,bay)
-    SELECT id_apartament, year_bay, month_bay, day_bay,bay FROM bay_temp;
+    SELECT id_apartament, year_bay, '0'||month_bay, '0'||day_bay,bay
+    FROM bay_temp2
+    WHERE month_bay<10 AND day_bay<10;
+
+REPLACE INTO bay (id_apartament, year_bay, month_bay, day_bay,bay)
+    SELECT id_apartament, year_bay, '0'||month_bay, day_bay,bay
+    FROM bay_temp2
+    WHERE month_bay<10 AND day_bay>=10;
+
+REPLACE INTO bay (id_apartament, year_bay, month_bay, day_bay,bay)
+    SELECT id_apartament, year_bay, month_bay, '0'||day_bay,bay
+    FROM bay_temp2
+    WHERE month_bay>=10 AND day_bay<10;
 
 
 REPLACE INTO bay (id_apartament, year_bay, month_bay, day_bay,bay)
-    SELECT id_apartament, year_bay, month_bay, day_bay,bay FROM bay_temp;
+    SELECT id_apartament, year_bay, month_bay, day_bay,bay
+    FROM bay_temp2
+    WHERE month_bay>=10 AND day_bay>=10;
 
-DROP TABLE bay_temp;
+DROP TABLE bay_temp2;
 
 ALTER TABLE bay RENAME TO bay_temp;
-
---UPDATE bay_temp SET day_bay='0'||day_bay  WHERE day_bay<'10';
---UPDATE bay_temp SET month_bay='0'||month_bay  WHERE month_bay<'10';
 
 CREATE TABLE bay (
     id_apartament INTEGER NOT NULL,
@@ -33,3 +44,7 @@ CREATE TABLE bay (
 REPLACE INTO bay (id_apartament, bay_date, bay)
 SELECT id_apartament, STRFTIME('%s',bt.year_bay||'-'||bt.month_bay||'-'||bt.day_bay), bay
 FROM bay_temp bt ;
+
+DROP TABLE bay_temp;
+
+UPDATE version SET version = '01.06.001';

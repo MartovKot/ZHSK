@@ -37,7 +37,7 @@ bool BD::RunScript(QString sqlfilename)
     }
     return true;
 }
-
+//------------------------------------------------------------------------------------------------------
 void BD::Create()
 {
     if (!RunScript("./update_db/baseline.sql")){
@@ -909,19 +909,19 @@ QSqlQueryModel* BD::ModelTarifTabl(int year, int month)
     return model;
 }
 
-QSqlQueryModel* BD::ModelBay(int id_apartament)
-{
-    QSqlQueryModel *model = new QSqlQueryModel;
-    QString str;
-    str = "SELECT day_bay, month_bay, year_bay,bay FROM bay WHERE id_apartament = "+QString::number(id_apartament);
-    model->setQuery(QSqlQuery(str));
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("День"));
-    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Месяц"));
-    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Год"));
-    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Сумма"));
+//QSqlQueryModel* BD::ModelBay(int id_apartament)
+//{
+//    QSqlQueryModel *model = new QSqlQueryModel;
+//    QString str;
+//    str = "SELECT  strftime('%d',bay_date,'unixepoch'), strftime('%m',bay_date,'unixepoch'),strftime('%Y',bay_date,'unixepoch'), bay FROM bay WHERE id_apartament = "+QString::number(id_apartament);
+//    model->setQuery(QSqlQuery(str));
+//    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("День"));
+//    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Месяц"));
+//    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Год"));
+//    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Сумма"));
 
-    return model;
-}
+//    return model;
+//}
 QSqlQueryModel* BD::ModelPensioner(int id_home, int id_org)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
@@ -1530,23 +1530,10 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
     double debt = 0.0, bay = 0.0;
 
 
-//    //--------  Оплата за услуги за предыдущий месяц
-//    debt = AmountForServices(id_apart, previous_month(month),previous_year(year,month));
-//    qDebug()<<"debt = " << debt;
+
     // --------- К оплате в прошлом месяце
     debt += AmountToPay(id_apart, previous_month(month),previous_year(year,month));
-//    qDebug()<<"debt = " << debt;
 
-//    //--------  Долг за на начало месяца
-//    str="SELECT debt FROM debt WHERE  year_debt=%1 AND month_debt=%2 AND id_apartament=%3";
-//    str = str.arg(previous_year(year,month))
-//            .arg(previous_month(month))
-//            .arg(id_apart);
-//    QVariant t = SelectFromTable(str);
-//    if (!t.isNull()){
-//        debt += t.toDouble();
-//    }
-//    qDebug()<<"debt = " << debt;
     //---------- Долг за счётчики в этом месяце
     str="SELECT credited_with_counter FROM credited_of_apartament WHERE  year=%1 AND month=%2 AND id_apartament=%3";
     str = str.arg(year)
@@ -1556,21 +1543,20 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
     if(!t.isNull()){
         debt += t.toDouble();
     }
-//    qDebug()<<"debt = " << debt;
     //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
-    str =   " SELECT bay "
-            " FROM bay "
-            " WHERE "
+    str =   "SELECT bay, DATE(bay_date,'%Y') as y_bay, DATE(bay_date,'%M') as m_bay, DATE(bay_date,'%d') as d_bay  "
+            "FROM bay "
+            "WHERE "
             "   (( "
-            "     (year_bay = %3 AND month_bay = %4 AND day_bay >=25 ) "
-            "     OR (year_bay = %1 AND month_bay = %2 AND day_bay =1 ) "
+            "     (y_bay = %3 AND m_bay = %4 AND d_bay >=25 ) "
+            "     OR (y_bay = %1 AND m_bay = %2 AND d_bay =1 ) "
             "   ) "
             "   OR "
             "   ( "
-            "     (year_bay = %1 AND month_bay = %2 AND day_bay >=1) "
-            "     OR (year_bay = %1 AND month_bay = %2 AND day_bay < 25 ) "
+            "     (y_bay = %1 AND m_bay = %2 AND d_bay >=1) "
+            "     OR (y_bay = %1 AND m_bay = %2 AND d_bay < 25 ) "
             "   )) "
-            " AND id_apartament=%5";
+            "AND id_apartament=%5";
     str = str.arg(year)
             .arg(month)
             .arg(previous_year(year,month))
@@ -1578,14 +1564,13 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
             .arg(id_apart);
     if (query.exec(str)){
         while (query.next()){
+            qDebug() << query.value(0).toDouble();
             bay = bay + query.value(0).toDouble();
         }
     }else{
         qDebug()<<query.lastError()<<str;
         LogOut.logout(query.lastError().text());
     }
-//    qDebug()<<"debt = " << debt;
-//    qDebug()<<"bay = " << bay;
     debt = debt - bay;
 
     //-----обновление/добавление долга
@@ -1595,7 +1580,6 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
             .arg(id_apart);
     if (query.exec(str)){
         if (query.next()){
-//            qDebug()<<str<<" line found debt = " <<debt;
             if(QString::number(debt,'f',2) == query.value(1).toString()){
                 return;
             }else{
@@ -1615,7 +1599,7 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
         return;
     }
 }
-
+//-------------------------------------------------------------------------------------------
 QString BD::is_Debt(int id_apart, int month, int year)
 {
     QString str;
@@ -1809,17 +1793,18 @@ int BD::FillTarif(int month, int year)
     return 0;
 }
 
-QString BD::delete_Bay(int id_apartament, int year_bay, int month_bay, int day_bay)
+QString BD::delete_Bay(int id_apartament, int year, int month, int day)
 {
     QString str;
     QSqlQuery query;
     QString out = "";
 
-    str = "DELETE FROM bay WHERE id_apartament=%1 AND year_bay=%2 AND month_bay=%3 AND day_bay=%4";
+    str =   "DELETE FROM bay "
+            "WHERE id_apartament=%1 AND DATE(bay_date,'%Y')=%2 ANDDATE(bay_date,'%M')=%3 AND DATE(bay_date,'%d')=%4";
     str = str.arg(id_apartament)
-            .arg(year_bay)
-            .arg(month_bay)
-            .arg(day_bay);
+            .arg(year)
+            .arg(month)
+            .arg(day);
     if (!query.exec(str)){
         out = query.lastError().text();
     }
