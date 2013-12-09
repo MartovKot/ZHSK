@@ -51,4 +51,5 @@ OTHER_FILES += \
     future.txt \
     exaple_qss.txt \
     update_db/baseline.sql \
-    update_db/01_06_001.sql
+    update_db/01_06_001.sql \
+    update_db/01_06_002.sql
