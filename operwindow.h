@@ -9,7 +9,7 @@
 #include"bd.h"
 #include "tableviewpokazanie.h"
 #include "newcounter.h"
-#include "table_bay.h"
+#include "table_payment.h"
 
 namespace Ui {
     class OperWindow;
@@ -27,20 +27,20 @@ public:
 private:
     Ui::OperWindow *ui;
     BD db;
-    void Refresh_tblVBay(int ApartamentID);
+    void Refresh_tblVPayment(int ApartamentID);
     TableViewPokazanie *tbl;
     QDialog *dlg;
     int HomeID, OrganizationID;
     int p_id_pokazanie, p_pokazanie;
-    table_bay t_bay;
+    Table_Payment t_payment;
 
 
 private slots:
-    void sl_addBay();
+    void sl_addPayment();
     void Refresh_tblVCount();
     void sl_RefreshFull();
     void sl_EditPokazanie();
-    void sl_EditBay();
+    void sl_EditPayment();
     void sl_Calendar();
     void sl_RefreshLabel();
     void sl_ApartFirst();

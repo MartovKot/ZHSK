@@ -10,12 +10,12 @@ OperWindow::OperWindow(QWidget *parent) :
     ui->setupUi(this);
     setLayout(ui->mainLayout); //указываем главный  слой
 
-    connect(ui->pBtn_AddBay,SIGNAL(clicked()),SLOT(sl_addBay()));
-    connect(ui->pBtn_AddBay,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
+    connect(ui->pBtn_AddPayment,SIGNAL(clicked()),SLOT(sl_addPayment()));
+    connect(ui->pBtn_AddPayment,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
     connect(ui->pBtn_EditPokazanie,SIGNAL(clicked()),SLOT(sl_EditPokazanie()));
     connect(ui->pBtn_EditPokazanie,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
-    connect(ui->pBtn_DeleteBay,SIGNAL(clicked()),SLOT(sl_EditBay()));
-    connect(ui->pBtn_DeleteBay,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
+    connect(ui->pBtn_DeletePayment,SIGNAL(clicked()),SLOT(sl_EditPayment()));
+    connect(ui->pBtn_DeletePayment,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
     connect(ui->tBtn_Calendar,SIGNAL(clicked()),SLOT(sl_Calendar()));
 
     connect(ui->tBtn_ApartLeftEnd,SIGNAL(clicked()),SLOT(sl_ApartFirst()));
@@ -32,7 +32,7 @@ OperWindow::OperWindow(QWidget *parent) :
     QRegExpValidator *dv = new QRegExpValidator(QRegExp("[0-9]+[\\.|\\,]?[0-9]{,2}"),this); //валидатор для чисел
     ui->lEd_Sum->setValidator(dv);
     ui->dEd_Count->setDate(QDate::currentDate());
-    ui->dEd_Bay->setDate(QDate::currentDate().addDays(-QDate::currentDate().day()+1));
+    ui->dEd_Payment->setDate(QDate::currentDate().addDays(-QDate::currentDate().day()+1));
     QPixmap pixmap(":/ico/base_calendar_32.png");
     ui->tBtn_Calendar->setIcon(QIcon(pixmap));
     ui->tBtn_Calendar->setMask(pixmap.mask());
@@ -44,28 +44,28 @@ OperWindow::~OperWindow()
 }
 
 
-void OperWindow::Refresh_tblVBay(int ApartamenID)
+void OperWindow::Refresh_tblVPayment(int ApartamenID)
 {
-    ui->tblV_Bay->setModel(t_bay.ModelBay(ApartamenID));
-    ui->tblV_Bay->horizontalHeader()->setStretchLastSection(false);
-    ui->tblV_Bay->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblV_Bay->horizontalHeader()->setResizeMode( 3, QHeaderView::Interactive);
+    ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
+    ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
+    ui->tblV_Payment->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    ui->tblV_Payment->horizontalHeader()->setResizeMode( 3, QHeaderView::Interactive);
 }
 
-void OperWindow::sl_addBay()
+void OperWindow::sl_addPayment()
 {
-    QString bay;
+    QString Payment;
     int day, month,year,num;
 
     num = ui->cmBx_NumApartanent->model()->index(ui->cmBx_NumApartanent->currentIndex(), 1).data().toInt(); //ID квартиры
 
-    bay = ui->lEd_Sum->text();
-    if (bay == ""){
+    Payment = ui->lEd_Sum->text();
+    if (Payment == ""){
         return;
     }
-    day = ui->dEd_Bay->date().day();
-    month = ui->dEd_Bay->date().month();
-    year = ui->dEd_Bay->date().year();
+    day = ui->dEd_Payment->date().day();
+    month = ui->dEd_Payment->date().month();
+    year = ui->dEd_Payment->date().year();
     QDate date_calc;
     date_calc.setDate(year,month,day);
     if (date_calc.daysTo(QDate::currentDate())>40 ){
@@ -79,9 +79,9 @@ void OperWindow::sl_addBay()
         return;
     }
 
-    t_bay.add_line(QString::number(num),QString::number(year),QString::number(month),QString::number(day),bay);
+    t_payment.add_line(QString::number(num),QString::number(year),QString::number(month),QString::number(day),Payment);
 
-    Refresh_tblVBay(num);
+    Refresh_tblVPayment(num);
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -178,13 +178,13 @@ void OperWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Enter :
     case Qt::Key_Return:
         if(ui->cmBx_NumApartanent == focusWidget()){
-            ui->dEd_Bay->setFocus();
+            ui->dEd_Payment->setFocus();
         }else if(focusWidget() == ui->dEd_Count){
             ui->cmBx_NumApartanent->setFocus();
-        }else if(focusWidget() == ui->dEd_Bay){
+        }else if(focusWidget() == ui->dEd_Payment){
             ui->lEd_Sum->setFocus();
         }else if(focusWidget() == ui->lEd_Sum){
-            ui->pBtn_AddBay->click();
+            ui->pBtn_AddPayment->click();
             ui->pBtn_EditPokazanie->setFocus();
         }
         break;
@@ -192,36 +192,36 @@ void OperWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void OperWindow::sl_EditBay()
+void OperWindow::sl_EditPayment()
 {
     int row;
     int month,year,day;
 
-    row = ui->tblV_Bay->currentIndex().row();
+    row = ui->tblV_Payment->currentIndex().row();
     if (row<0){
         QMessageBox::warning(this,trUtf8("Предупреждение"),
                              trUtf8("Не выбрана оплата"),QMessageBox::Ok);
         return;
     }
 
-    day = ui->tblV_Bay->model()->index(row,0).data().toInt();
-    month = ui->tblV_Bay->model()->index(row,1).data().toInt();
-    year = ui->tblV_Bay->model()->index(row,2).data().toInt();
+    day = ui->tblV_Payment->model()->index(row,0).data().toInt();
+    month = ui->tblV_Payment->model()->index(row,1).data().toInt();
+    year = ui->tblV_Payment->model()->index(row,2).data().toInt();
 
     if(QMessageBox::question(this,trUtf8("Удаление"),
                          trUtf8("Удалить эту запись?\n")+QString::number(day)+" "+
                          QDate::longMonthName(month)+" "+QString::number(year)+trUtf8(" года"),
                     QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
         QString err;
-        err = db.delete_Bay(
+        err = t_payment.delete_Payment(
                     db.is_idappart(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt()),
-                    ui->tblV_Bay->model()->index(row,2).data().toInt(),
-                    ui->tblV_Bay->model()->index(row,1).data().toInt(),
-                    ui->tblV_Bay->model()->index(row,0).data().toInt());
+                    ui->tblV_Payment->model()->index(row,2).data().toInt(),
+                    ui->tblV_Payment->model()->index(row,1).data().toInt(),
+                    ui->tblV_Payment->model()->index(row,0).data().toInt());
         if (err == ""){
             QMessageBox::information(this,trUtf8("Успех"),
                                  trUtf8("Удаление прошло успешно \n")+err,QMessageBox::Ok);
-            Refresh_tblVBay(db.is_idappart(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt()));
+            Refresh_tblVPayment(db.is_idappart(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt()));
         }else{
             QMessageBox::critical(this,trUtf8("Ошибка"),
                                  trUtf8("Удаление не произошло \n")+err,QMessageBox::Ok);
@@ -236,7 +236,7 @@ void OperWindow::sl_Calendar()
     QHBoxLayout *mainlayout = new QHBoxLayout;
     mainlayout->addWidget(calendar);
     w->setLayout(mainlayout);
-    connect(calendar,SIGNAL(clicked(QDate)),ui->dEd_Bay,SLOT(setDate(QDate)));
+    connect(calendar,SIGNAL(clicked(QDate)),ui->dEd_Payment,SLOT(setDate(QDate)));
     connect(calendar,SIGNAL(clicked(QDate)),w,SLOT(close()));
     ui->lEd_Sum->setFocus();
     w->open();
@@ -278,7 +278,7 @@ void OperWindow::sl_RefreshLabel()
                              ui->dEd_Count->date().year(),
                              ApartamentID);
     }
-    ui->lblInBay->setText(QString::number(db.AmountToPay(ApartamentID,ui->dEd_Count->date().month(),
+    ui->lblInPayment->setText(QString::number(db.AmountToPay(ApartamentID,ui->dEd_Count->date().month(),
                                                          ui->dEd_Count->date().year())));
 
     ui->lblDolg->setText(db.is_Debt(ApartamentID,ui->dEd_Count->date().month(),ui->dEd_Count->date().year()));
@@ -326,7 +326,7 @@ void OperWindow::sl_ApartPrevious()
 void OperWindow::sl_RefreshFull()
 {
     int num = ui->cmBx_NumApartanent->model()->index(ui->cmBx_NumApartanent->currentIndex(), 1).data().toInt();
-    Refresh_tblVBay(num);
+    Refresh_tblVPayment(num);
     Refresh_tblVCount();
     sl_RefreshLabel();
 }
