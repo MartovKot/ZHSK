@@ -34,14 +34,14 @@ DROP TABLE bay_temp2;
 
 ALTER TABLE bay RENAME TO bay_temp;
 
-CREATE TABLE bay (
+CREATE TABLE payment (
     id_apartament INTEGER NOT NULL,
-    bay_date INTEGER  NOT NULL,
-    bay REAL,
-    UNIQUE (id_apartament, bay_date)
+    payment_date INTEGER  NOT NULL,
+    payment REAL,
+    UNIQUE (id_apartament, payment_date)
 );
 
-REPLACE INTO bay (id_apartament, bay_date, bay)
+REPLACE INTO payment (id_apartament, payment_date, payment)
 SELECT id_apartament, STRFTIME('%s',bt.year_bay||'-'||bt.month_bay||'-'||bt.day_bay), bay
 FROM bay_temp bt ;
 

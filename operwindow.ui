@@ -458,7 +458,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QTableView" name="tblV_Bay">
+             <widget class="QTableView" name="tblV_Payment">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -502,7 +502,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QDateEdit" name="dEd_Bay">
+               <widget class="QDateEdit" name="dEd_Payment">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -606,7 +606,7 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
-               <widget class="QPushButton" name="pBtn_AddBay">
+               <widget class="QPushButton" name="pBtn_AddPayment">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -652,7 +652,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pBtn_DeleteBay">
+             <widget class="QPushButton" name="pBtn_DeletePayment">
               <property name="text">
                <string>Удалить оплату</string>
               </property>
@@ -677,7 +677,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="lblInBay">
+               <widget class="QLabel" name="lblInPayment">
                 <property name="text">
                  <string>0</string>
                 </property>
@@ -832,9 +832,9 @@
  </widget>
  <tabstops>
   <tabstop>cmBx_NumApartanent</tabstop>
-  <tabstop>dEd_Bay</tabstop>
+  <tabstop>dEd_Payment</tabstop>
   <tabstop>lEd_Sum</tabstop>
-  <tabstop>pBtn_AddBay</tabstop>
+  <tabstop>pBtn_AddPayment</tabstop>
   <tabstop>tblV_Count</tabstop>
   <tabstop>pBtn_EditPokazanie</tabstop>
  </tabstops>
