@@ -1,4 +1,5 @@
 #include "bd.h"
+#include "table_tariff.h"
 
 
 BD::BD()
@@ -244,45 +245,7 @@ void BD::UpdateMenInApartament(QStringList column, QStringList value, int idapar
         add("men_in_apartament",column,value);
     }
 }
-//-----------------------------------------------------------------------------------------------------
-void BD::UpdateTarif(QString tarif, QString tarif2, QString norma, int idtarif)
-{
-    UpdateTable("tarif","tarif",tarif,"id_tarif",QString::number(idtarif));
-    UpdateTable("tarif","tarif2",tarif2,"id_tarif",QString::number(idtarif));
-    UpdateTable("tarif","norm",norma,"id_tarif",QString::number(idtarif));
-}
-//-----------------------------------------------------------------------------------------------------
-double BD::is_Tarif(int m, int y, int u)
-{
-    QString str, strF;
-    double out = -1;
 
-    str = "SELECT tarif FROM tarif WHERE id_usluga=%3  AND month_t=%1 AND year_t=%2 ";
-    strF = str.arg(m)
-            .arg(y)
-            .arg(u);
-    QVariant t = SelectFromTable(strF);
-    if (!t.isNull()){
-        out = t.toDouble();
-    }
-return out;
-}
-//-----------------------------------------------------------------------------------------------------
-double BD::is_Tarif2(int m, int y, int u)
-{
-    QString str, strF;
-    double out = -1;
-
-    str = "SELECT tarif2 FROM tarif WHERE id_usluga=%3  AND month_t=%1 AND year_t=%2 ";
-    strF = str.arg(m)
-            .arg(y)
-            .arg(u);
-    QVariant t = SelectFromTable(strF);
-    if (!t.isNull()){
-        out = t.toDouble();
-    }
-return out;
-}
 //-------------------------------------------------------------------------------------------------------
 QString BD::is_nameOrg(int id)
 {
@@ -872,42 +835,7 @@ QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
     return model;
 }
 
-QSqlQueryModel* BD::ModelTarifTabl(int year, int month)
-{
-    QSqlQueryModel *model = new QSqlQueryModel;
-    QString str;
-    QVariant count_tarif;
 
-    str = "SELECT COUNT() FROM tarif "
-            " WHERE year_t = "+QString::number(year)+" AND month_t="+QString::number(month)+" ";
-    count_tarif = SelectFromTable(str);
-    if(!count_tarif.isNull()){
-        if(count_tarif.toInt()==0){
-            QString str2 = "INSERT INTO tarif(id_usluga, year_t, month_t) SELECT id_usluga, '%1', '%2' FROM usluga";
-            str2 = str2.arg(QString::number(year))
-                    .arg(QString::number(month));
-            QSqlQuery query2;
-            if(query2.exec(str2)){
-//                qDebug()<<"insert";
-
-            }else{
-                qDebug()<<query2.lastError();
-                LogOut.logout(query2.lastError().text());
-            }
-        }
-    }
-
-    str = "SELECT t.id_tarif, u.name, t.tarif, t.tarif2, t.norm FROM tarif t, usluga u "
-            " WHERE t.year_t = " + QString::number(year) +
-            " AND t.month_t=" + QString::number(month) + " AND u.id_usluga=t.id_usluga";
-    model->setQuery(QSqlQuery(str));
-    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Услуга"));
-    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Тариф"));
-    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Тариф2"));
-    model->setHeaderData(4,Qt::Horizontal,QObject::trUtf8("Норма"));
-
-    return model;
-}
 
 QSqlQueryModel* BD::ModelPensioner(int id_home, int id_org)
 {
@@ -1354,7 +1282,8 @@ double BD::CreditedOfApartament(int month, int year, int id_list_app_usluga) // 
       if (query.next()){
           type_usluga = query.value(0).toInt();
           id_usluga = query.value(1).toInt();
-          tarif = is_Tarif(month,year,id_usluga);// Получаем тариф
+          table_tariff tbl_tariff;
+          tarif = tbl_tariff.is_Tariff(month,year,id_usluga);// Получаем тариф
       }else{
           qDebug()<<"not record" << str;
           return -1;
@@ -1736,49 +1665,7 @@ double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //ра�
     return out;
 }
 
-int BD::FillTarif(int month, int year)
-{
-    QString str;
-    QSqlQuery query;
 
-    str ="SELECT tarif, tarif2, norm, id_usluga FROM tarif WHERE month_t=%1 AND year_t=%2";
-    str = str.arg(previous_month(month))
-            .arg(previous_year(year,month));
-    if (query.exec(str)){
-
-        while(query.next()){
-            QString str2;
-            QSqlQuery query2;
-            str2 = "SELECT id_tarif FROM tarif WHERE month_t=%1 AND year_t=%2 AND id_usluga=%3";
-
-            str2 = str2.arg(month)
-                    .arg(year)
-                    .arg(query.value(3).toInt());
-            if (query2.exec(str2)){
-              if (query2.next()){
-                  UpdateTarif(query.value(0).toString(),query.value(1).toString()
-                                          ,query.value(2).toString(),query2.value(0).toInt());
-              }else{
-                  QStringList column, value;
-                  column << "tarif" <<"tarif2" <<"norm"<<"id_usluga"<<"year_t"<<"month_t";
-                  value << query.value(0).toString() << query.value(1).toString() << query.value(2).toString()
-                           << query.value(3).toString() <<QString::number(year) << QString::number(month);
-                  add("tarif",column,value);
-              }
-            } else{
-                qDebug()<<"CreditedOfApartament"<<query2.lastError();
-                LogOut.logout(query2.lastError().text());
-                return -1;
-            }
-        }
-    }else{
-        qDebug()<<query.lastError()<<str;
-        LogOut.logout(query.lastError().text());
-        return -1;
-    }
-
-    return 0;
-}
 
 
 

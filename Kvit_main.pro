@@ -24,7 +24,9 @@ HEADERS += adminwindow.h \
     logreport.h \
     newcounter.h \
     viewblank.h \
-    table_payment.h
+    table_payment.h \
+    table_tariff.h \
+    my_function.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui
 SOURCES += adminwindow.cpp \
@@ -40,7 +42,9 @@ SOURCES += adminwindow.cpp \
     logreport.cpp \
     newcounter.cpp \
     viewblank.cpp \
-    table_payment.cpp
+    table_payment.cpp \
+    table_tariff.cpp
+
 
 RESOURCES += \
     qrc.qrc
@@ -51,4 +55,6 @@ OTHER_FILES += \
     future.txt \
     exaple_qss.txt \
     update_db/baseline.sql \
-    update_db/01_06_001.sql
+    update_db/01_06_001.sql \
+    update_db/01_06_002.sql \
+    update_db/01_06_003.sql
