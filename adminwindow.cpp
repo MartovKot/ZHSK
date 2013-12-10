@@ -529,7 +529,7 @@ void AdminWindow::TarifRequest()
     }
 
     ui->tblV_on_Tarif->setModel(
-                db.ModelTarifTabl(ui->lEd_Tarif_year->text().toInt(),ui->lEd_Tarif_month->text().toInt()));
+                tbl_tariff.ModelTarifTabl(ui->lEd_Tarif_year->text().toInt(),ui->lEd_Tarif_month->text().toInt()));
     ui->tblV_on_Tarif->hideColumn(0);
 }
 
@@ -537,7 +537,7 @@ void AdminWindow::SaveTarif()
 {
     int TarifID = ui->tblV_on_Tarif->model()->index(ui->tblV_on_Tarif->currentIndex().row(),0).data().toInt();
 
-    db.UpdateTarif(lEd_tarif->text(),lEd_tarif2->text(),lEd_norm->text(),TarifID);
+    tbl_tariff.UpdateTarif(lEd_tarif->text(),lEd_tarif2->text(),lEd_norm->text(),TarifID);
     TarifRequest();
     dlg->close();
     delete dlg;
@@ -759,7 +759,7 @@ void AdminWindow::Refresh()
 void AdminWindow::FillTarif()
 {
 
-    db.FillTarif(ui->lEd_Tarif_month->text().toInt(),ui->lEd_Tarif_year->text().toInt());
+    tbl_tariff.FillTarif(ui->lEd_Tarif_month->text().toInt(),ui->lEd_Tarif_year->text().toInt());
     QMessageBox::information(this,trUtf8("Уведомление"),
                              trUtf8("Загрузка завершена"),QMessageBox::Ok);
     TarifRequest();

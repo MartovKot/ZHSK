@@ -86,7 +86,7 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, int year,in
         find_pos = str_out.indexOf(strlst_find.at(1));
         if(find_pos>=0){
             str_out.replace(find_pos,strlst_find.at(1).size(),
-                            QString::number(db.is_Tarif(month,year,ServiceList.at(i))));
+                            QString::number(tbl_tariff.is_Tariff(month,year,ServiceList.at(i))));
         }
         find_pos = str_out.indexOf(strlst_find.at(2));
         if(find_pos>=0){
@@ -130,11 +130,11 @@ QString parser_blank::process_schet(QString str_in_sch, int id_app, int year,int
         find_pos = str_out.indexOf(strlst_find.at(2));
         if(find_pos>=0){ //тариф
             str_out.replace(find_pos,strlst_find.at(2).size(),
-                            QString::number(db.is_Tarif(month,year,CounterList.at(i))));
+                            QString::number(tbl_tariff.is_Tariff(month,year,CounterList.at(i))));
         }
         find_pos = str_out.indexOf(strlst_find.at(3));
         if(find_pos>=0){ //тариф2
-            double t2 = db.is_Tarif2(month,year,CounterList.at(i));
+            double t2 = tbl_tariff.is_Tariff(month,year,CounterList.at(i),2);
             if (t2!=0.0 ){
                 str_out.replace(find_pos,strlst_find.at(3).size(), " / "+QString::number(t2));
             }else{
