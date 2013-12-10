@@ -29,8 +29,6 @@ CREATE TABLE tariff (
             UNIQUE (tariff_date,id_usluga)
 );
 
-
-
 REPLACE INTO tariff (id_tariff, tariff_date, id_usluga, tariff, tariff2, norm)
 SELECT id_tarif, STRFTIME('%s',t.year_t||'-'||t.month_t||'-01'), id_usluga, tarif, tarif2, norm
 FROM tarif t;

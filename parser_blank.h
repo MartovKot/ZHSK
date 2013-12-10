@@ -9,6 +9,7 @@
 #include <QMessageBox>
 
 #include "bd.h"
+#include "table_tariff.h"
 
 class parser_blank :public QWidget
 {
@@ -30,6 +31,7 @@ private:
     QString str_folder;  //каталог для создания отчётов
     QString str_folder_arhiv;
     BD db;
+    table_tariff tbl_tariff;
     void creat_blank(QString name,int id_app,int year,int month);
     QString process_usluga(QString str_in_usl, int id_app,int year,int month);
     QString process_schet(QString str_in_sch, int id_app,int year,int month);

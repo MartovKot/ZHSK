@@ -19,6 +19,7 @@ bool table_bay::add_line(QString id_apartament, QString y_bay, QString m_bay, QS
     QDate date;
     date.setDate(y_bay.toInt(), m_bay.toInt(), d_bay.toInt());
     QDateTime datetime;
+    datetime.setTimeSpec(Qt::OffsetFromUTC);
     datetime.setDate(date);
     timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
 
@@ -40,24 +41,5 @@ QSqlQueryModel* table_bay::ModelBay(int id_apartament)
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Месяц"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Год"));
     model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Сумма"));
-
-//    QSqlQuery query;
-
-//    if (query.exec(str)){
-//        while (query.next()){
-//            qDebug() << query.value(3).toString();
-//        }
-
-
-////        if (query.next()){
-
-////        }else{
-////            qDebug()<<"not record" << str;
-////        }
-//    } /*else{
-//            qDebug()<<query.lastError();
-//            LogOut.logout(query.lastError().text());
-//    }*/
-
     return model;
 }

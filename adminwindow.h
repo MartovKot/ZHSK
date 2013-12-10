@@ -6,7 +6,8 @@
 #include <QMessageBox>
 #include <QSpacerItem>
 
-#include"bd.h"
+#include "bd.h"
+#include "table_tariff.h"
 
 namespace Ui {
     class AdminWindow;
@@ -23,6 +24,7 @@ public:
 private:
     Ui::AdminWindow *ui;
     BD db;
+    table_tariff tbl_tariff;
 
     void Mode (QString m);
     struct Tarifstruct {

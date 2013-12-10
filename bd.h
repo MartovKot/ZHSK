@@ -42,8 +42,7 @@ public:
     int is_RealMen(int id_app, int year, int month);                                 //возвращает количество проживающих.
     int is_RentMen(int id_app, int year, int month);                                 //возвращает количество снимающих
     int is_ReservMen(int id_app, int year, int month);                               //возвращает количество на брони
-    double is_Tarif(int m, int y, int u);                       //возвращает размер тарифа
-    double is_Tarif2(int m, int y, int u);                      //возвращает размер тарифа2
+
 
     int is_Pokazanie(int id_list_app_usluga, int month, int year); //для бланка
     int is_IdPokazanie(int id_list_app_usluga, int month, int year);
@@ -71,7 +70,7 @@ public:
 
     void UpdateApartament(QStringList column,QStringList value, int idapart);           //Обновление таблицы с квартирами
     void UpdateMenInApartament(QStringList column, QStringList value, int idapart, int year, int month);
-    void UpdateTarif(QString tarif,QString tarif2, QString norma, int idusl);
+
     void UpdateOrganization(QString name = "", QString bank="", QString acc="", int idorg = -1);
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);
     void UpdateHome(int id_home, QString home);
@@ -84,8 +83,7 @@ public:
     QSqlQueryModel* ModelApartament(int id_apartament);                                 //модель для квартиры
     QSqlQueryModel* ModelApartament(int id_home, int id_org);                           //модель квартир для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
-    QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
-//    QSqlQueryModel* ModelBay(int id_apartament);                                        //все платежи по квартире
+
     QSqlQueryModel* ModelOrganiz();
     QSqlQueryModel* ModelHome();
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания
@@ -97,7 +95,7 @@ public:
     double AmountToPay(int id_apart, int month, int year);                              //сумма к оплате
     QString is_Debt(int id_apart, int month, int year);
     double AmountForServices(int id_apart, int month, int year);
-    int FillTarif(int month, int year);
+
 
     QString DeleteOrg(int id_org);
     QString DeleteHome(int id_home);
@@ -105,20 +103,24 @@ public:
 
     void UpdateDataBase();
     void new_pokazanie(int id_apartament, int month, int year);
+    //----new interface
+    QVariant SelectFromTable (QString str);
+    void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
+    int previous_month(int m);
+    int previous_year(int y, int m);
 
 private:
     QSqlDatabase db;
     LogReport LogOut;
-    QVariant SelectFromTable (QString str);
     bool RunScript(QString filename);
-    void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
+
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
 
     int next_month (int m);
     int next_year(int m, int y);
-    int previous_month(int m);
-    int previous_year(int y, int m);
+
+
 
     double CreditedOfApartament(int month,int year, int id_list_app_usluga);
     void CreditedForApartament(int id_apart, int month, int year);
