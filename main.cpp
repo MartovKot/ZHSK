@@ -56,6 +56,11 @@ int main(int argc, char *argv[])
     splash.show();
 
 
+    QPixmap pixmap(":/ico/splash.png");
+
+    QSplashScreen splash(pixmap);
+    splash.show();
+
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
     LogReport out;
     out.setFileName("out.log");
@@ -87,6 +92,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
+    splash.close();
     w.show();
     splash.finish(&w);
 

@@ -45,6 +45,6 @@
         <file>images/spinup_pressed.png</file>
         <file>images/up_arrow.png</file>
         <file>images/up_arrow_disabled.png</file>
-        <file>images/main.png</file>
+        <file>ico/splash.png</file>
     </qresource>
 </RCC>

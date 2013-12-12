@@ -142,6 +142,3 @@ INSERT INTO usluga (name, type_usluga )VALUES("Паспортный режим",
 INSERT INTO usluga (name, type_usluga )VALUES("Тех. содержание и текущий ремонт",2);
 
 
-
-
-

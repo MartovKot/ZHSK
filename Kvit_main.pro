@@ -59,4 +59,8 @@ OTHER_FILES += \
     update_db/baseline.sql \
     update_db/01_06_001.sql \
     update_db/01_06_002.sql \
-    update_db/01_06_003.sql
+    update_db/01_06_003.sql \
+    update_db/01_06_004.sql \
+    update_db/01_06_005.sql \
+    update_db/01_06_006.sql \
+    update_db/01_06_007.sql
