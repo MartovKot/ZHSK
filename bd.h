@@ -109,6 +109,7 @@ public:
     int previous_year(int y, int m);
 
 private:
+    qint64 IsDateOfUnix(int year, int month, int day);
     QSqlDatabase db;
     LogReport LogOut;
     bool RunScript(QString filename);

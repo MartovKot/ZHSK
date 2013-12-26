@@ -44,27 +44,28 @@ QSqlQueryModel* table_tariff::ModelTarifTabl(int year, int month)
 
     //----Вынести в другое место----
     str = "SELECT COUNT() FROM tariff "
-            " WHERE tariff_date = "+QString::number(IsDateOfUnix(year,month,1));
+            " WHERE tariff_date = " + QString::number(IsDateOfUnix(year,month,1));
     count_tarif = db->SelectFromTable(str);
     if(!count_tarif.isNull()){
         if(count_tarif.toInt()==0){
-            QString str2 = "INSERT INTO tariff(id_usluga, tariff_date) SELECT id_usluga, '%1','%2' FROM usluga";
-            str2 = str2.arg(QString::number(year))
-                    .arg(QString::number(month));
+            QString str2 = "INSERT INTO tariff(id_usluga, tariff_date) SELECT id_usluga, %1 FROM usluga";
+            str2 = str2.arg(QString::number(IsDateOfUnix(year,month,1)));
             QSqlQuery query2;
             if(query2.exec(str2)){
 
             }else{
-                qDebug()<<query2.lastError();
+                qDebug() << "aebb8b3a6e4299f530efd00de3e80361" <<query2.lastError();
             }
         }
     }
     //-----конец
 
-    str = "SELECT t.id_tarif, u.name, t.tarif, t.tarif2, t.norm FROM tarif t, usluga u "
-            " WHERE t.year_t = " + QString::number(year) +
-            " AND t.month_t=" + QString::number(month) + " AND u.id_usluga=t.id_usluga";
+    str = "SELECT t.id_tariff, u.name, t.tariff, t.tariff2, t.norm FROM tariff t, usluga u "
+            " WHERE t.tariff_date = " + QString::number(IsDateOfUnix(year,month,1)) + " AND u.id_usluga=t.id_usluga";
     model->setQuery(QSqlQuery(str));
+    if (model->lastError().number() != -1){
+        qDebug() << "d79f962a16168e6156e982b602b533dc" << model->lastError();
+    }
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Услуга"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Тариф"));
     model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Тариф2"));
@@ -86,18 +87,15 @@ int table_tariff::FillTarif(int month, int year)
     QString str;
     QSqlQuery query;
 
-    str ="SELECT tarif, tarif2, norm, id_usluga FROM tarif WHERE month_t=%1 AND year_t=%2";
-    str = str.arg(db->previous_month(month))
-            .arg(db->previous_year(year,month));
+    str ="SELECT tariff, tariff2, norm, id_usluga FROM tariff WHERE tariff_date=%1";
+    str = str.arg(QString::number(IsDateOfUnix(
+                                      db->previous_year(year,month),db->previous_month(month),1)));
     if (query.exec(str)){
-
         while(query.next()){
             QString str2;
             QSqlQuery query2;
-            str2 = "SELECT id_tarif FROM tarif WHERE month_t=%1 AND year_t=%2 AND id_usluga=%3";
-
-            str2 = str2.arg(month)
-                    .arg(year)
+            str2 = "SELECT id_tariff FROM tariff WHERE tariff_date=%1 AND id_usluga=%2";
+            str2 = str2.arg(QString::number(IsDateOfUnix(year,month,1)))
                     .arg(query.value(3).toInt());
             if (query2.exec(str2)){
               if (query2.next()){
@@ -106,18 +104,18 @@ int table_tariff::FillTarif(int month, int year)
                                           ,query.value(2).toString(),query2.value(0).toInt());
               }else{
                   QStringList column, value;
-                  column << "tarif" <<"tarif2" <<"norm"<<"id_usluga"<<"year_t"<<"month_t";
+                  column << "tariff" <<"tariff2" <<"norm"<<"id_usluga"<<"tariff_date";
                   value << query.value(0).toString() << query.value(1).toString() << query.value(2).toString()
-                           << query.value(3).toString() <<QString::number(year) << QString::number(month);
-                  db->add("tarif",column,value);
+                           << query.value(3).toString() << QString::number(IsDateOfUnix(year,month,1));
+                  db->add("tariff",column,value);
               }
             } else{
-                qDebug()<<"CreditedOfApartament"<<query2.lastError();
+                qDebug()<<"02e81a7a2124e38f486e726ea5422e69"<<query2.lastError();
                 return -1;
             }
         }
     }else{
-        qDebug()<<query.lastError()<<str;
+        qDebug()<<"a9fca9fafc74e63119a07736a8236acb"<<query.lastError()<<str;
         return -1;
     }
 

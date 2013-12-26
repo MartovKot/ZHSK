@@ -9,6 +9,7 @@
 #include "bd.h"
 #include "table_tariff.h"
 
+
 namespace Ui {
     class AdminWindow;
 }
@@ -45,6 +46,19 @@ private:
     QLineEdit *lEd_norm;
     int ID_ORG;
     int ID_HOME;
+    qint64 IsDateOfUnix(int year, int month, int day)
+    {
+        qint64 timeInUnix;
+        const qint64 MS_COEF = 1000;
+        QDate date;
+        date.setDate(year, month, day);
+        QDateTime datetime;
+        datetime.setTimeSpec(Qt::OffsetFromUTC);
+        datetime.setDate(date);
+        timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
+        return timeInUnix;
+    }
+
 private slots:
     void AddOrg();                                  // добавление организации
     void AddHome();                                 // добавление дома
