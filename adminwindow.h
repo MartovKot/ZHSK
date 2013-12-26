@@ -2,9 +2,11 @@
 #define ADMINWINDOW_H
 
 #include <QDialog>
-#include <QtGui>
 #include <QMessageBox>
 #include <QSpacerItem>
+#include <QHBoxLayout>
+#include <QLineEdit>
+#include <QSqlError>
 
 #include"bd.h"
 

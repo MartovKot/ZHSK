@@ -25,6 +25,7 @@ QVariant BD::SelectFromTable(QString str)
         qDebug() << query.lastError() << str;
         LogOut.logout(query.lastError().text());
     }
+    query.finish();
     return out;
 }
 
@@ -284,20 +285,27 @@ void BD::UpdateDataBase()
         UpdateDataBase_12_to_13();
         UpdateDataBase_13_to_14();
         UpdateDataBase_14_to_15();
+        UpdateDataBase_15_to_151();
     }else if( res == "1.1"){
         UpdateDataBase_11_to_12();
         UpdateDataBase_12_to_13();
         UpdateDataBase_13_to_14();
         UpdateDataBase_14_to_15();
+        UpdateDataBase_15_to_151();
     }else if( res == "1.2"){
         UpdateDataBase_12_to_13();
         UpdateDataBase_13_to_14();
         UpdateDataBase_14_to_15();
+        UpdateDataBase_15_to_151();
     }else if( res == "1.3" ){
         UpdateDataBase_13_to_14();
         UpdateDataBase_14_to_15();
+        UpdateDataBase_15_to_151();
     }else if (res == "1.4"){
         UpdateDataBase_14_to_15();
+        UpdateDataBase_15_to_151();
+    }else if (res == "1.5"){
+        UpdateDataBase_15_to_151();
     }
 
 
@@ -778,6 +786,91 @@ void BD::UpdateDataBase_14_to_15()
         LogOut.logout(query.lastError().text());
     }
 }
+//--------------------------------------------------------------------------------------------------------
+void BD::UpdateDataBase_15_to_151() //Структура не меняется, идёт смена внешнего ключа
+{
+    QString str;
+    QSqlQuery query;
+    //--------------------------------
+    str = "PRAGMA foreign_keys = off";
+    if (query.exec(str)) {
+        qDebug()<<"PRAGMA foreign_keys";
+        LogOut.logout("PRAGMA foreign_keys");
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+    //----------------переименовать таблицу
+
+    str = "ALTER TABLE men_in_apartament RENAME TO men_in_apartament_temp;";
+    if (query.exec(str)) {
+        qDebug()<<"rename";
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+    //--------------создание таблицы
+    str = "CREATE TABLE men_in_apartament ("
+            "id_apartament INTEGER NOT NULL,"
+            "real_men INTEGER DEFAULT '0', "
+            "rent_men INTEGER DEFAULT '0', "
+            "reserv_men INTEGER DEFAULT '0', "
+            "month INTEGER DEFAULT '0', "
+            "year INTEGER DEFAULT '1900', "
+            "UNIQUE (id_apartament,month,year), "
+            "FOREIGN KEY(id_apartament) REFERENCES apartament(id_apartament) ON DELETE RESTRICT"
+            ");";
+    if (!query.exec(str)) {
+        qDebug() << "Unable to create a table men_in_apartament" << query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+
+    //-----перенос количества проживающих в новую таблицу
+    str = "REPLACE INTO men_in_apartament(id_apartament, real_men, rent_men, reserv_men, month, year) "
+            "SELECT id_apartament, real_men, rent_men, reserv_men, month, year "
+            "FROM men_in_apartament_temp";
+    if (query.exec(str)) {
+        qDebug()<<"copy men_in_apartament";
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+    //--------------------------------
+    str = "DROP TABLE IF EXISTS men_in_apartament_temp";
+    if (query.exec(str)) {
+        qDebug()<<"delete";
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+    //--------------------------------
+    str = "PRAGMA foreign_keys = on";
+    if (query.exec(str)) {
+        qDebug()<<"PRAGMA foreign_keys";
+        LogOut.logout("PRAGMA foreign_keys");
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+    //---------------------------------------------------------
+    str = "UPDATE version SET version = '1.5.1' WHERE version = '1.5'";
+    if (query.exec(str)) {
+        qDebug()<<"Update Full";
+        LogOut.logout("Update Full");
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+    //-----------сжатие
+    str = "vacuum";
+    if (query.exec(str)) {
+        qDebug()<<"vacuum";
+        LogOut.logout("Vacuum");
+    }else{
+        qDebug()<<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+}
 
 //--------------------------------------------------------------------------------------------------------
 int BD::add(QString table, QString column, QString value)
@@ -787,6 +880,7 @@ int BD::add(QString table, QString column, QString value)
     V_sl<<value;
     return add(table,C_sl,V_sl);
 }
+
 
 //--------------------------------------------------------------------------------------------------------
 int BD::add(QString table,QStringList column,QStringList value)
@@ -880,13 +974,14 @@ void BD::UpdateMenInApartament(QStringList column, QStringList value, int idapar
     if (!t.isNull()){
         out = t.toInt();
     }
-    if (out==1){
+    qDebug() << out;
+    if (out == 1){
         for(int i=0; i<column.count();i++ ){
             UpdateTable("men_in_apartament",column[i],value[i],"id_apartament", QString::number(idapart));
         }
-    }else if(out==0){
+    }else if(out == 0){
         column << "id_apartament" << "year" << "month";
-        value << QString::number(idapart) << QString::number(year) <<QString::number(month);
+        value << QString::number(idapart) << QString::number(year) << QString::number(month);
         add("men_in_apartament",column,value);
     }
 }
@@ -1510,7 +1605,7 @@ QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
-    str = "SELECT u.name FROM list_app_usluga lau, usluga u "
+    str = "SELECT lau.id_list_app_usluga, u.name FROM list_app_usluga lau, usluga u "
             " WHERE lau.id_apartament = "+QString::number(id_apartament)+" AND u.id_usluga=lau.id_usluga";
     model->setQuery(QSqlQuery(str));
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Услуги"));
@@ -1598,6 +1693,22 @@ QSqlError BD::DeletePension(int id_apart)
 
     str = "DELETE FROM pensioner_living_alone WHERE id_apartament=%1";
     str = str.arg(id_apart);
+    if (!query.exec(str)){
+        out = query.lastError();
+    }
+    return out;
+}
+
+//--------------------------------------------------------------------------------------------------------
+
+QSqlError BD::DeleteUslugaApartament(int id_list_apart_usluga)
+{
+    QString str;
+    QSqlQuery query;
+    QSqlError out;
+
+    str = "DELETE FROM list_app_usluga WHERE id_list_app_usluga=%1";
+    str = str.arg(id_list_apart_usluga);
     if (!query.exec(str)){
         out = query.lastError();
     }

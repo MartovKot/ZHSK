@@ -640,6 +640,7 @@ void AdminWindow::UslView()
     model = db.ModelUslugiTabl(ApartamentID);
 
     ui->tblV_on_Uslugi->setModel(model);
+    ui->tblV_on_Uslugi->hideColumn(0);
 
     ui->tblV_on_Uslugi->horizontalHeader()->setStretchLastSection(false);
     ui->tblV_on_Uslugi->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -831,6 +832,10 @@ void AdminWindow::sl_DeleteUsluga()
                                trUtf8("Действительно хотете удалить?"),
                                QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
         return;
+    }else{
+//        qDebug()<<ui->tblV_on_Uslugi->model()->index(ui->tblV_on_Uslugi->currentIndex().row(),0).data();
+        db.DeleteUslugaApartament(ui->tblV_on_Uslugi->model()->index(ui->tblV_on_Uslugi->currentIndex().row(),0).data().toInt());
+        UslView();
     }
 }
 

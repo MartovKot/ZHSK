@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QMessageBox>
+#include <QProgressBar>
 
 #include "bd.h"
 

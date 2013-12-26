@@ -1,6 +1,8 @@
 #include <QtGui/QApplication>
-#include <QtSql>
+//#include <QtSql>
 #include <QMessageBox>
+#include <QSplashScreen>
+#include <QTextCodec>
 #include "mainwindow.h"
 #include "bd.h"
 #include "logreport.h"
@@ -25,6 +27,10 @@ static bool createConnection() //подключение к БД
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QPixmap pixmap(":/images/main.png");
+    QSplashScreen splash(pixmap);
+    splash.show();
+
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
     LogReport out;
@@ -50,6 +56,7 @@ int main(int argc, char *argv[])
     if (query.exec(str)){
         out.logout(QObject::trUtf8("Успешно"));
     }
+
     query.finish();
     out.logout(QObject::trUtf8("Проверка обновлений ..."));
     bd.UpdateDataBase();
@@ -57,6 +64,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
     w.show();
+    splash.finish(&w);
 
     return a.exec();
 }

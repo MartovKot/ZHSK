@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QDebug>
+#include <QProgressBar>
 
 #include "adminwindow.h"
 #include "operwindow.h"

@@ -1,10 +1,28 @@
 #ifndef CREATEBD_H
 #define CREATEBD_H
 
-#include <QtSql>
-#include <QtGui>
+//#include <QtGui>
 #include <QDebug>
 #include <QMessageBox>
+#include <QSqlQuery>
+#include <QDate>
+
+#include "qsqlquerymodel.h"
+#include "qsqlrelationaldelegate.h"
+#include "qsqlrelationaltablemodel.h"
+#include "qsqltablemodel.h"
+#include "qsql.h"
+#include "qsqldatabase.h"
+#include "qsqldriver.h"
+#include "qsqldriverplugin.h"
+#include "qsqlerror.h"
+#include "qsqlfield.h"
+#include "qsqlindex.h"
+#include "qsqlquery.h"
+#include "qsqlrecord.h"
+#include "qsqlresult.h"
+
+
 #include "sqlqueryeditmodel.h"
 #include "logreport.h"
 
@@ -106,6 +124,7 @@ public:
     QString DeleteOrg(int id_org);
     QString DeleteHome(int id_home);
     QSqlError DeletePension(int id_apart);
+    QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
 
     void UpdateDataBase();
     void new_pokazanie(int id_apartament, int month, int year);
@@ -135,6 +154,7 @@ private:
     void UpdateDataBase_12_to_13();
     void UpdateDataBase_13_to_14();
     void UpdateDataBase_14_to_15();
+    void UpdateDataBase_15_to_151();
     bool isElectroUsluga(int id_usluga);
     bool is_pensioner_living_alone(int id_apartament);
 private slots:

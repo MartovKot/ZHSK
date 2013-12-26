@@ -1,5 +1,3 @@
-#include <QtSql>
-
 #include "sqlqueryeditmodel.h"
 
 SqlQueryEditModel::SqlQueryEditModel(QObject *parent)

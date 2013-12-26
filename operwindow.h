@@ -2,9 +2,13 @@
 #define OPERWINDOW_H
 
 #include <QDialog>
-#include <QtSql>
+//#include <QtSql>
+#include <QSqlRecord>
 #include <QSqlQueryModel>
-
+#include <QBitmap>
+#include <QKeyEvent>
+#include <QCalendarWidget>
+#include <QHBoxLayout>
 
 #include"bd.h"
 #include "tableviewpokazanie.h"

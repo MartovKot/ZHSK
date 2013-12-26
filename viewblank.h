@@ -8,6 +8,10 @@
 #include <QWebView>
 #include <QWebFrame>
 #include <QStringList>
+#include <QToolButton>
+#include <QBitmap>
+#include <QPrinter>
+#include <QPrintDialog>
 #include "parser_blank.h"
 
 class ViewBlank : public QDialog
