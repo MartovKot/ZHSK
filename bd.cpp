@@ -148,7 +148,7 @@ int BD::add(QString table, QString column, QString value)
 //--------------------------------------------------------------------------------------------------------
 int BD::add(QString table,QStringList column,QStringList value)
 {
-    qDebug()<<"Add Line in "<< table;
+//    qDebug()<<"Add Line in "<< table;
     QString strF;
     QSqlQuery query;
     int i;
@@ -170,10 +170,8 @@ int BD::add(QString table,QStringList column,QStringList value)
 
     strF = strF + ");";
 
-    qDebug()<< strF;
-
     if (!query.exec(strF)){
-        qDebug() << "Unable to do " << strF <<query.lastError();
+        qDebug() << "3c1f9d13f59a784144a975dd9f5f1fc4" << query.lastError() << strF;
         LogOut.logout(query.lastError().text());
         return -1;
     }else{
@@ -904,11 +902,12 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
             "AND u.type_usluga=1 "
             "AND lau.id_apartament="+QString::number(id_apartament)+" "
             "AND p.id_list_app_usluga=lau.id_list_app_usluga "
-            "AND t.month_t=p.date_month "
-            "AND p.date_month="+QString::number(month)+" "
-            "AND p.date_year=t.year_t "
-            "AND p.date_year="+QString::number(year)+" ";
+            "AND t.tariff_date=p.date_pokazanie "
+            "AND p.date_pokazanie="+QString::number(IsDateOfUnix(year,month,1));
     model->setQuery(QSqlQuery(str));
+    if(model->lastError().number() != -1){
+        qDebug()<<"e825d464c306efe892a28669bdcefb13"<<model->lastError();
+    }
 
     if(model->rowCount()==0){//  если строки не найдены, скорее всего нет тарифов - сделаем без них
         QWidget *wgt = new QWidget;
@@ -1911,4 +1910,18 @@ int BD::is_IdPokazanie(int id_list_app_usluga, int month, int year)
 void BD::UpdateHome(int id_home, QString home)
 {
     UpdateTable("homes","name",home,"id_homes",QString::number(id_home));
+}
+
+
+qint64 BD::IsDateOfUnix(int year, int month, int day)
+{
+    qint64 timeInUnix;
+    const qint64 MS_COEF = 1000;
+    QDate date;
+    date.setDate(year, month, day);
+    QDateTime datetime;
+    datetime.setTimeSpec(Qt::OffsetFromUTC);
+    datetime.setDate(date);
+    timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
+    return timeInUnix;
 }

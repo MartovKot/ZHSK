@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include <qtextcodec.h>
 
+
 AdminWindow::AdminWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AdminWindow)
@@ -182,11 +183,10 @@ void AdminWindow::AddUsluga_of_Apartament()
     {
         column.clear();
         value.clear();
-        column << "id_list_app_usluga" << "date_month"
-               << "date_year" << "pokazanie_home" << "pokazanie_end";
+        column << "id_list_app_usluga" << "date_pokazanie" << "pokazanie_home" << "pokazanie_end";
         value << QString::number(db.is_idListAppUsluga(ApartamentID,UslugaID))
-              << QString::number(QDate::currentDate().month())
-              << QString::number(QDate::currentDate().year()) << "0" <<"0";
+              << QString::number(IsDateOfUnix(QDate::currentDate().year(),QDate::currentDate().month(),1))
+              << "0" <<"0";
         db.add("pokazanie",column,value);
     }
 
