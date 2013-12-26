@@ -106,15 +106,12 @@ void BD::UpdateDataBase()
             }
         }
     }
-<<<<<<< HEAD
-=======
 
     for (int i=0;i<list_update.count();i++){
         if (!RunScript(list_update.at(i))){
             qDebug() << "Error run " << list_update.at(i);
         }
     }
->>>>>>> db 05.12 work
 
 }
 //-------------------------------------------------------------------------------------------------------

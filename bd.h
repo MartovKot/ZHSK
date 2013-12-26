@@ -1,7 +1,7 @@
 #ifndef CREATEBD_H
 #define CREATEBD_H
 
-//#include <QtGui>
+#include <QDir>
 #include <QDebug>
 #include <QMessageBox>
 #include <QSqlQuery>

@@ -2,7 +2,7 @@
 #define MY_FUNCTION_H
 #include <QObject>
 
-const qint64 IsDateOfUnix(int year, int month, int day)
+qint64 IsDateOfUnix(int year, int month, int day)
 {
     qint64 timeInUnix;
     const qint64 MS_COEF = 1000;

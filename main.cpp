@@ -51,9 +51,9 @@ static bool createConnection() //подключение к БД
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QPixmap pixmap(":/images/main.png");
-    QSplashScreen splash(pixmap);
-    splash.show();
+//    QPixmap pixmap(":/images/main.png");
+//    QSplashScreen splash(pixmap);
+//    splash.show();
 
 
     QPixmap pixmap(":/ico/splash.png");
