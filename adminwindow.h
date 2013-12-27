@@ -11,7 +11,6 @@
 #include "bd.h"
 #include "table_tariff.h"
 
-
 namespace Ui {
     class AdminWindow;
 }
