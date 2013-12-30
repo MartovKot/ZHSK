@@ -891,8 +891,8 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
-    str = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end, t.tarif, t.tarif2, t.norm "
-            "FROM list_app_usluga lau, usluga u, tarif t, pokazanie p "
+    str = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end, t.tariff, t.tariff2, t.norm "
+            "FROM list_app_usluga lau, usluga u, tariff t, pokazanie p "
             "WHERE "
             "lau.id_usluga=u.id_usluga "
             "AND t.id_usluga=u.id_usluga "
@@ -907,10 +907,6 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
     }
 
     if(model->rowCount()==0){//  если строки не найдены, скорее всего нет тарифов - сделаем без них
-        QWidget *wgt = new QWidget;
-//        QMessageBox::information(wgt,trUtf8("Предупреждение"),
-//                             trUtf8("Возможно не установленны тарифы. \n "),QMessageBox::Ok);
-        delete wgt;
         QString str2 = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end "
             "FROM list_app_usluga lau, usluga u, pokazanie p "
             "WHERE "
@@ -918,8 +914,7 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
             "AND u.type_usluga=1 "
             "AND lau.id_apartament="+QString::number(id_apartament)+" "
             "AND p.id_list_app_usluga=lau.id_list_app_usluga "
-            "AND p.date_month="+QString::number(month)+" "
-            "AND p.date_year="+QString::number(year)+" ";
+            "AND p.date_pokazanie="+QString::number(IsDateOfUnix(year,month,1));
         model->setQuery(QSqlQuery(str2));
     }
 
@@ -928,7 +923,7 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
         QSqlQuery query2;
         QStringList column, values;
 
-        column << "id_list_app_usluga" << "date_month" << "date_year"
+        column << "id_list_app_usluga" << "date_pokazanie"
                << "pokazanie_home"     << "pokazanie_end";
 
         str2 = "SELECT id_list_app_usluga FROM list_app_usluga WHERE id_apartament=%1"; //все Услуги квартиры
@@ -937,7 +932,7 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
         if (query2.exec(str2)){
             while (query2.next()){ // переберём все строчки
                 values.clear();
-                values << query2.value(0).toString() << QString::number(month) << QString::number(year)
+                values << query2.value(0).toString() << QString::number(IsDateOfUnix(year,month,1))
                        << QString::number(0)         << QString::number(0);
                 add("pokazanie",column,values);
             }
@@ -965,7 +960,7 @@ SqlQueryEditModel* BD::ModelEditPokazanie(int id_apartament, int month, int year
 
     QString str;
     str = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end, t.tarif "
-            " FROM list_app_usluga lau, usluga u, tarif t, pokazanie p "
+            " FROM list_app_usluga lau, usluga u, tariff t, pokazanie p "
             " WHERE "
             " lau.id_usluga = u.id_usluga "
             " AND t.id_usluga = u.id_usluga "
@@ -973,11 +968,8 @@ SqlQueryEditModel* BD::ModelEditPokazanie(int id_apartament, int month, int year
             " AND NOT u.id_usluga = 3"
             " AND lau.id_apartament="+QString::number(id_apartament)+" "
             " AND p.id_list_app_usluga=lau.id_list_app_usluga "
-            " AND t.month_t=p.date_month "
-            " AND p.date_month="+QString::number(month)+" "
-            " AND p.date_year=t.year_t "
-            " AND p.date_year="+QString::number(year)+" ";
-
+            " AND t.tariff_date=p.date_pokazanie "
+            " AND p.date_pokazanie="+QString::number(IsDateOfUnix(year,month,1));
     model->setMyQuery(str);
     return model;
 }
@@ -1063,11 +1055,9 @@ void BD::new_pokazanie(int id_apartament, int month, int year)
             " FROM pokazanie p, list_app_usluga lau "
             " WHERE lau.id_apartament = %1 "
                 " AND lau.id_list_app_usluga = p.id_list_app_usluga "
-                " AND p.date_year = %3 "
-                " AND p.date_month = %2";
+                " AND p.date_pokazanie = %2 ";
     str = str.arg(id_apartament)
-                .arg(next_month(month))
-                .arg(next_year(month,year));
+                .arg(QString::number(IsDateOfUnix(next_year(month,year),next_month(month),1)));
 
     if (query.exec(str)) {
         while (query.next()) {
@@ -1083,20 +1073,19 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
 {
 //    qDebug()<<"new int";
     int id_new = -1;
-    int month_old = -1, year_old = -1, month, year, id_ListApart=-1;
+    int date_old = -1, date, id_ListApart=-1;
     QString str;
     QStringList column, value;
     QSqlQuery query;
 
 
     //  найдём дату текущих показаний
-    str = "SELECT date_month, date_year,id_list_app_usluga FROM pokazanie WHERE id_pokazanie=%1";
+    str = "SELECT date_pokazanie, id_list_app_usluga FROM pokazanie WHERE id_pokazanie=%1";
     str = str.arg(id_pok_old);
 
     if (query.exec(str)){
         if (query.next()){
-            month_old =  query.value(0).toInt();
-            year_old = query.value(1).toInt();
+            date_old =  query.value(0).toInt();
             id_ListApart = query.value(2).toInt();
         }else{
             qDebug()<<"not record" << str;
@@ -1106,27 +1095,23 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
             LogOut.logout(query.lastError().text());
     }
     //проверим на коректность
-    month = next_month(month_old);
-    year = next_year(month_old,year_old);
-    if(month == -1 ||year  == -1){
-        return -1;
-    }
+//    month = next_month(month_old);
+//    year = next_year(month_old,year_old);
+    date = date_old; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Проверим на существование показаний на след месяц
     str = "SELECT id_pokazanie FROM pokazanie "
-            "WHERE date_month = %1 AND date_year=%2 AND id_list_app_usluga=%3";
-    str = str.arg(QString::number(month))
-            .arg(QString::number(year))
+            "WHERE date_pokazanie=%1 AND id_list_app_usluga=%2";
+    str = str.arg(date_old)
             .arg(QString::number(id_ListApart));
     QVariant t = SelectFromTable(str);
     if(t.toInt() == -1){//если нет записей
         //добавим новое показание на след месяц
 //        qDebug("new");
         column.clear();
-        column<<"id_list_app_usluga"<<"date_month"<<"date_year"<<"pokazanie_home"<<"pokazanie_end";
+        column<<"id_list_app_usluga"<<"date_pokazanie"<<"pokazanie_home"<<"pokazanie_end";
         value.append(QString::number(id_ListApart));
-        value.append(QString::number(month));
-        value.append(QString::number(year));
+        value.append(QString::number(date));
         value.append(value_home);
         value.append(QString::number(0));
         if ((id_new = add("pokazanie",column,value)) != 0){
