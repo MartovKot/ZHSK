@@ -1153,7 +1153,7 @@ int BD::next_year(int m, int y)
 int BD::previous_month(int m)
 {
     int out = -1;
-    if(m > 0 && m <= 12){
+    if(m > 1 && m <= 12){
         out = m - 1;
     }else if(m==1){
         out = 12;
