@@ -759,7 +759,7 @@ void AdminWindow::Refresh()
 void AdminWindow::FillTarif()
 {
 
-    db.FillTarif(ui->lEd_Tarif_month->text().toInt(),ui->lEd_Tarif_year->text().toInt());
+    db.FillTarif(ui->lEd_Tarif_month->text().toInt(), ui->lEd_Tarif_year->text().toInt());
     QMessageBox::information(this,trUtf8("Уведомление"),
                              trUtf8("Загрузка завершена"),QMessageBox::Ok);
     TarifRequest();
