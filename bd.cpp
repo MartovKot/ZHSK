@@ -465,18 +465,17 @@ int BD::is_LSh(int id_app)
     return out;
 }
 
-int BD::is_RealMen(int id_app, int year, int month)
+int BD::is_RealMen(int id_app, QDate date)
 {
     int out;
     QString str;
     QSqlQuery query;
 
     str = "SELECT real_men FROM men_in_apartament "
-            " WHERE id_apartament=%1 AND ((year = %2 AND month <= %3) OR (year < %2))"
+            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
             " ORDER BY year DESC, month DESC";
     str = str.arg(id_app)
-            .arg(year)
-            .arg(month);
+            .arg(IsDateOfUnix(date));
 
     if (query.exec(str)){
       if (query.next()){
@@ -494,7 +493,7 @@ int BD::is_RealMen(int id_app, int year, int month)
     return out;
 }
 
-int BD::is_RentMen(int id_app, int year, int month)
+int BD::is_RentMen(int id_app, QDate date)
 {
 
     int out;
@@ -502,11 +501,10 @@ int BD::is_RentMen(int id_app, int year, int month)
     QSqlQuery query;
 
     str = "SELECT rent_men FROM men_in_apartament "
-            " WHERE id_apartament=%1  AND ((year = %2 AND month <= %3) OR (year < %2)) "
+            " WHERE id_apartament=%1  AND date_men_in_apartament <= %1 "
             " ORDER BY year DESC, month DESC";
     str = str.arg(id_app)
-            .arg(year)
-            .arg(month);
+            .arg(IsDateOfUnix(date));
 
     if (query.exec(str)){
       if (query.next()){
@@ -520,21 +518,19 @@ int BD::is_RentMen(int id_app, int year, int month)
         LogOut.logout(query.lastError().text());
         out = -1;
     }
-//    qDebug()<<"test45"<<out;
     return out;
 }
-int BD::is_ReservMen(int id_app, int year, int month)
+int BD::is_ReservMen(int id_app, QDate date)
 {
     int out;
     QString str;
     QSqlQuery query;
-//    qDebug()<<"test5";
+
     str = "SELECT reserv_men FROM men_in_apartament "
-            " WHERE id_apartament=%1 AND ((year = %2 AND month <= %3) OR (year < %2))"
+            " WHERE id_apartament=%1 AND date_men_in_apartament <= %1"
             " ORDER BY year DESC, month DESC";
     str = str.arg(id_app)
-            .arg(year)
-            .arg(month);
+            .arg(IsDateOfUnix(date));
 
     if (query.exec(str)){
       if (query.next()){
@@ -959,7 +955,7 @@ SqlQueryEditModel* BD::ModelEditPokazanie(int id_apartament, int month, int year
     connect(model,SIGNAL(sgn_EditPokazanie(int,QString)),this,SLOT(sl_EditPokazanie(int,QString)));
 
     QString str;
-    str = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end, t.tarif "
+    str = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end, t.tariff "
             " FROM list_app_usluga lau, usluga u, tariff t, pokazanie p "
             " WHERE "
             " lau.id_usluga = u.id_usluga "
@@ -1194,7 +1190,7 @@ void BD::DataProcessing(int id_org, int id_home, int month, int year)
 //    str = "SELECT id_credited, "
 }
 
-void BD::CreditedOfService(int month, int year, int id_apartament)  //расчёт для квартиры
+void BD::CreditedOfService(int id_apartament, QDate date)  //расчёт для квартиры
 {
     QList<int> ListService;
     QString str;
@@ -1204,15 +1200,14 @@ void BD::CreditedOfService(int month, int year, int id_apartament)  //расчё
         int id_list_ap_usl = 0;
         id_list_ap_usl = is_idListAppUsluga(id_apartament, ListService[i]);
 
-        str = "SELECT id_credited FROM credited WHERE id_list_app_usluga=%1 AND month=%2 AND year=%3";
+        str = "SELECT id_credited FROM credited WHERE id_list_app_usluga=%1 AND date_credited=%2 ";
         str = str.arg(id_list_ap_usl)
-                .arg(month)
-                .arg(year);
+                .arg(IsDateOfUnix(date));
 
         // перебирается все услуги всех квартир
         // начисление по услугам
         if (query.exec(str)){
-            double cred = CreditedOfApartament(month,year,id_list_ap_usl);
+            double cred = CreditedOfApartament(id_list_ap_usl, date);
             if (query.next()){
                 QVariant credR = SelectFromTable("SELECT credited_of_service FROM credited "
                                 "WHERE id_credited = "+query.value(0).toString());
@@ -1224,10 +1219,10 @@ void BD::CreditedOfService(int month, int year, int id_apartament)  //расчё
                 }
             }else{
                 QStringList column,value;
-                column<<"id_list_app_usluga"<<"month"<<"year"<<"credited_of_service";
+                column<<"id_list_app_usluga"<<"date_credited"<<"credited_of_service";
                 value<<QString::number(id_list_ap_usl)<<
-                    QString::number(month)<< QString::number(year)<<
-                    QString::number(CreditedOfApartament(month,year,id_list_ap_usl));
+                    QString::number(IsDateOfUnix(date))<<
+                    QString::number(CreditedOfApartament(id_list_ap_usl,date));
                 add("credited",column,value);
             }
         } else{
@@ -1236,18 +1231,19 @@ void BD::CreditedOfService(int month, int year, int id_apartament)  //расчё
         }
 
     }
-    CreditedForApartament(id_apartament,month,year);  //расчёт общей оплаты и задолжности
+    CreditedForApartament(id_apartament,date);  //расчёт общей оплаты и задолжности
 }
 
-int BD::is_Pokazanie(int id_list_app_usluga, int month, int year)
+int BD::is_Pokazanie(int id_list_app_usluga, QDate date)
 {
     QString str;
     int out = -1;
+    QDate next_date;
+    next_date = date.addMonths(1);
 
-    str = "SELECT pokazanie_home FROM pokazanie WHERE id_list_app_usluga=%1 AND date_month=%2 AND date_year=%3";
+    str = "SELECT pokazanie_home FROM pokazanie WHERE id_list_app_usluga=%1 AND date_pokazanie=%2 ";
     str = str.arg(id_list_app_usluga)
-            .arg(next_month(month))
-            .arg(next_year(month,year));
+            .arg(IsDateOfUnix(next_date));
     QVariant t = SelectFromTable(str);
     if(!t.isNull()){
         out = t.toInt();   
@@ -1266,7 +1262,7 @@ int BD::is_Pokazanie(int id_list_app_usluga, int month, int year)
     return out;
 }
 
-double BD::CreditedOfApartament(int month, int year, int id_list_app_usluga) // начисление услуга-квартрира-дата
+double BD::CreditedOfApartament(int id_list_app_usluga, QDate date) // начисление услуга-квартрира-дата
 {
     QString str;
     QSqlQuery query;
@@ -1283,7 +1279,7 @@ double BD::CreditedOfApartament(int month, int year, int id_list_app_usluga) // 
           type_usluga = query.value(0).toInt();
           id_usluga = query.value(1).toInt();
           table_tariff tbl_tariff;
-          tarif = tbl_tariff.is_Tariff(month,year,id_usluga);// Получаем тариф
+          tarif = tbl_tariff.is_Tariff(id_usluga,date);// Получаем тариф
       }else{
           qDebug()<<"not record" << str;
           return -1;
@@ -1295,7 +1291,7 @@ double BD::CreditedOfApartament(int month, int year, int id_list_app_usluga) // 
     }
 
     if(type_usluga == 1){ //счётчики
-        out = PaymentCounters(id_list_app_usluga,month,year);
+        out = PaymentCounters(id_list_app_usluga, date);
     }
     if(type_usluga == 2){ //на кв метр
         QString str2;
@@ -1341,16 +1337,15 @@ double BD::CreditedOfApartament(int month, int year, int id_list_app_usluga) // 
     return out;
 }
 
-double BD::CreditedForReport(int month, int year, int id_apartament, int id_usluga)
+double BD::CreditedForReport(int id_apartament, int id_usluga, QDate date)
 {
     QString str;
     double out = -1;
 
     str = "SELECT credited_of_service FROM credited c, list_app_usluga lau "
-            "WHERE month=%1 AND year=%2 AND lau.id_list_app_usluga=c.id_list_app_usluga "
-            "AND lau.id_apartament=%3 AND lau.id_usluga=%4 ";
-    str = str.arg(month)
-            .arg(year)
+            "WHERE date_credited=%1 AND lau.id_list_app_usluga=c.id_list_app_usluga "
+            "AND lau.id_apartament=%2 AND lau.id_usluga=%3 ";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apartament)
             .arg(id_usluga);
     QVariant t = SelectFromTable(str);
@@ -1360,7 +1355,7 @@ double BD::CreditedForReport(int month, int year, int id_apartament, int id_uslu
     return out;
 }
 
-void BD::CreditedForApartament(int id_apart, int month, int year)
+void BD::CreditedForApartament(int id_apart, QDate date)
 {
     QString str;
     QSqlQuery query;
@@ -1368,13 +1363,12 @@ void BD::CreditedForApartament(int id_apart, int month, int year)
 
     // К оплате по услугам
     str = "SELECT SUM(credited_of_service) FROM credited c, list_app_usluga lau, usluga u "
-            "WHERE c.month=%1 AND c.year=%2 "
+            "WHERE c.date_credited=%1 "
             "AND c.id_list_app_usluga=lau.id_list_app_usluga "
             "AND lau.id_usluga=u.id_usluga "
             "AND NOT u.type_usluga='1' "
-            "AND lau.id_apartament=%3";
-    str = str.arg(month)
-            .arg(year)
+            "AND lau.id_apartament=%2 ";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
     if(!t.isNull()){
@@ -1383,22 +1377,20 @@ void BD::CreditedForApartament(int id_apart, int month, int year)
 
     // К оплате по счётчикам
     str = "SELECT SUM(credited_of_service) FROM credited c, list_app_usluga lau, usluga u "
-            "WHERE c.month=%1 AND c.year=%2 "
+            "WHERE c.date_credited=%1 "
                 "AND c.id_list_app_usluga=lau.id_list_app_usluga "
                 "AND lau.id_usluga=u.id_usluga "
                 "AND u.type_usluga=1 "
-                "AND lau.id_apartament=%3";
-    str = str.arg(month)
-            .arg(year)
+                "AND lau.id_apartament=%2";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
     t = SelectFromTable(str);
     if(!t.isNull()){
         cred_with_count = t.toDouble();
     }
     str = "SELECT id_credited_of_apartament FROM credited_of_apartament "
-            "WHERE month=%1 AND year=%2 AND id_apartament=%3";
-    str = str.arg(month)
-            .arg(year)
+            "WHERE date_credited_of_apartament=%1 AND id_apartament=%2 ";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
     if (query.exec(str)){
         if (query.next()){
@@ -1408,8 +1400,8 @@ void BD::CreditedForApartament(int id_apart, int month, int year)
                         "id_credited_of_apartament",query.value(0).toString());
         }else{
             QStringList column, value;
-            column<<"id_apartament"<<"month"<<"year"<<"credited_with_counter"<<"credited_out_counter";
-            value<<QString::number(id_apart)<<QString::number(month)<<QString::number(year)
+            column<<"id_apartament"<<"date_credited_of_apartament"<<"credited_with_counter"<<"credited_out_counter";
+            value<<QString::number(id_apart)<<QString::number(IsDateOfUnix(date))
                 <<QString::number(cred_with_count)<<QString::number(cred_out_count);
             add("credited_of_apartament",column,value);
         }
@@ -1418,42 +1410,40 @@ void BD::CreditedForApartament(int id_apart, int month, int year)
         LogOut.logout(query.lastError().text());
     }
 
-    PaymentOfDebt(id_apart,month,year);// Расчёт долга
+    PaymentOfDebt(id_apart,date);// Расчёт долга
 }
 
-double BD::AmountToPay(int id_apart, int month, int year)
+double BD::AmountToPay(int id_apart, QDate date)
 {
     QString str;
     double out = 0.0, debt = 0.0;
 
-    str="SELECT debt FROM debt WHERE  year_debt=%1 AND month_debt=%2 AND id_apartament=%3";
-    str = str.arg(year)
-            .arg(month)
+    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
     if (!t.isNull()){
         debt = t.toDouble();
     }
 
-    out = debt + AmountForServices(id_apart,month,year);
+    out = debt + AmountForServices(id_apart,date);
     return out;
 }
 
-void BD::PaymentOfDebt(int id_apart, int month, int year)
+void BD::PaymentOfDebt(int id_apart, QDate date)
 {
     QString str;
     QSqlQuery query;
     double debt = 0.0, payment = 0.0;
-
-
+    QDate  previous_date;
+    previous_date = date.addMonths(-1);
 
     // --------- К оплате в прошлом месяце
-    debt += AmountToPay(id_apart, previous_month(month),previous_year(year,month));
+    debt += AmountToPay(id_apart,date);
 
     //---------- Долг за счётчики в этом месяце
-    str="SELECT credited_with_counter FROM credited_of_apartament WHERE  year=%1 AND month=%2 AND id_apartament=%3";
-    str = str.arg(year)
-            .arg(month)
+    str="SELECT credited_with_counter FROM credited_of_apartament WHERE  date_credited_of_apartament=%1 AND id_apartament=%2";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
     if(!t.isNull()){
@@ -1473,10 +1463,10 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
             "     OR (y_payment = %1 AND m_payment = %2 AND d_payment < 25 ) "
             "   )) "
             "AND id_apartament=%5";
-    str = str.arg(year)
-            .arg(month)
-            .arg(previous_year(year,month))
-            .arg(previous_month(month))
+    str = str.arg(date.year())
+            .arg(date.month())
+            .arg(previous_year(date.year(),date.month()))
+            .arg(previous_month(date.month()))
             .arg(id_apart);
     if (query.exec(str)){
         while (query.next()){
@@ -1490,9 +1480,8 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
     debt = debt - payment;
 
     //-----обновление/добавление долга
-    str = "SELECT id_debt, debt FROM debt WHERE year_debt=%1 AND month_debt=%2 AND id_apartament=%3";
-    str = str.arg(year)
-            .arg(month)
+    str = "SELECT id_debt, debt FROM debt WHERE date_debt=%1 AND id_apartament=%2";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
     if (query.exec(str)){
         if (query.next()){
@@ -1504,8 +1493,8 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
         }else{
             qDebug()<<str<<" line not found ";
             QStringList column,value;
-            column << "year_debt" << "month_debt" << "id_apartament" << "debt";
-            value << QString::number(year) << QString::number(month)
+            column << "date_debt" << "id_apartament" << "debt";
+            value << QString::number(IsDateOfUnix(date))
                   << QString::number(id_apart) << QString::number(debt,'f',2);
             add("debt",column,value);
         }
@@ -1516,15 +1505,14 @@ void BD::PaymentOfDebt(int id_apart, int month, int year)
     }
 }
 //-------------------------------------------------------------------------------------------
-QString BD::is_Debt(int id_apart, int month, int year)
+QString BD::is_Debt(int id_apart, QDate date)
 {
     QString str;
     double debt = 0.0;
     QString out= "" ;
 
-    str="SELECT debt FROM debt WHERE  year_debt=%1 AND month_debt=%2 AND id_apartament=%3";
-    str = str.arg(year)
-            .arg(month)
+    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%3";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
 //    qDebug()<<str;
     QVariant t = SelectFromTable(str);
@@ -1542,14 +1530,13 @@ QString BD::is_Debt(int id_apart, int month, int year)
 }
 
 
-double BD::AmountForServices(int id_apart, int month, int year)
+double BD::AmountForServices(int id_apart, QDate date)
 {
     QString str;
     double out = 0;
 
-    str="SELECT credited_out_counter FROM credited_of_apartament WHERE  year=%1 AND month=%2 AND id_apartament=%3";
-    str = str.arg(year)
-            .arg(month)
+    str="SELECT credited_out_counter FROM credited_of_apartament WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
+    str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
     if(!t.isNull()){
@@ -1587,12 +1574,15 @@ bool BD::is_pensioner_living_alone(int id_apartament)
 
 }
 
-double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //расчёт оплаты за счётчик
+double BD::PaymentCounters(int id_list_app_usluga, QDate date)  //расчёт оплаты за счётчик
 {
     QString str;
     QSqlQuery query;
     int id_usluga, id_apartament;
     double tarif,tarif2,norma, out = -1;
+    QDate previous_date;
+    previous_date = date.addMonths(-1);
+
 
     //Получим ид квартиры и ид услуги
     str = "SELECT id_usluga, id_apartament FROM list_app_usluga WHERE id_list_app_usluga=%1";
@@ -1612,11 +1602,10 @@ double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //ра�
     }
 
     //получим тариф
-    str = "SELECT t.tarif, t.tarif2, t.norm FROM tarif t, list_app_usluga lau "
-            "WHERE lau.id_usluga=t.id_usluga AND lau.id_list_app_usluga=%1 AND t.year_t=%2 AND t.month_t=%3";
+    str = "SELECT t.tariff, t.tariff2, t.norm FROM tariff t, list_app_usluga lau "
+            "WHERE lau.id_usluga=t.id_usluga AND lau.id_list_app_usluga=%1 AND tariff_date=%2 ";
     str = str.arg(id_list_app_usluga)
-            .arg(previous_year(year,month))
-            .arg(previous_month(month));
+            .arg(IsDateOfUnix(previous_date));
     if (query.exec(str)){
       if (query.next()){
             tarif = query.value(0).toDouble();
@@ -1626,7 +1615,7 @@ double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //ра�
           return -1;
       }
     } else{
-        qDebug()<<"CreditedOfApartament"<<query.lastError();
+        qDebug()<<"50989f8dadb00b65e3396658407c7197"<<query.lastError();
         LogOut.logout(query.lastError().text());
         return -1;
     }
@@ -1634,18 +1623,17 @@ double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //ра�
     if(is_TypeUsluga(id_usluga)==1){
         str = "SELECT pokazanie_end, pokazanie_home FROM pokazanie "
                 "WHERE id_list_app_usluga=%1 "
-                "AND date_month=%2 AND date_year=%3";
+                "AND date_pokazanie=%2 ";
         str = str.arg(id_list_app_usluga)
-                .arg(month)
-                .arg(year);
+                .arg(IsDateOfUnix(date));
         if (query.exec(str)){
             if (query.next()){
                 int count = query.value(0).toDouble() - query.value(1).toDouble();
                 if(isElectroUsluga(id_usluga)){// Электричество
-                    if(count <= norma*is_RealMen(id_apartament,year,month)|| norma==0 || is_pensioner_living_alone(id_apartament)){
+                    if(count <= norma*is_RealMen(id_apartament,date)|| norma==0 || is_pensioner_living_alone(id_apartament)){
                         out = tarif * count;
-                    }else if (count > norma*is_RealMen(id_apartament,year,month)&& norma!=0){
-                        out = norma * is_RealMen(id_apartament,year,month) * (tarif - tarif2) + count * tarif2;
+                    }else if (count > norma*is_RealMen(id_apartament,date)&& norma!=0){
+                        out = norma * is_RealMen(id_apartament,date) * (tarif - tarif2) + count * tarif2;
                     }
                 }else{
                     out = tarif * count;
@@ -1655,13 +1643,11 @@ double BD::PaymentCounters(int id_list_app_usluga, int month, int year)  //ра�
                 return -1;
             }
         }else{
-            qDebug()<<query.lastError();
+            qDebug()<<"91748951796616cc5b01273b7a07c8f7"<<query.lastError();
             LogOut.logout(query.lastError().text());
             return -1;
         }
     }
-
-//    qDebug()<<"COUNT = "<<out;
     return out;
 }
 
@@ -1673,9 +1659,11 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
 {
     QString str;
     QSqlQuery query;
-    int month, year, id_app, value = 0, id_sumpok;
+    int id_app, value = 0, id_sumpok;
+    qint64 Unix_date;
 
-    str = " SELECT date_month, date_year, id_apartament"            //Дата и квартира
+
+    str = " SELECT date_pokazanie, id_apartament"            //Дата и квартира
           " FROM pokazanie p, list_app_usluga lau "
           " WHERE id_pokazanie = %1 "
             " AND lau.id_list_app_usluga = p.id_list_app_usluga ";
@@ -1683,9 +1671,9 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
 
     if (query.exec(str)){
         if (query.next()){
-            month = query.value(0).toInt();
-            year = query.value(1).toInt();
-            id_app = query.value(2).toInt();
+            Unix_date = query.value(0).toULongLong();
+            qDebug() << Unix_date;
+            id_app = query.value(1).toInt();
         }else{
             return;
         }
@@ -1700,19 +1688,19 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
         str = " SELECT pokazanie_home ";
     }
     str +=  " FROM pokazanie p, list_app_usluga lau "
-            " WHERE date_month = %1 "
-            " AND date_year = %2 "
-            " AND id_apartament = %3 "
+            " WHERE date_pokazanie = %1 "
+            " AND id_apartament = %2 "
             " AND lau.id_list_app_usluga = p.id_list_app_usluga "
             " AND (id_usluga=1 OR id_usluga=2)";                // Воды и ГВС
 
     if (!New){
-        str = str.arg(month)
-                .arg(year)
+        str = str.arg(Unix_date)
                 .arg(id_app);
     }else{
-        str = str.arg(next_month(month))
-                .arg(next_year(month,year))
+        QDateTime dt;
+        dt.fromMSecsSinceEpoch(qint64(Unix_date));
+        dt = dt.addMonths(1);
+        str = str.arg(IsDateOfUnix(dt.date()))
                 .arg(id_app);
     }
 
@@ -1734,17 +1722,17 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
     }
     str +=  " FROM pokazanie p, list_app_usluga lau "
             " WHERE lau.id_list_app_usluga = p.id_list_app_usluga "
-            " AND date_month = %1 "
-            " AND date_year = %2 "
-            " AND id_apartament = %3"
+            " AND date_pokazanie = %1 "
+            " AND id_apartament = %2"
             " AND id_usluga = 3";                           //ид счётчика канализации
     if (!New){
-        str = str.arg(month)
-                .arg(year)
+        str = str.arg(Unix_date)
                 .arg(id_app);
     } else {
-        str = str.arg(next_month(month))
-                .arg(next_year(month,year))
+        QDateTime dt;
+        dt.fromMSecsSinceEpoch(qint64(Unix_date));
+        dt = dt.addMonths(1);
+        str = str.arg(IsDateOfUnix(dt.date()))
                 .arg(id_app);
     }
 
@@ -1901,6 +1889,17 @@ qint64 BD::IsDateOfUnix(int year, int month, int day)
     const qint64 MS_COEF = 1000;
     QDate date;
     date.setDate(year, month, day);
+    QDateTime datetime;
+    datetime.setTimeSpec(Qt::OffsetFromUTC);
+    datetime.setDate(date);
+    timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
+    return timeInUnix;
+}
+
+qint64 BD::IsDateOfUnix(QDate date)
+{
+    qint64 timeInUnix;
+    const qint64 MS_COEF = 1000;
     QDateTime datetime;
     datetime.setTimeSpec(Qt::OffsetFromUTC);
     datetime.setDate(date);

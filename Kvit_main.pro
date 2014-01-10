@@ -27,7 +27,7 @@ HEADERS += adminwindow.h \
     table_payment.h \
     table_tariff.h \
     my_function.h \
-    table_pokazanie.h
+    counter.h
 
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui
@@ -46,7 +46,7 @@ SOURCES += adminwindow.cpp \
     viewblank.cpp \
     table_payment.cpp \
     table_tariff.cpp \
-    table_pokazanie.cpp
+    counter.cpp
 
 RESOURCES += \
     qrc.qrc

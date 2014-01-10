@@ -26,16 +26,17 @@ public:
 
 private:
     struct ConfigData {
-        int Org_id, Home_id, month, year;
+        int Org_id, Home_id;
+        QDate date;
     } ConfData;
 
     QString str_folder;  //каталог для создания отчётов
     QString str_folder_arhiv;
     BD db;
     table_tariff tbl_tariff;
-    void creat_blank(QString name,int id_app,int year,int month);
-    QString process_usluga(QString str_in_usl, int id_app,int year,int month);
-    QString process_schet(QString str_in_sch, int id_app,int year,int month);
+    void creat_blank(QString name,int id_app,QDate date);
+    QString process_usluga(QString str_in_usl, int id_app, QDate date);
+    QString process_schet(QString str_in_sch, int id_app, QDate date);
     QString process_main(QString str_in, int id_app);
 signals:
 //    void sgn_FolderAlreadyPresent();

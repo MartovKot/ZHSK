@@ -11,10 +11,13 @@ table_tariff::~table_tariff()
     delete db;
 }
 
-double table_tariff::is_Tariff(int month, int year, int usluga, int tariff/*=1*/)
+double table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
 {
     QString str, strF;
     double out = -1;
+    QDate t_date;
+
+    t_date.setDate(date.year(),date.month(),1);
 
     switch (tariff) {
     case 1:
@@ -27,7 +30,7 @@ double table_tariff::is_Tariff(int month, int year, int usluga, int tariff/*=1*/
         break;
     }
     str += "FROM tariff WHERE id_usluga=%2  AND tariff_date=%1 ";
-    strF = str.arg(IsDateOfUnix(year,month,1))
+    strF = str.arg(IsDateOfUnix(t_date))
             .arg(usluga);
     QVariant t = db->SelectFromTable(strF);
     if (!t.isNull()){

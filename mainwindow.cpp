@@ -132,9 +132,7 @@ void MainWindow::Print_mod()
     PB->show();
     //------------------------------------------------------------------------------------------
     for(int i = 0;i<list_id_apartament.size();i++){
-        db.CreditedOfService(QDate::currentDate().month(),
-                             QDate::currentDate().year(),
-                             list_id_apartament.at(i));// Формирование данных по i той квартире
+        db.CreditedOfService(list_id_apartament.at(i),QDate::currentDate());// Формирование данных по i той квартире
         PB->setValue(i);
     }
     //-------------------------------------------------------------------------------------------

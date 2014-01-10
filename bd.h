@@ -58,12 +58,12 @@ public:
 
     int is_LSh(int id_app);                                     //возвращает лицевой счёт квартиры
 
-    int is_RealMen(int id_app, int year, int month);                                 //возвращает количество проживающих.
-    int is_RentMen(int id_app, int year, int month);                                 //возвращает количество снимающих
-    int is_ReservMen(int id_app, int year, int month);                               //возвращает количество на брони
+    int is_RealMen(int id_app, QDate date);                                 //возвращает количество проживающих.
+    int is_RentMen(int id_app, QDate date);                                 //возвращает количество снимающих
+    int is_ReservMen(int id_app, QDate date);                               //возвращает количество на брони
 
 
-    int is_Pokazanie(int id_list_app_usluga, int month, int year); //для бланка
+    int is_Pokazanie(int id_list_app_usluga, QDate date); //для бланка
     int is_IdPokazanie(int id_list_app_usluga, int month, int year);
 
     double is_TotalArea(int id_app);
@@ -94,8 +94,8 @@ public:
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);
     void UpdateHome(int id_home, QString home);
 
-    void CreditedOfService(int month,int year, int id_apartament);                      // начисление по квартире
-    double CreditedForReport(int month,int year, int id_apartament, int id_usluga);
+    void CreditedOfService (int id_apartament, QDate date);                      // начисление по квартире
+    double CreditedForReport(int id_apartament, int id_usluga,  QDate date);
 
 
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
@@ -111,9 +111,10 @@ public:
 
     int NewApatament(int id_org, int id_home, int num_apart);                           //новая квартира
 
-    double AmountToPay(int id_apart, int month, int year);                              //сумма к оплате
-    QString is_Debt(int id_apart, int month, int year);
-    double AmountForServices(int id_apart, int month, int year);
+    //double AmountToPay(int id_apart, int month, int year);                              //сумма к оплате
+    double AmountToPay(int id_apart, QDate date);
+    QString is_Debt(int id_apart, QDate date);
+    double AmountForServices(int id_apart, QDate date);
 
 
     QString DeleteOrg(int id_org);
@@ -131,6 +132,7 @@ public:
 
 private:
     qint64 IsDateOfUnix(int year, int month, int day);
+    qint64 IsDateOfUnix(QDate date);
     QSqlDatabase db;
     LogReport LogOut;
     bool RunScript(QString filename);
@@ -143,10 +145,10 @@ private:
 
 
 
-    double CreditedOfApartament(int month,int year, int id_list_app_usluga);
-    void CreditedForApartament(int id_apart, int month, int year);
-    void PaymentOfDebt(int id_apart, int month, int year);                              //расчёт долга
-    double PaymentCounters(int id_list_app_usluga, int month, int year);
+    double CreditedOfApartament(int id_list_app_usluga, QDate date);
+    void CreditedForApartament(int id_apart, QDate date);
+    void PaymentOfDebt(int id_apart, QDate date);                              //расчёт долга
+    double PaymentCounters(int id_list_app_usluga, QDate date);
 
     void SumCount(int id_pokazanie, bool New = false);                                                    //Расчёт показаний канализации
     void DataProcessing(int id_org, int id_home, int month, int year);                  //начало оптимизированного расчёта

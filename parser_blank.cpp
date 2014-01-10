@@ -5,7 +5,7 @@ parser_blank::parser_blank(QWidget *parent):
 {
 
 }
-void parser_blank::creat_blank(QString name,int id_app,int year,int month)
+void parser_blank::creat_blank(QString name,int id_app, QDate date)
 {
     QFile f_m,f_s,f_u;
     f_m.setFileName("./blank/blank_main.html");
@@ -35,14 +35,14 @@ void parser_blank::creat_blank(QString name,int id_app,int year,int month)
     // обработка счётчиков
     find_pos = str_m.indexOf("@tab_sch#");
     while (find_pos>=0){
-        str_m.replace(find_pos,9,process_schet(str_s, id_app, year, month));
+        str_m.replace(find_pos,9,process_schet(str_s, id_app, date));
         find_pos = str_m.indexOf("@tab_sch#");
     }
 
     // обработка услуг
     find_pos = str_m.indexOf("@tab_usl#");
     while (find_pos>=0){
-        str_m.replace(find_pos,9,process_usluga(str_u, id_app, year, month));
+        str_m.replace(find_pos,9,process_usluga(str_u, id_app, date));
         find_pos = str_m.indexOf("@tab_usl#");
     }
 
@@ -64,7 +64,7 @@ void parser_blank::creat_blank(QString name,int id_app,int year,int month)
     /*qDebug()<<*/f_out.copy(str_folder_arhiv + "/" + name); //копируем файл в архив
 }
 
-QString parser_blank::process_usluga(QString str_in_usl, int id_app, int year,int month)
+QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)
 {
     QString str_out;
     QStringList strlst_find;
@@ -86,12 +86,12 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, int year,in
         find_pos = str_out.indexOf(strlst_find.at(1));
         if(find_pos>=0){
             str_out.replace(find_pos,strlst_find.at(1).size(),
-                            QString::number(tbl_tariff.is_Tariff(month,year,ServiceList.at(i))));
+                            QString::number(tbl_tariff.is_Tariff(ServiceList.at(i),date)));
         }
         find_pos = str_out.indexOf(strlst_find.at(2));
         if(find_pos>=0){
             str_out.replace(find_pos,strlst_find.at(2).size(),
-                            QString::number(db.CreditedForReport(month,year,id_app,ServiceList.at(i))));
+                            QString::number(db.CreditedForReport(id_app,ServiceList.at(i),date)));
         }
         find_pos = str_out.indexOf(strlst_find.at(3));
         if(find_pos>=0){
@@ -100,12 +100,12 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, int year,in
         find_pos = str_out.indexOf(strlst_find.at(4));
         if(find_pos>=0){
             str_out.replace(find_pos,strlst_find.at(4).size(),
-                            QString::number(db.CreditedForReport(month,year,id_app,ServiceList.at(i))));
+                            QString::number(db.CreditedForReport(id_app,ServiceList.at(i),date)));
         }
     }
     return str_out;
 }
-QString parser_blank::process_schet(QString str_in_sch, int id_app, int year,int month)
+QString parser_blank::process_schet(QString str_in_sch, int id_app, QDate date)
 {
     QString str_out="";
     QStringList strlst_find;
@@ -125,16 +125,16 @@ QString parser_blank::process_schet(QString str_in_sch, int id_app, int year,int
         if(find_pos>=0){ //Показание
             str_out.replace(find_pos,strlst_find.at(1).size(),
                             QString::number(db.is_Pokazanie(
-                                                db.is_idListAppUsluga(id_app,CounterList.at(i)),month,year)));
+                                                db.is_idListAppUsluga(id_app,CounterList.at(i)),date)));
         }
         find_pos = str_out.indexOf(strlst_find.at(2));
         if(find_pos>=0){ //тариф
             str_out.replace(find_pos,strlst_find.at(2).size(),
-                            QString::number(tbl_tariff.is_Tariff(month,year,CounterList.at(i))));
+                            QString::number(tbl_tariff.is_Tariff(CounterList.at(i),date)));
         }
         find_pos = str_out.indexOf(strlst_find.at(3));
         if(find_pos>=0){ //тариф2
-            double t2 = tbl_tariff.is_Tariff(month,year,CounterList.at(i),2);
+            double t2 = tbl_tariff.is_Tariff(CounterList.at(i),date,2);
             if (t2!=0.0 ){
                 str_out.replace(find_pos,strlst_find.at(3).size(), " / "+QString::number(t2));
             }else{
@@ -197,7 +197,7 @@ void parser_blank::generating()
         str_NameFile_pach = QObject::trUtf8(" кв ") + str_L.at(i);
         creat_blank(str_NameFile_base+str_NameFile_pach+".html",
                     db.is_idappart(ConfData.Home_id,ConfData.Org_id,str_L.at(i).toInt()),
-                    ConfData.year,ConfData.month);
+                    ConfData.date);
         PB->setValue(i);
     }
     delete PB;
@@ -242,8 +242,9 @@ QString parser_blank::isnextfile()
 
 void parser_blank::setDate( int year,int month, int id_home, int id_org)
 {
-    ConfData.month = month;
-    ConfData.year = year;
+//    ConfData.month = month;
+//    ConfData.year = year;
+    ConfData.date = QDate(year,month,1);
     //-----------
     ConfData.Home_id = id_home;
     ConfData.Org_id = id_org;
@@ -270,20 +271,20 @@ QString parser_blank::process_main(QString str_in, int id_app)
               << "@prKOpl#"
               << "@ItogKOpl#";
     strL_replace << QString(db.is_nameOrg(ConfData.Org_id))     << db.is_FIO(id_app)
-                 << QString::number(db.is_LSh(id_app))          << QString::number(db.is_RealMen(id_app,ConfData.year,ConfData.month))
-                 << QString::number(db.is_RentMen(id_app,ConfData.year,ConfData.month))
-                 << QString::number(db.is_ReservMen(id_app,ConfData.year,ConfData.month))
+                 << QString::number(db.is_LSh(id_app))          << QString::number(db.is_RealMen(id_app,ConfData.date))
+                 << QString::number(db.is_RentMen(id_app,ConfData.date))
+                 << QString::number(db.is_ReservMen(id_app,ConfData.date))
                  << QString::number(db.is_TotalArea(id_app))    << QString::number(db.is_LivedArea(id_app))
                  << QString::number(db.is_Balkon(id_app))       << QString::number(db.is_Lodjia(id_app))
                  << db.is_nameHome(ConfData.Home_id)
                     + QObject::trUtf8(" кв. ")
                     + QString::number(db.is_NumberAppartament(id_app))
-                 << QString::number(ConfData.month)+" / "+QString::number(ConfData.year)
-                 << /*QDate::shortMonthName(ConfData.month)*/ QDate::longMonthName(ConfData.month)+"  "+QString::number(ConfData.year)+QObject::trUtf8(" г.")
-                 << QString::number(db.AmountToPay(id_app,ConfData.month,ConfData.year))
-                 << db.is_Debt(id_app,ConfData.month,ConfData.year)
-                 << QString::number(db.AmountForServices(id_app,ConfData.month,ConfData.year))
-                 << QString::number(db.AmountForServices(id_app,ConfData.month,ConfData.year));
+                 << QString::number(ConfData.date.month())+" / "+QString::number(ConfData.date.year())
+                 << QDate::longMonthName(ConfData.date.month())+"  "+QString::number(ConfData.date.year())+QObject::trUtf8(" г.")
+                 << QString::number(db.AmountToPay(id_app,ConfData.date))
+                 << db.is_Debt(id_app,ConfData.date)
+                 << QString::number(db.AmountForServices(id_app,ConfData.date))
+                 << QString::number(db.AmountForServices(id_app,ConfData.date));
 
     str_out = str_in;
     for (int i=0;i<strL_find.size();i++){

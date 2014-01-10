@@ -225,11 +225,11 @@ void AdminWindow::Refresh_Appartament(int id_apartament)
         ui->lEd_lodggia->setText(
                     model->index(0,model->query().record().indexOf("loggia")).data().toString());
         ui->lEd_RealMen->setText(
-                    QString::number(db.is_RealMen(id_apartament,QDate::currentDate().year(),QDate::currentDate().month())));
+                    QString::number(db.is_RealMen(id_apartament,QDate::currentDate())));
         ui->lEd_RentMen->setText(
-                    QString::number(db.is_RentMen(id_apartament,QDate::currentDate().year(),QDate::currentDate().month())));
+                    QString::number(db.is_RentMen(id_apartament,QDate::currentDate())));
         ui->lEd_ReservMen->setText(
-                    QString::number(db.is_ReservMen(id_apartament,QDate::currentDate().year(),QDate::currentDate().month())));
+                    QString::number(db.is_ReservMen(id_apartament,QDate::currentDate())));
         ui->lEd_Surname->setText(
                     model->index(0,model->query().record().indexOf("surname")).data().toString());
         ui->lEd_Name->setText(
