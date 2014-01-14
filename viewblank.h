@@ -5,7 +5,7 @@
 #include <QIcon>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QWebView>
+#include <QWebKitPlatformPlugin>
 #include <QWebFrame>
 #include <QStringList>
 #include <QToolButton>
