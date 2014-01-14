@@ -7,6 +7,7 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QSqlError>
+#include <QHeaderView>
 
 #include"bd.h"
 

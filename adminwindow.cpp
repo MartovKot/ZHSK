@@ -643,7 +643,7 @@ void AdminWindow::UslView()
     ui->tblV_on_Uslugi->hideColumn(0);
 
     ui->tblV_on_Uslugi->horizontalHeader()->setStretchLastSection(false);
-    ui->tblV_on_Uslugi->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    ui->tblV_on_Uslugi->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     Mode("usl_add");
 }
 
@@ -653,10 +653,10 @@ void AdminWindow::Refresh_Organization()
     ui->tView_Organization->setModel(db.ModelOrganiz());
 
     ui->tView_Organization->horizontalHeader()->setStretchLastSection(false);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(1,QHeaderView::Interactive);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(2,QHeaderView::ResizeToContents);
+    ui->tView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+    ui->tView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Interactive);
+    ui->tView_Organization->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
 
 }
 
@@ -665,8 +665,8 @@ void AdminWindow::Refresh_Home()
     delete ui->tblView_Home->model();
     ui->tblView_Home->setModel(db.ModelHome());
     ui->tblView_Home->horizontalHeader()->setStretchLastSection(false);
-    ui->tblView_Home->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblView_Home->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
+    ui->tblView_Home->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tblView_Home->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
 //    ui->tblView_Home->horizontalHeader()->setResizeMode(0,QHeaderView::Interactive);
 }
 
@@ -689,8 +689,8 @@ void AdminWindow::Refresh_Pensioner()
                                                  ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
     ui->tblV_on_Pens->hideColumn(0);
     ui->tblV_on_Pens->horizontalHeader()->setStretchLastSection(false);
-    ui->tblV_on_Pens->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblV_on_Pens->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
+    ui->tblV_on_Pens->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tblV_on_Pens->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
 }
 
 void AdminWindow::Refresh_cmbNumApp_onUslugi()

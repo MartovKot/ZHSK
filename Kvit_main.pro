@@ -7,7 +7,12 @@ QT       += webkit\
 
 TEMPLATE = app
 TARGET = kvit
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4){
+    QT += widgets\
+            printsupport\
+            webkitwidgets
+
+}
 
 
 # Input

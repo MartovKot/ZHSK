@@ -47,8 +47,8 @@ void OperWindow::Refresh_tblVBay(int ApartamenID)
 {
     ui->tblV_Bay->setModel(db.ModelBay(ApartamenID));
     ui->tblV_Bay->horizontalHeader()->setStretchLastSection(false);
-    ui->tblV_Bay->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblV_Bay->horizontalHeader()->setResizeMode( 3, QHeaderView::Interactive);
+    ui->tblV_Bay->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tblV_Bay->horizontalHeader()->setSectionResizeMode( 3, QHeaderView::Interactive);
 }
 
 void OperWindow::sl_addBay()
@@ -98,8 +98,8 @@ void OperWindow::Refresh_tblVCount()
                      ui->dEd_Count->date().year());
     ui->tblV_Count->hideColumn(0);
     ui->tblV_Count->horizontalHeader()->setStretchLastSection(false);
-    ui->tblV_Count->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblV_Count->horizontalHeader()->setResizeMode(1,QHeaderView::ResizeToContents);
+    ui->tblV_Count->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tblV_Count->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
 }
 //-----------------------------------------------------------------------------------------------------------
 
@@ -160,9 +160,9 @@ void OperWindow::sl_EditPokazanie()
     connect(dlg,SIGNAL(finished(int)),SLOT(sl_RefreshLabel()));
 
     tbl->horizontalHeader()->setStretchLastSection(false);
-    tbl->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    tbl->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
-    tbl->horizontalHeader()->setResizeMode(3, QHeaderView::Interactive);
+    tbl->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tbl->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+    tbl->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive);
 
     lay_1->addWidget(tbl);
     main_lay->addLayout(lay_1);
