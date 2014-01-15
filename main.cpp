@@ -1,18 +1,19 @@
 #include <QApplication>
-//#include <QtSql>
 #include <QMessageBox>
 #include <QSplashScreen>
 #include <QTextCodec>
 #include "mainwindow.h"
 #include "bd.h"
 #include "logreport.h"
+
+#include <QtNetwork>
+
 static bool createConnection() //подключение к БД
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("kvitdb.qsl");
     LogReport out;
     out.setFileName("out.log");
-
 
     if (!db.isOpen())
     if (!db.open()) {
@@ -30,7 +31,6 @@ int main(int argc, char *argv[])
     QPixmap pixmap(":/images/main.png");
     QSplashScreen splash(pixmap);
     splash.show();
-
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
     LogReport out;

@@ -11,6 +11,10 @@
 #include "apartament.h"
 #include "viewblank.h"
 
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QImageReader>
 
 namespace Ui {
     class MainWindow;
@@ -36,6 +40,11 @@ private:
     BD db;
     QString CurentDirArhiv;
 
+    QNetworkReply* m_reply;
+    QNetworkAccessManager* m_manager;
+
+    QNetworkRequest m_request;
+    QUrl m_url;
 
 private slots:
     void Admin_mod();
@@ -48,6 +57,8 @@ private slots:
 
 
     void on_pBtnPrint_clicked();
+
+    void finishedSlot (QNetworkReply*);
 };
 
 #endif // MAINWINDOW_H

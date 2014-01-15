@@ -3,7 +3,8 @@
 ######################################################################
 QT       += webkit\
             core gui\
-            sql
+            sql\
+            network
 
 TEMPLATE = app
 TARGET = kvit
