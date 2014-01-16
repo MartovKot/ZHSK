@@ -16,6 +16,8 @@
 #include <QNetworkReply>
 #include <QImageReader>
 
+#include "httpwindow.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -33,6 +35,7 @@ private:
     Ui::MainWindow *ui;
     OperWindow *OperWin;
     AdminWindow *AdmWin;
+    HttpWindow *HttpWin;
 
     ViewBlank *VwBlank;
     void Install_param();

@@ -67,8 +67,8 @@ void MainWindow::finishedSlot(QNetworkReply*)
        QVariant statusCodeV = m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
        qDebug() << statusCodeV;
        // Or the target URL if it was a redirect:
-       QVariant redirectionTargetUrl = m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-       qDebug() << redirectionTargetUrl;
+//       QVariant redirectionTargetUrl = m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+//       qDebug() << redirectionTargetUrl;
        // see CS001432 on how to handle this
 
        // no error received?
@@ -82,11 +82,27 @@ void MainWindow::finishedSlot(QNetworkReply*)
 
            // Example 2: Reading bytes form the reply
            QByteArray bytes = m_reply->readAll();  // bytes
-//           QString string(bytes); // string
-//           qDebug()<<string <<bytes;
+           QString string(bytes); // string
+
            QJsonDocument m_jdoc;
-           m_jdoc = m_jdoc.fromBinaryData(bytes,QJsonDocument::BypassValidation);
-           qDebug()<<bytes.size()<<m_jdoc.isNull();
+           m_jdoc = QJsonDocument::fromJson(string.toUtf8());
+           qint64 last_time = 0;
+           QString path;
+           QStringList path_list;
+           for (int i = 0;i < m_jdoc.array().size();i++){
+               if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time){
+                    last_time = QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch();
+                    path = m_jdoc.array().takeAt(i).toObject().value("html_url").toString() + "/download/";
+                    for (int j = 0; j < m_jdoc.array().takeAt(i).toObject().value("assets").toArray().size(); j++){
+                        path_list << path + m_jdoc.array().takeAt(i).toObject().value("assets").toArray().takeAt(i).toObject().value("name").toString();
+                    }
+               }
+           }
+           qDebug() << path_list;
+            HttpWin = new HttpWindow;
+            HttpWin->show();
+            HttpWin->setUrl(path_list.at(0));
+//            HttpWin->startRequest(path_list.at(0));
        }
        // Some http error received
        else
