@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 #include "bd.h"
 #include "logreport.h"
+#include "updater.h"
 
 #include <QtNetwork>
 
@@ -29,6 +30,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QPixmap pixmap(":/images/main.png");
+    Updater upd;
+    upd.RunUpdate();
+
     QSplashScreen splash(pixmap);
     splash.show();
 

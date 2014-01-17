@@ -7,14 +7,8 @@
 HttpWindow::HttpWindow(QWidget *parent)
     : QDialog(parent)
 {
-#ifndef QT_NO_SSL
-    urlLineEdit = new QLineEdit("https://qt-project.org/");
-#else
-    urlLineEdit = new QLineEdit("http://qt-project.org/");
-#endif
-
     urlLabel = new QLabel(tr("&URL:"));
-    urlLabel->setBuddy(urlLineEdit);
+//    urlLabel->setBuddy(urlLineEdit);
     statusLabel = new QLabel(tr("Please enter the URL of a file you want to "
                                 "download."));
     statusLabel->setWordWrap(true);
@@ -30,8 +24,8 @@ HttpWindow::HttpWindow(QWidget *parent)
 
     progressDialog = new QProgressDialog(this);
 
-    connect(urlLineEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(enableDownloadButton()));
+//    connect(urlLineEdit, SIGNAL(textChanged(QString)),
+//            this, SLOT(enableDownloadButton()));
 
     connect(&qnam, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
             this, SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
@@ -45,7 +39,7 @@ HttpWindow::HttpWindow(QWidget *parent)
 
     QHBoxLayout *topLayout = new QHBoxLayout;
     topLayout->addWidget(urlLabel);
-    topLayout->addWidget(urlLineEdit);
+//    topLayout->addWidget(urlLineEdit);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addLayout(topLayout);
@@ -54,7 +48,7 @@ HttpWindow::HttpWindow(QWidget *parent)
     setLayout(mainLayout);
 
     setWindowTitle(tr("HTTP"));
-    urlLineEdit->setFocus();
+//    urlLineEdit->setFocus();
 }
 
 void HttpWindow::startRequest(QUrl url)
@@ -70,8 +64,6 @@ void HttpWindow::startRequest(QUrl url)
 
 void HttpWindow::downloadFile()
 {
-    url = urlLineEdit->text();
-
     QFileInfo fileInfo(url.path());
     QString fileName = fileInfo.fileName();
     if (fileName.isEmpty())
@@ -153,7 +145,7 @@ void HttpWindow::httpFinished()
             return;
         }
     } else {
-        QString fileName = QFileInfo(QUrl(urlLineEdit->text()).path()).fileName();
+        QString fileName = QFileInfo(url.path()).fileName();
         statusLabel->setText(tr("Downloaded %1 to %2.").arg(fileName).arg(QDir::currentPath()));
         downloadButton->setEnabled(true);
     }
@@ -185,7 +177,7 @@ void HttpWindow::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
 
 void HttpWindow::enableDownloadButton()
 {
-    downloadButton->setEnabled(!urlLineEdit->text().isEmpty());
+//    downloadButton->setEnabled(!urlLineEdit->text().isEmpty());
 }
 
 void HttpWindow::slotAuthenticationRequired(QNetworkReply*,QAuthenticator *authenticator)
@@ -207,10 +199,10 @@ void HttpWindow::slotAuthenticationRequired(QNetworkReply*,QAuthenticator *authe
     }
 }
 
-void HttpWindow::setUrl(QString url)
+void HttpWindow::setUrl(QString url_str)
 {
-    urlLineEdit->setText(url);
-    downloadButton->click();
+    url = QUrl(url_str);
+    downloadFile();
 }
 
 #ifndef QT_NO_SSL

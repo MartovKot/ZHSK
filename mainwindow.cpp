@@ -36,19 +36,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     m_url = "https://api.github.com/repos/MartovKot/ZHSK/releases";
-//    m_url = "http://bash.im/quote/426323";
-//    m_url = "file:///E:/test";
-
 
     QNetworkProxy proxy;
-     proxy.setType(QNetworkProxy::HttpProxy);
-     proxy.setHostName("10.62.0.9");
-     proxy.setPort(3128);
-     //proxy.setUser("username");
-     //proxy.setPassword("password");
-     QNetworkProxy::setApplicationProxy(proxy);
-
-
+    proxy.setType(QNetworkProxy::HttpProxy);
+    proxy.setHostName("10.62.0.9");
+    proxy.setPort(3128);
+    QNetworkProxy::setApplicationProxy(proxy);
 
     m_request.setUrl(m_url);
     m_manager = new QNetworkAccessManager(this);
@@ -72,37 +65,31 @@ void MainWindow::finishedSlot(QNetworkReply*)
        // see CS001432 on how to handle this
 
        // no error received?
-       if (m_reply->error() == QNetworkReply::NoError)
-       {
-           // read data from QNetworkReply here
+        if (m_reply->error() == QNetworkReply::NoError)
+        {
+            QByteArray bytes = m_reply->readAll();  // bytes
+            QString string(bytes); // string
 
-           // Example 1: Creating QImage from the reply
-//           QImageReader imageReader(m_reply);
-//           QImage pic = imageReader.read();
-
-           // Example 2: Reading bytes form the reply
-           QByteArray bytes = m_reply->readAll();  // bytes
-           QString string(bytes); // string
-
-           QJsonDocument m_jdoc;
-           m_jdoc = QJsonDocument::fromJson(string.toUtf8());
-           qint64 last_time = 0;
-           QString path;
-           QStringList path_list;
-           for (int i = 0;i < m_jdoc.array().size();i++){
-               if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time){
+            QJsonDocument m_jdoc;
+            m_jdoc = QJsonDocument::fromJson(string.toUtf8());
+            qint64 last_time = 0;
+            QString path = "";
+            QStringList path_list;
+            for (int i = 0;i < m_jdoc.array().size();i++){
+                if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time){
                     last_time = QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch();
-                    path = m_jdoc.array().takeAt(i).toObject().value("html_url").toString() + "/download/";
+                    path += "https://github.com/MartovKot/ZHSK/releases";
+                    path += "/download/";
+                    path += m_jdoc.array().takeAt(i).toObject().value("tag_name").toString();
+                    path += "/";
                     for (int j = 0; j < m_jdoc.array().takeAt(i).toObject().value("assets").toArray().size(); j++){
                         path_list << path + m_jdoc.array().takeAt(i).toObject().value("assets").toArray().takeAt(i).toObject().value("name").toString();
                     }
-               }
-           }
-           qDebug() << path_list;
+                }
+            }
             HttpWin = new HttpWindow;
             HttpWin->show();
             HttpWin->setUrl(path_list.at(0));
-//            HttpWin->startRequest(path_list.at(0));
        }
        // Some http error received
        else
@@ -111,8 +98,6 @@ void MainWindow::finishedSlot(QNetworkReply*)
            // handle errors here
        }
 
-       // We receive ownership of the reply object
-       // and therefore need to handle deletion.
        delete m_reply;
 }
 

@@ -82,9 +82,10 @@ private slots:
 #endif
 
 private:
+//    QString urlString;
     QLabel *statusLabel;
     QLabel *urlLabel;
-    QLineEdit *urlLineEdit;
+//    QLineEdit *urlLineEdit;
     QProgressDialog *progressDialog;
     QPushButton *downloadButton;
     QPushButton *quitButton;
