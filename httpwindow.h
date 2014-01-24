@@ -83,7 +83,7 @@ private slots:
 
 private:
 //    QString urlString;
-    QLabel *statusLabel;
+//    QLabel *statusLabel;
     QLabel *urlLabel;
 //    QLineEdit *urlLineEdit;
     QProgressDialog *progressDialog;

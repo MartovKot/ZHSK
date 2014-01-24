@@ -9,9 +9,9 @@ HttpWindow::HttpWindow(QWidget *parent)
 {
     urlLabel = new QLabel(tr("&URL:"));
 //    urlLabel->setBuddy(urlLineEdit);
-    statusLabel = new QLabel(tr("Please enter the URL of a file you want to "
-                                "download."));
-    statusLabel->setWordWrap(true);
+//    statusLabel = new QLabel(tr("Please enter the URL of a file you want to "
+//                                "download."));
+//    statusLabel->setWordWrap(true);
 
     downloadButton = new QPushButton(tr("Download"));
     downloadButton->setDefault(true);
@@ -43,7 +43,7 @@ HttpWindow::HttpWindow(QWidget *parent)
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addLayout(topLayout);
-    mainLayout->addWidget(statusLabel);
+//    mainLayout->addWidget(statusLabel);
     mainLayout->addWidget(buttonBox);
     setLayout(mainLayout);
 
@@ -70,19 +70,19 @@ void HttpWindow::downloadFile()
         fileName = "index.html";
 
     if (QFile::exists(fileName)) {
-        if (QMessageBox::question(this, tr("HTTP"),
-                                  tr("There already exists a file called %1 in "
-                                     "the current directory. Overwrite?").arg(fileName),
-                                  QMessageBox::Yes|QMessageBox::No, QMessageBox::No)
-            == QMessageBox::No)
-            return;
+//        if (QMessageBox::question(this, tr("HTTP"),
+//                                  tr("There already exists a file called %1 in "
+//                                     "the current directory. Overwrite?").arg(fileName),
+//                                  QMessageBox::Yes|QMessageBox::No, QMessageBox::No)
+//            == QMessageBox::No)
+//            return;
         QFile::remove(fileName);
     }
 
     file = new QFile(fileName);
     if (!file->open(QIODevice::WriteOnly)) {
         QMessageBox::information(this, tr("HTTP"),
-                                 tr("Unable to save the file %1: %2.")
+                                 trUtf8("Невозможно сохранить файл %1: %2.")
                                  .arg(fileName).arg(file->errorString()));
         delete file;
         file = 0;
@@ -100,7 +100,7 @@ void HttpWindow::downloadFile()
 
 void HttpWindow::cancelDownload()
 {
-    statusLabel->setText(tr("Download canceled."));
+//    statusLabel->setText(tr("Download canceled."));
     httpRequestAborted = true;
     reply->abort();
     downloadButton->setEnabled(true);
@@ -134,19 +134,19 @@ void HttpWindow::httpFinished()
         downloadButton->setEnabled(true);
     } else if (!redirectionTarget.isNull()) {
         QUrl newUrl = url.resolved(redirectionTarget.toUrl());
-        if (QMessageBox::question(this, tr("HTTP"),
-                                  tr("Redirect to %1 ?").arg(newUrl.toString()),
-                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+//        if (QMessageBox::question(this, tr("HTTP"),
+//                                  tr("Redirect to %1 ?").arg(newUrl.toString()),
+//                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
             url = newUrl;
             reply->deleteLater();
             file->open(QIODevice::WriteOnly);
             file->resize(0);
             startRequest(url);
             return;
-        }
+//        }
     } else {
         QString fileName = QFileInfo(url.path()).fileName();
-        statusLabel->setText(tr("Downloaded %1 to %2.").arg(fileName).arg(QDir::currentPath()));
+//        statusLabel->setText(tr("Downloaded %1 to %2.").arg(fileName).arg(QDir::currentPath()));
         downloadButton->setEnabled(true);
     }
 
@@ -215,10 +215,10 @@ void HttpWindow::sslErrors(QNetworkReply*,const QList<QSslError> &errors)
         errorString += error.errorString();
     }
 
-    if (QMessageBox::warning(this, tr("HTTP"),
-                             tr("One or more SSL errors has occurred: %1").arg(errorString),
-                             QMessageBox::Ignore | QMessageBox::Abort) == QMessageBox::Ignore) {
+//    if (QMessageBox::warning(this, tr("HTTP"),
+//                             tr("One or more SSL errors has occurred: %1").arg(errorString),
+//                             QMessageBox::Ignore | QMessageBox::Abort) == QMessageBox::Ignore) {
         reply->ignoreSslErrors();
-    }
+//    }
 }
 #endif

@@ -1,10 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QNetworkProxy>
-#include <QJsonDocument>
-#include <QJsonArray>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -32,75 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }else{
         qDebug() << "Style can't be loaded.";
     }
-
-
-
-    m_url = "https://api.github.com/repos/MartovKot/ZHSK/releases";
-
-    QNetworkProxy proxy;
-    proxy.setType(QNetworkProxy::HttpProxy);
-    proxy.setHostName("10.62.0.9");
-    proxy.setPort(3128);
-    QNetworkProxy::setApplicationProxy(proxy);
-
-    m_request.setUrl(m_url);
-    m_manager = new QNetworkAccessManager(this);
-    m_manager->setProxy(proxy);
-    m_reply = m_manager->get(m_request);
-
-    QObject::connect(m_manager, SIGNAL(finished(QNetworkReply*)),
-             this, SLOT(finishedSlot(QNetworkReply*)));
-
 }
-
-void MainWindow::finishedSlot(QNetworkReply*)
-{
-    // Reading attributes of the reply
-       // e.g. the HTTP status code
-       QVariant statusCodeV = m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-       qDebug() << statusCodeV;
-       // Or the target URL if it was a redirect:
-//       QVariant redirectionTargetUrl = m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-//       qDebug() << redirectionTargetUrl;
-       // see CS001432 on how to handle this
-
-       // no error received?
-        if (m_reply->error() == QNetworkReply::NoError)
-        {
-            QByteArray bytes = m_reply->readAll();  // bytes
-            QString string(bytes); // string
-
-            QJsonDocument m_jdoc;
-            m_jdoc = QJsonDocument::fromJson(string.toUtf8());
-            qint64 last_time = 0;
-            QString path = "";
-            QStringList path_list;
-            for (int i = 0;i < m_jdoc.array().size();i++){
-                if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time){
-                    last_time = QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch();
-                    path += "https://github.com/MartovKot/ZHSK/releases";
-                    path += "/download/";
-                    path += m_jdoc.array().takeAt(i).toObject().value("tag_name").toString();
-                    path += "/";
-                    for (int j = 0; j < m_jdoc.array().takeAt(i).toObject().value("assets").toArray().size(); j++){
-                        path_list << path + m_jdoc.array().takeAt(i).toObject().value("assets").toArray().takeAt(i).toObject().value("name").toString();
-                    }
-                }
-            }
-            HttpWin = new HttpWindow;
-            HttpWin->show();
-            HttpWin->setUrl(path_list.at(0));
-       }
-       // Some http error received
-       else
-       {
-           qDebug()<< m_reply->errorString();
-           // handle errors here
-       }
-
-       delete m_reply;
-}
-
 
 MainWindow::~MainWindow()
 {

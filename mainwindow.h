@@ -5,17 +5,12 @@
 #include <QFile>
 #include <QDebug>
 #include <QProgressBar>
+#include <QImageReader>
 
 #include "adminwindow.h"
 #include "operwindow.h"
 #include "apartament.h"
 #include "viewblank.h"
-
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QImageReader>
-
 #include "httpwindow.h"
 
 namespace Ui {
@@ -43,12 +38,6 @@ private:
     BD db;
     QString CurentDirArhiv;
 
-    QNetworkReply* m_reply;
-    QNetworkAccessManager* m_manager;
-
-    QNetworkRequest m_request;
-    QUrl m_url;
-
 private slots:
     void Admin_mod();
     void Oper_mod();
@@ -58,10 +47,7 @@ private slots:
     void sl_setCurDirArh(QString CurDir);
     void sl_OpenArhiv();
 
-
     void on_pBtnPrint_clicked();
-
-    void finishedSlot (QNetworkReply*);
 };
 
 #endif // MAINWINDOW_H
