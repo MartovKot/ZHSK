@@ -1,39 +1,45 @@
 #include "updater.h"
-#include <QTimer>
+//#include "httpwindow.h"
 
 Updater::Updater(QWidget *parent) :
     QWidget(parent)
+{
+    //настройки прокси вынести отдельно
+//    QNetworkProxy proxy;
+    proxy.setType(QNetworkProxy::HttpProxy);
+    proxy.setHostName("10.62.0.9");
+    proxy.setPort(3128);
+    QNetworkProxy::setApplicationProxy(proxy);
+    //
+//    m_manager_download = new QNetworkAccessManager(this);
+    m_manager_download.setProxy(proxy);
+#ifndef QT_NO_SSL
+    connect(&m_manager_download, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)),
+            this, SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
+#endif
+
+
+}
+Updater::~Updater()
 {
 
 }
 
 void Updater::RunUpdate()
 {
-    QNetworkRequest m_request;
-    QNetworkAccessManager* m_manager;
-
     QString m_url = "https://api.github.com/repos/MartovKot/ZHSK/releases";
 
-    //настройки прокси вынести отдельно
-    QNetworkProxy proxy;
-    proxy.setType(QNetworkProxy::HttpProxy);
-    proxy.setHostName("10.62.0.9");
-    proxy.setPort(3128);
-    QNetworkProxy::setApplicationProxy(proxy);
-    //
+    progressDialog = new QProgressDialog(this);
+    m_manager_json = new QNetworkAccessManager(this);
 
-    m_manager = new QNetworkAccessManager(this);
-    m_manager->setProxy(proxy);
+    m_manager_json->setProxy(proxy);
+    m_reply = m_manager_json->get(QNetworkRequest(m_url));
 
-    m_request.setUrl(m_url);
-    m_reply = m_manager->get(m_request);
-
-    QObject::connect(m_manager, SIGNAL(finished(QNetworkReply*)),
-             this, SLOT(finishedSlot(QNetworkReply*)));  //После запроса получаем json ответ который разбираем
-
+    QObject::connect(m_manager_json, SIGNAL(finished(QNetworkReply*)),
+             this, SLOT(finished_json(QNetworkReply*)));  //После запроса получаем json ответ который разбираем
 }
 
-void Updater::finishedSlot(QNetworkReply*)
+void Updater::finished_json(QNetworkReply*)
 {
 //    QVariant statusCodeV = m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if (m_reply->error() == QNetworkReply::NoError)
@@ -62,6 +68,7 @@ void Updater::finishedSlot(QNetworkReply*)
         for (int i=0;i<path_list.size();i++){
             downloadFile(QUrl(path_list.at(i)));
         }
+//        HttpWindow *HttpWin;
 //        HttpWin = new HttpWindow;
 //        HttpWin->show();
 //        HttpWin->setUrl(path_list.at(0));
@@ -74,6 +81,7 @@ void Updater::finishedSlot(QNetworkReply*)
     }
 
     delete m_reply;
+    delete m_manager_json;
 }
 
 void Updater::downloadFile(QUrl url)
@@ -92,6 +100,7 @@ void Updater::downloadFile(QUrl url)
 //            == QMessageBox::No)
 //            return;
         QFile::remove(fileName);
+        qDebug()<<"delete old file: " << fileName;
     }
 
     file = new QFile(fileName);
@@ -106,7 +115,6 @@ void Updater::downloadFile(QUrl url)
 
     progressDialog->setWindowTitle(tr("HTTP"));
     progressDialog->setLabelText(tr("Downloading %1.").arg(fileName));
-//    downloadButton->setEnabled(false);
 
     // schedule the request
     httpRequestAborted = false;
@@ -115,18 +123,24 @@ void Updater::downloadFile(QUrl url)
 
 void Updater::startRequest(QUrl url)
 {
+    progressDialog->open();
 
-    reply = qnam.get(QNetworkRequest(url));
-    connect(reply, SIGNAL(finished()),
+//    qDebug() << "Start Request: " << url;
+
+    qDebug() << "Start Request";
+    reply_download = m_manager_download.get(QNetworkRequest(url));
+
+    connect(reply_download, SIGNAL(finished()),
             this, SLOT(httpFinished()));
-    connect(reply, SIGNAL(readyRead()),
+    connect(reply_download, SIGNAL(readyRead()),
             this, SLOT(httpReadyRead()));
-    connect(reply, SIGNAL(downloadProgress(qint64,qint64)),
+    connect(reply_download, SIGNAL(downloadProgress(qint64,qint64)),
             this, SLOT(updateDataReadProgress(qint64,qint64)));
 }
 
 void Updater::httpFinished()
 {
+    qDebug()<<"httpFinished";
     if (httpRequestAborted) {
         if (file) {
             file->close();
@@ -134,7 +148,7 @@ void Updater::httpFinished()
             delete file;
             file = 0;
         }
-        reply->deleteLater();
+        reply_download->deleteLater();
         progressDialog->hide();
         return;
     }
@@ -144,33 +158,72 @@ void Updater::httpFinished()
     file->close();
 
 
-    QVariant redirectionTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-    if (reply->error()) {
+    QVariant redirectionTarget = reply_download->attribute(QNetworkRequest::RedirectionTargetAttribute);
+    if (reply_download->error()) {
         file->remove();
         QMessageBox::information(this, tr("HTTP"),
                                  tr("Download failed: %1.")
-                                 .arg(reply->errorString()));
+                                 .arg(reply_download->errorString()));
 //        downloadButton->setEnabled(true);
     } else if (!redirectionTarget.isNull()) {
         QUrl newUrl = url.resolved(redirectionTarget.toUrl());
-//        if (QMessageBox::question(this, tr("HTTP"),
-//                                  tr("Redirect to %1 ?").arg(newUrl.toString()),
-//                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+        if (QMessageBox::question(this, tr("HTTP"),
+                                  tr("Redirect to %1 ?").arg(newUrl.toString()),
+                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
             url = newUrl;
-            reply->deleteLater();
+            reply_download->deleteLater();
             file->open(QIODevice::WriteOnly);
             file->resize(0);
             startRequest(url);
             return;
-//        }
+        }
     } else {
         QString fileName = QFileInfo(url.path()).fileName();
 //        statusLabel->setText(tr("Downloaded %1 to %2.").arg(fileName).arg(QDir::currentPath()));
 //        downloadButton->setEnabled(true);
     }
 
-    reply->deleteLater();
-    reply = 0;
+    reply_download->deleteLater();
+    reply_download = 0;
     delete file;
     file = 0;
 }
+
+void Updater::httpReadyRead()
+{
+    qDebug()<<"httpReadyRead";
+    // this slot gets called every time the QNetworkReply has new data.
+    // We read all of its new data and write it into the file.
+    // That way we use less RAM than when reading it at the finished()
+    // signal of the QNetworkReply
+    if (file)
+        file->write(reply_download->readAll());
+}
+
+void Updater::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
+{
+    qDebug()<<"updateDataReadProgress";
+    if (httpRequestAborted)
+        return;
+    qDebug()<<totalBytes;
+    progressDialog->setMaximum(totalBytes);
+    progressDialog->setValue(bytesRead);
+}
+
+#ifndef QT_NO_SSL
+void Updater::sslErrors(QNetworkReply*,const QList<QSslError> &errors)
+{
+    QString errorString;
+    foreach (const QSslError &error, errors) {
+        if (!errorString.isEmpty())
+            errorString += ", ";
+        errorString += error.errorString();
+    }
+
+    if (QMessageBox::warning(this, tr("HTTP"),
+                             tr("One or more SSL errors has occurred: %1").arg(errorString),
+                             QMessageBox::Ignore | QMessageBox::Abort) == QMessageBox::Ignore) {
+        reply_download->ignoreSslErrors();
+    }
+}
+#endif
