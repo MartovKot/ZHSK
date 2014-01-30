@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug() << "Style can't be loaded.";
     }
 
+
 }
 
 MainWindow::~MainWindow()
@@ -194,4 +195,10 @@ void MainWindow::sl_setCurDirArh(QString CurDir)
 void MainWindow::on_pBtnPrint_clicked()
 {
 
+}
+
+void MainWindow::setVersion(QString ver)
+{
+    Version = trUtf8("ЖСК-квитанция ")+ver;
+    setWindowTitle(Version);
 }

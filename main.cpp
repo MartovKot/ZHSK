@@ -6,6 +6,9 @@
 #include "mainwindow.h"
 #include "bd.h"
 #include "logreport.h"
+
+#define VERSION "1.5.1"
+
 static bool createConnection() //подключение к БД
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -62,6 +65,7 @@ int main(int argc, char *argv[])
     bd.UpdateDataBase();
 
     MainWindow w;
+    w.setVersion(VERSION);
     out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
     w.show();
     splash.finish(&w);
