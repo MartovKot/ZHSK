@@ -30,8 +30,8 @@ HEADERS += adminwindow.h \
     logreport.h \
     newcounter.h \
     viewblank.h \
-    httpwindow.h \
-    updater.h
+    updater.h \
+    mysplashscreen.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui
@@ -48,8 +48,8 @@ SOURCES += adminwindow.cpp \
     logreport.cpp \
     newcounter.cpp \
     viewblank.cpp \
-    httpwindow.cpp \
-    updater.cpp
+    updater.cpp \
+    mysplashscreen.cpp
 
 RESOURCES += \
     qrc.qrc

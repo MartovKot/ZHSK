@@ -58,7 +58,6 @@ void MainWindow::Oper_mod()
         OperWin = new OperWindow(this);
     }
 
-
     OperWin->set_parametr(OrganiztionID,HomeID);
     OperWin->setWindowTitle(ui->pBtnOper->text());
     OperWin->show();

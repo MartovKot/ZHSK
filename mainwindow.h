@@ -11,7 +11,7 @@
 #include "operwindow.h"
 #include "apartament.h"
 #include "viewblank.h"
-#include "httpwindow.h"
+//#include "httpwindow.h"
 
 namespace Ui {
     class MainWindow;
@@ -30,7 +30,7 @@ private:
     Ui::MainWindow *ui;
     OperWindow *OperWin;
     AdminWindow *AdmWin;
-    HttpWindow *HttpWin;
+//    HttpWindow *HttpWin;
 
     ViewBlank *VwBlank;
     void Install_param();

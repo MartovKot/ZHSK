@@ -1,5 +1,5 @@
 #include "updater.h"
-//#include "httpwindow.h"
+#include <QSplashScreen>
 
 Updater::Updater(QWidget *parent) :
     QWidget(parent)
@@ -27,6 +27,8 @@ Updater::~Updater()
 
 void Updater::RunUpdate()
 {
+//    qDebug()<<"Start update";
+
     QString m_url = "https://api.github.com/repos/MartovKot/ZHSK/releases";
 
     progressDialog = new QProgressDialog(this);
@@ -53,8 +55,18 @@ void Updater::finished_json(QNetworkReply*)
         QString path = "";
         QStringList path_list;
 
-        for (int i = 0;i < m_jdoc.array().size();i++){
-            if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time){
+        for (int i = 0;i < m_jdoc.array().size();i++){  // проходим блоки
+//            qDebug() << m_jdoc.array().takeAt(i).toObject().value("tag_name").toString();
+//            qDebug() << version;
+            if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time &&
+                    NumMajorVersion(m_jdoc.array().takeAt(i).toObject().value("tag_name").toString()) > NumMajorVersion(version)){
+                if (QMessageBox::question(this, trUtf8("Обновление"),
+                                                  tr("Найдено новое обновление "
+                                                     "Скачать?"),
+                                                  QMessageBox::Yes|QMessageBox::No, QMessageBox::No)
+                            == QMessageBox::No){
+                            close();
+                }
                 last_time = QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch();
                 path += "https://github.com/MartovKot/ZHSK/releases";
                 path += "/download/";
@@ -68,10 +80,6 @@ void Updater::finished_json(QNetworkReply*)
         for (int i=0;i<path_list.size();i++){
             downloadFile(QUrl(path_list.at(i)));
         }
-//        HttpWindow *HttpWin;
-//        HttpWin = new HttpWindow;
-//        HttpWin->show();
-//        HttpWin->setUrl(path_list.at(0));
     }
     // Some http error received
     else
@@ -100,7 +108,7 @@ void Updater::downloadFile(QUrl url)
 //            == QMessageBox::No)
 //            return;
         QFile::remove(fileName);
-        qDebug()<<"delete old file: " << fileName;
+//        qDebug()<<"delete old file: " << fileName;
     }
 
     file = new QFile(fileName);
@@ -124,10 +132,6 @@ void Updater::downloadFile(QUrl url)
 void Updater::startRequest(QUrl url)
 {
     progressDialog->open();
-
-//    qDebug() << "Start Request: " << url;
-
-    qDebug() << "Start Request";
     reply_download = m_manager_download.get(QNetworkRequest(url));
 
     connect(reply_download, SIGNAL(finished()),
@@ -140,7 +144,7 @@ void Updater::startRequest(QUrl url)
 
 void Updater::httpFinished()
 {
-    qDebug()<<"httpFinished";
+//    qDebug()<<"httpFinished";
     if (httpRequestAborted) {
         if (file) {
             file->close();
@@ -167,16 +171,16 @@ void Updater::httpFinished()
 //        downloadButton->setEnabled(true);
     } else if (!redirectionTarget.isNull()) {
         QUrl newUrl = url.resolved(redirectionTarget.toUrl());
-        if (QMessageBox::question(this, tr("HTTP"),
-                                  tr("Redirect to %1 ?").arg(newUrl.toString()),
-                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+//        if (QMessageBox::question(this, tr("HTTP"),
+//                                  tr("Redirect to %1 ?").arg(newUrl.toString()),
+//                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
             url = newUrl;
             reply_download->deleteLater();
             file->open(QIODevice::WriteOnly);
             file->resize(0);
             startRequest(url);
             return;
-        }
+//        }
     } else {
         QString fileName = QFileInfo(url.path()).fileName();
 //        statusLabel->setText(tr("Downloaded %1 to %2.").arg(fileName).arg(QDir::currentPath()));
@@ -191,7 +195,7 @@ void Updater::httpFinished()
 
 void Updater::httpReadyRead()
 {
-    qDebug()<<"httpReadyRead";
+//    qDebug()<<"httpReadyRead";
     // this slot gets called every time the QNetworkReply has new data.
     // We read all of its new data and write it into the file.
     // That way we use less RAM than when reading it at the finished()
@@ -202,10 +206,11 @@ void Updater::httpReadyRead()
 
 void Updater::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
 {
-    qDebug()<<"updateDataReadProgress";
+//    qDebug()<<"updateDataReadProgress";
     if (httpRequestAborted)
         return;
-    qDebug()<<totalBytes;
+//    qDebug()<<totalBytes;
+//    progressDialog->show();
     progressDialog->setMaximum(totalBytes);
     progressDialog->setValue(bytesRead);
 }
@@ -220,10 +225,27 @@ void Updater::sslErrors(QNetworkReply*,const QList<QSslError> &errors)
         errorString += error.errorString();
     }
 
-    if (QMessageBox::warning(this, tr("HTTP"),
-                             tr("One or more SSL errors has occurred: %1").arg(errorString),
-                             QMessageBox::Ignore | QMessageBox::Abort) == QMessageBox::Ignore) {
+//    if (QMessageBox::warning(this, tr("HTTP"),
+//                             tr("One or more SSL errors has occurred: %1").arg(errorString),
+//                             QMessageBox::Ignore | QMessageBox::Abort) == QMessageBox::Ignore) {
         reply_download->ignoreSslErrors();
-    }
+//    }
 }
 #endif
+
+
+void Updater::setVersion(QString ver)
+{
+    version = ver;
+}
+
+
+double Updater::NumMajorVersion(QString str)
+{
+    int position = 0;
+    for (int i=0;i<2;i++){
+        position = str.indexOf(".",position+1);
+    }
+    qDebug() << str.left(position);
+    return str.left(position).toDouble();
+}

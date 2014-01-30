@@ -23,6 +23,7 @@ public:
     explicit Updater(QWidget *parent = 0);
     ~Updater();
     void RunUpdate();
+    void setVersion(QString ver);
 private:
     QNetworkProxy proxy;
     QUrl url;
@@ -37,6 +38,11 @@ private:
 
     void downloadFile(QUrl url);
     void startRequest(QUrl url);
+    QString version;
+
+    double NumMajorVersion (QString str);
+
+
 
 signals:
 

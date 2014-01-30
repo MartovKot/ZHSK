@@ -9,6 +9,8 @@
 
 #include <QtNetwork>
 
+#define VERSION  "1.6"
+
 static bool createConnection() //подключение к БД
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -31,9 +33,12 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     QPixmap pixmap(":/images/main.png");
     Updater upd;
+    upd.setVersion(VERSION);
+
     upd.RunUpdate();
 
-    QSplashScreen splash(pixmap);
+    QSplashScreen splash;
+    splash.setPixmap(pixmap);
     splash.show();
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
