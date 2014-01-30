@@ -25,6 +25,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     Apartament Apartament_Share;
+    void setVersion(QString ver);
 
 private:
     Ui::MainWindow *ui;
@@ -37,6 +38,7 @@ private:
     int OrganiztionID, HomeID ;
     BD db;
     QString CurentDirArhiv;
+    QString Version;
 
 private slots:
     void Admin_mod();

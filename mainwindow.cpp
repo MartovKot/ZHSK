@@ -193,3 +193,9 @@ void MainWindow::on_pBtnPrint_clicked()
 {
 
 }
+
+void MainWindow::setVersion(QString ver)
+{
+    Version = trUtf8("ЖСК-квитанция ")+ver;
+    setWindowTitle(Version);
+}
