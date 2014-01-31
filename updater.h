@@ -40,7 +40,7 @@ private:
     void startRequest(QUrl url);
     QString version;
 
-    double NumMajorVersion (QString str);
+    bool isNewVersion (QString realVersion, QString downloadVersion);
 
 
 

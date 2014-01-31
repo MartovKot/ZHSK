@@ -58,4 +58,5 @@ RC_FILE = ICON.rc
 OTHER_FILES += \
     logika.txt \
     future.txt \
-    exaple_qss.txt
+    exaple_qss.txt \
+    script2.nsi

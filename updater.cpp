@@ -52,30 +52,34 @@ void Updater::finished_json(QNetworkReply*)
         m_jdoc = QJsonDocument::fromJson(json_reply.toUtf8());
 
         qint64 last_time = 0;
+        int IndexLastVersion = -1;
         QString path = "";
         QStringList path_list;
 
         for (int i = 0;i < m_jdoc.array().size();i++){  // проходим блоки
-//            qDebug() << m_jdoc.array().takeAt(i).toObject().value("tag_name").toString();
-//            qDebug() << version;
-            if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time &&
-                    NumMajorVersion(m_jdoc.array().takeAt(i).toObject().value("tag_name").toString()) > NumMajorVersion(version)){
-                if (QMessageBox::question(this, trUtf8("Обновление"),
-                                                  tr("Найдено новое обновление "
-                                                     "Скачать?"),
-                                                  QMessageBox::Yes|QMessageBox::No, QMessageBox::No)
-                            == QMessageBox::No){
-                            close();
-                }
+            if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time ){
+                IndexLastVersion = i;  //номер блока где есть последняя версия
                 last_time = QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch();
-                path += "https://github.com/MartovKot/ZHSK/releases";
-                path += "/download/";
-                path += m_jdoc.array().takeAt(i).toObject().value("tag_name").toString();
-                path += "/";
-                for (int j = 0; j < m_jdoc.array().takeAt(i).toObject().value("assets").toArray().size(); j++){
-                    path_list << path + m_jdoc.array().takeAt(i).toObject().value("assets").toArray().takeAt(i).toObject().value("name").toString();
-                }
             }
+        }
+
+        if(isNewVersion(version, m_jdoc.array().takeAt(IndexLastVersion).toObject().value("tag_name").toString()) && IndexLastVersion != -1){
+            qDebug() << "test";
+            if (QMessageBox::question(this, trUtf8("Обновление"),
+                                              tr("Найдено новое обновление "
+                                                 "Скачать?"),
+                                              QMessageBox::Yes|QMessageBox::No, QMessageBox::No)
+                        == QMessageBox::No){
+                       return;
+            }
+            path += "https://github.com/MartovKot/ZHSK/releases";
+            path += "/download/";
+            path += m_jdoc.array().takeAt(IndexLastVersion).toObject().value("tag_name").toString();
+            path += "/";
+            for (int j = 0; j < m_jdoc.array().takeAt(IndexLastVersion).toObject().value("assets").toArray().size(); j++){
+                path_list << path + m_jdoc.array().takeAt(IndexLastVersion).toObject().value("assets").toArray().takeAt(IndexLastVersion).toObject().value("name").toString();
+            }
+
         }
         for (int i=0;i<path_list.size();i++){
             downloadFile(QUrl(path_list.at(i)));
@@ -240,12 +244,51 @@ void Updater::setVersion(QString ver)
 }
 
 
-double Updater::NumMajorVersion(QString str)
+bool Updater::isNewVersion(QString realVersion, QString downloadVersion)
 {
-    int position = 0;
-    for (int i=0;i<2;i++){
-        position = str.indexOf(".",position+1);
+//    qDebug() << realVersion << downloadVersion;
+    QList<int> realVersionArr;
+    QList<int> downloadVersionArr;
+    int pos;
+    QString t_rVer = realVersion;
+    QString t_dVer = downloadVersion;
+
+    pos = t_rVer.indexOf(".");
+    while(pos != -1){
+        realVersionArr << t_rVer.left(pos).toInt();
+        t_rVer = t_rVer.mid(pos+1);
+        pos = t_rVer.indexOf(".",pos);
     }
-    qDebug() << str.left(position);
-    return str.left(position).toDouble();
+    realVersionArr << t_rVer.toInt();
+
+    pos = t_dVer.indexOf(".");
+    while(pos != -1){
+        downloadVersionArr << t_dVer.left(pos).toInt();
+        t_dVer = t_dVer.mid(pos+1);
+        pos = t_dVer.indexOf(".",pos);
+    }
+    downloadVersionArr << t_dVer.toInt();
+
+//    qDebug() << realVersionArr << downloadVersionArr;
+
+//    qDebug()<<"test" <<realVersionArr.count();
+
+    if(downloadVersionArr.at(0) == realVersionArr.at(0)){
+        if(downloadVersionArr.at(1) == realVersionArr.at(1)){
+            if(downloadVersionArr.at(2) <= realVersionArr.at(2)){
+//                qDebug()<<"flase - 1";
+                return false;
+            }
+        }else if (downloadVersionArr.at(1) < realVersionArr.at(1)){
+//            qDebug()<<"flase - 2";
+            return false;
+        }
+    }else if (downloadVersionArr.at(0) < realVersionArr.at(0)){
+
+//        qDebug()<<"flase - 3" << downloadVersionArr.at(1) << realVersionArr.at(1);
+        return false;
+    }
+//    qDebug()<<"true";
+    //иначе есть новая версия
+    return true;
 }
