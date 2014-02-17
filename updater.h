@@ -26,7 +26,7 @@ public:
     void setVersion(QString ver);
 private:
     QNetworkProxy proxy;
-    QUrl url;
+    QUrl m_url;
     QNetworkReply *m_reply;
     QNetworkReply *reply_download;
     QNetworkAccessManager m_manager_download;
@@ -45,7 +45,7 @@ private:
 
 
 signals:
-
+    void s_run_update();
 public slots:
 private slots:
     void finished_json (QNetworkReply*);

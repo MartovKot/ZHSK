@@ -1,17 +1,16 @@
 #include "updater.h"
-#include <QSplashScreen>
+//#include <QSplashScreen>
+#include <QProcess>
 
 Updater::Updater(QWidget *parent) :
     QWidget(parent)
 {
     //настройки прокси вынести отдельно
-//    QNetworkProxy proxy;
-    proxy.setType(QNetworkProxy::HttpProxy);
-    proxy.setHostName("10.62.0.9");
-    proxy.setPort(3128);
-    QNetworkProxy::setApplicationProxy(proxy);
+//    proxy.setType(QNetworkProxy::HttpProxy);
+//    proxy.setHostName("10.62.0.9");
+//    proxy.setPort(3128);
+//    QNetworkProxy::setApplicationProxy(proxy);
     //
-//    m_manager_download = new QNetworkAccessManager(this);
     m_manager_download.setProxy(proxy);
 #ifndef QT_NO_SSL
     connect(&m_manager_download, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)),
@@ -27,8 +26,6 @@ Updater::~Updater()
 
 void Updater::RunUpdate()
 {
-//    qDebug()<<"Start update";
-
     QString m_url = "https://api.github.com/repos/MartovKot/ZHSK/releases";
 
     progressDialog = new QProgressDialog(this);
@@ -43,7 +40,7 @@ void Updater::RunUpdate()
 
 void Updater::finished_json(QNetworkReply*)
 {
-//    QVariant statusCodeV = m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+
     if (m_reply->error() == QNetworkReply::NoError)
     {
         QString json_reply(m_reply->readAll()); // json ответ от сервера
@@ -57,14 +54,15 @@ void Updater::finished_json(QNetworkReply*)
         QStringList path_list;
 
         for (int i = 0;i < m_jdoc.array().size();i++){  // проходим блоки
-            if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch() > last_time ){
+            if (QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate)
+                                                                                        .toMSecsSinceEpoch() > last_time ){
                 IndexLastVersion = i;  //номер блока где есть последняя версия
-                last_time = QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate).toMSecsSinceEpoch();
+                last_time = QDateTime::fromString(m_jdoc.array().takeAt(i).toObject().value("published_at").toString(),Qt::ISODate)
+                        .toMSecsSinceEpoch();
             }
         }
 
         if(isNewVersion(version, m_jdoc.array().takeAt(IndexLastVersion).toObject().value("tag_name").toString()) && IndexLastVersion != -1){
-            qDebug() << "test";
             if (QMessageBox::question(this, trUtf8("Обновление"),
                                               tr("Найдено новое обновление "
                                                  "Скачать?"),
@@ -88,8 +86,12 @@ void Updater::finished_json(QNetworkReply*)
     // Some http error received
     else
     {
-       qDebug()<< m_reply->errorString();
-       // handle errors here
+        QMessageBox::critical(this, trUtf8("Ошибка"),
+                                          tr("Ошибка соединения %1").arg(m_reply->errorString()),
+                                          QMessageBox::Ok);
+
+        qDebug()<< m_reply->errorString();
+        // handle errors here
     }
 
     delete m_reply;
@@ -130,11 +132,17 @@ void Updater::downloadFile(QUrl url)
 
     // schedule the request
     httpRequestAborted = false;
-    startRequest(url);
+    m_url = url;
+    startRequest(m_url);
+
 }
 
 void Updater::startRequest(QUrl url)
 {
+//    QFileInfo fileInfo(m_url.path());
+//    QString fileName = fileInfo.fileName();
+//    qDebug() <<"t1"<< fileName;
+
     progressDialog->open();
     reply_download = m_manager_download.get(QNetworkRequest(url));
 
@@ -146,9 +154,10 @@ void Updater::startRequest(QUrl url)
             this, SLOT(updateDataReadProgress(qint64,qint64)));
 }
 
-void Updater::httpFinished()
+void Updater::httpFinished()  //Завершение загрузки
 {
-//    qDebug()<<"httpFinished";
+    QUrl url;
+
     if (httpRequestAborted) {
         if (file) {
             file->close();
@@ -165,14 +174,12 @@ void Updater::httpFinished()
     file->flush();
     file->close();
 
-
     QVariant redirectionTarget = reply_download->attribute(QNetworkRequest::RedirectionTargetAttribute);
     if (reply_download->error()) {
         file->remove();
         QMessageBox::information(this, tr("HTTP"),
                                  tr("Download failed: %1.")
                                  .arg(reply_download->errorString()));
-//        downloadButton->setEnabled(true);
     } else if (!redirectionTarget.isNull()) {
         QUrl newUrl = url.resolved(redirectionTarget.toUrl());
 //        if (QMessageBox::question(this, tr("HTTP"),
@@ -186,7 +193,19 @@ void Updater::httpFinished()
             return;
 //        }
     } else {
-        QString fileName = QFileInfo(url.path()).fileName();
+        QFileInfo fileInfo(m_url.path());
+        QString fileName = fileInfo.fileName();
+//        qDebug() << "test" << fileName;
+        if (QMessageBox::question(this, trUtf8("Обновление"),
+                                          tr("Обновление готово к установке. \n Обновить?"),
+                                          QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+
+            QProcess *upd = new QProcess;
+            upd->start(fileName);
+//            connect(vec,SIGNAL(finished(int,QProcess::ExitStatus)),this,SLOT(finish_script()));
+            emit s_run_update();
+        }
+
 //        statusLabel->setText(tr("Downloaded %1 to %2.").arg(fileName).arg(QDir::currentPath()));
 //        downloadButton->setEnabled(true);
     }

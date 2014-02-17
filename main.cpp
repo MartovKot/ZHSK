@@ -9,7 +9,7 @@
 #include "logreport.h"
 #include "updater.h"
 
-#define VERSION "1.5.0"
+#define VERSION "1.4.0"
 
 static bool createConnection() //подключение к БД
 {
@@ -32,9 +32,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QPixmap pixmap(":/images/main.png");
+
     Updater upd;
     upd.setVersion(VERSION);
-
     upd.RunUpdate();
 
     QSplashScreen splash;
@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
     bd.UpdateDataBase();
 
     MainWindow w;
+    QObject::connect(&upd,SIGNAL(s_run_update()),&w,SLOT(close()));
     w.setVersion(VERSION);
     out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
     w.show();
