@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }else{
         qDebug() << "Style can't be loaded.";
     }
-
 }
 
 MainWindow::~MainWindow()
@@ -58,7 +57,6 @@ void MainWindow::Oper_mod()
     if (OperWin == NULL){
         OperWin = new OperWindow(this);
     }
-
 
     OperWin->set_parametr(OrganiztionID,HomeID);
     OperWin->setWindowTitle(ui->pBtnOper->text());
@@ -192,4 +190,10 @@ void MainWindow::sl_setCurDirArh(QString CurDir)
 void MainWindow::on_pBtnPrint_clicked()
 {
 
+}
+
+void MainWindow::setVersion(QString ver)
+{
+    Version = trUtf8("ЖСК-квитанция ")+ver;
+    setWindowTitle(Version);
 }

@@ -3,12 +3,17 @@
 ######################################################################
 QT       += webkit\
             core gui\
-            sql
+            sql\
+            network
 
 TEMPLATE = app
 TARGET = kvit
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+greaterThan(QT_MAJOR_VERSION, 4){
+    QT += widgets\
+            printsupport\
+            webkitwidgets
+    DEFINES += HAVE_QT5
+}
 
 # Input
 HEADERS += adminwindow.h \
@@ -27,10 +32,12 @@ HEADERS += adminwindow.h \
     table_payment.h \
     table_tariff.h \
     my_function.h \
-    counter.h
-
+    counter.h \
+    updater.h \
+    mysplashscreen.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
-    newcounter.ui
+    newcounter.ui \
+    authenticationdialog.ui
 SOURCES += adminwindow.cpp \
            apartament.cpp \
            bd.cpp \
@@ -46,7 +53,9 @@ SOURCES += adminwindow.cpp \
     viewblank.cpp \
     table_payment.cpp \
     table_tariff.cpp \
-    counter.cpp
+    counter.cpp \
+    updater.cpp \
+    mysplashscreen.cpp
 
 RESOURCES += \
     qrc.qrc
@@ -63,4 +72,6 @@ OTHER_FILES += \
     update_db/01_06_004.sql \
     update_db/01_06_005.sql \
     update_db/01_06_006.sql \
-    update_db/01_06_007.sql
+    update_db/01_06_007.sql \
+    script2.nsi
+

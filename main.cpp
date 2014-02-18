@@ -1,11 +1,16 @@
-#include <QtGui/QApplication>
-//#include <QtSql>
+#include <QApplication>
 #include <QMessageBox>
 #include <QSplashScreen>
 #include <QTextCodec>
+#include <QtNetwork>
+
 #include "mainwindow.h"
 #include "bd.h"
 #include "logreport.h"
+#include "updater.h"
+
+#define VERSION "1.5.1"
+
 static bool createConnection() //подключение к БД
 {
     /// Временный блок для востановления БД
@@ -37,7 +42,6 @@ static bool createConnection() //подключение к БД
     LogReport out;
     out.setFileName("out.log");
 
-
     if (!db.isOpen())
     if (!db.open()) {
         qDebug() << "Cannot open database:" << db.lastError();
@@ -52,7 +56,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QPixmap pixmap(":/ico/splash.png");
+    Updater upd;
+    upd.setVersion(VERSION);
+    upd.RunUpdate();
+
+    QPixmap pixmap(":/images/main.png");
     QSplashScreen splash(pixmap);
     splash.show();
 
@@ -86,6 +94,8 @@ int main(int argc, char *argv[])
     bd.UpdateDataBase();
 
     MainWindow w;
+    QObject::connect(&upd,SIGNAL(s_run_update()),&w,SLOT(close()));
+    w.setVersion(VERSION);
     out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
     splash.close();
     w.show();

@@ -108,11 +108,11 @@ void ViewBlank::Print()
         QWebView view;
         QWebPage *page;
         QWebFrame *frame;
-        qDebug()<<strL_page.count()<<" "<<printer.fromPage()<<" "<<printer.toPage();
-        if(printer.fromPage() == 0 && printer.toPage() == 0){
+//        qDebug()<<strL_page.count()<<" "<<printer.fromPage()<<" "<<printer.toPage();
+        if(printer.fromPage() <= 0 || printer.toPage() <= 0 || printer.toPage() > strL_page.count()){       //устанавливаем страницы печати с первой по последнюю.
             printer.setFromTo(1,strL_page.count());
         }
-        qDebug()<<strL_page.count()<<" "<<printer.fromPage()<<" "<<printer.toPage();
+//        qDebug()<<strL_page.count()<<" "<<printer.fromPage()<<" "<<printer.toPage();
 
         for (int i = printer.fromPage(); (i <= printer.toPage() && i <= strL_page.count()); i++) {
 //            qDebug()<<"test in " << i;
@@ -122,8 +122,8 @@ void ViewBlank::Print()
             frame = page->mainFrame();
             frame->setScrollBarPolicy(Qt::Vertical,Qt::ScrollBarAlwaysOff);
             frame->render(&painter);
-            if (i + 1 < strL_page.count() && i + 1  < printer.toPage())
-                printer.newPage();
+            if (i <= strL_page.count() && i  < printer.toPage())
+               printer.newPage();
             delete page;
         }
 

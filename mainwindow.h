@@ -5,12 +5,13 @@
 #include <QFile>
 #include <QDebug>
 #include <QProgressBar>
+#include <QImageReader>
 
 #include "adminwindow.h"
 #include "operwindow.h"
 #include "apartament.h"
 #include "viewblank.h"
-
+//#include "httpwindow.h"
 
 namespace Ui {
     class MainWindow;
@@ -24,18 +25,20 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     Apartament Apartament_Share;
+    void setVersion(QString ver);
 
 private:
     Ui::MainWindow *ui;
     OperWindow *OperWin;
     AdminWindow *AdmWin;
+//    HttpWindow *HttpWin;
 
     ViewBlank *VwBlank;
     void Install_param();
     int OrganiztionID, HomeID ;
     BD db;
     QString CurentDirArhiv;
-
+    QString Version;
 
 private slots:
     void Admin_mod();
@@ -45,7 +48,6 @@ private slots:
     void sl_ArhivKvit();  //Архив квитанций
     void sl_setCurDirArh(QString CurDir);
     void sl_OpenArhiv();
-
 
     void on_pBtnPrint_clicked();
 };
