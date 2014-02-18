@@ -44,8 +44,8 @@
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "setup.exe"
-InstallDir "$PROGRAMFILES\ZHSK"
-InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
+InstallDir "$EXEDIR"
+;InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 
 
@@ -58,7 +58,7 @@ IfFileExists $INSTDIR\kvit.exe 0 +6
   RMDir /r $INSTDIR
   CreateDirectory $INSTDIR
   !insertmacro RestoreFile $TEMP "kvitdb.qsl" $INSTDIR
-  MessageBox MB_OK "проверь"
+  ;MessageBox MB_OK "проверь"
 
 
 

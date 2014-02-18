@@ -9,7 +9,7 @@
 #include "logreport.h"
 #include "updater.h"
 
-#define VERSION "1.4.0"
+#define VERSION "1.5.1"
 
 static bool createConnection() //подключение к БД
 {
