@@ -6,10 +6,10 @@ Updater::Updater(QWidget *parent) :
     QWidget(parent)
 {
     //настройки прокси вынести отдельно
-//    proxy.setType(QNetworkProxy::HttpProxy);
-//    proxy.setHostName("10.62.0.9");
-//    proxy.setPort(3128);
-//    QNetworkProxy::setApplicationProxy(proxy);
+    proxy.setType(QNetworkProxy::HttpProxy);
+    proxy.setHostName("10.62.0.9");
+    proxy.setPort(3128);
+    QNetworkProxy::setApplicationProxy(proxy);
     //
     m_manager_download.setProxy(proxy);
 

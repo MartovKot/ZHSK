@@ -41,13 +41,13 @@ private:
     void Refresh_Appartament(int id_apartament=-1);
     void Refresh_Uslugi();
     void Refresh_Pensioner();
+
     QList<QHBoxLayout> list;
     QDialog *dlg;
     QLineEdit *lEd_tarif;
     QLineEdit *lEd_tarif2;
     QLineEdit *lEd_norm;
-    int ID_ORG;
-    int ID_HOME;
+
     qint64 IsDateOfUnix(int year, int month, int day)
     {
         qint64 timeInUnix;
@@ -61,13 +61,16 @@ private:
         return timeInUnix;
     }
 
+    int isIdSelectHome_onApartament();
+    int isIdSelectOrganiztion_onApartament();
 private slots:
     void AddOrg();                                  // добавление организации
     void AddHome();                                 // добавление дома
     void AddUsluga_of_Apartament();                 // Добавить услуги в квартиру
-    void Refresh();
+    void Refresh(int);
     void Refresh_cmbNumApp_onUslugi();
-    bool Verify();
+    void Refresh_cmBx_NumApp_onApartament();
+//    bool Verify();
     void SaveApart();
     void TarifRequest();
     void TarifEdit();
@@ -87,6 +90,8 @@ private slots:
     void on_pBtn_delPens_clicked();
     void on_cmBx_PensApart_activated(const QString &arg1);
     void on_tblV_on_Pens_clicked(const QModelIndex &index);
+    void on_pBtn_NewApartament_clicked();
+    void on_pBtn_Cancel_onApart_clicked();
 };
 
 #endif // ADMINWINDOW_H

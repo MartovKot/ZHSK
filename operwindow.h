@@ -44,7 +44,7 @@ private slots:
     void Refresh_tblVCount();
     void sl_RefreshFull();
     void sl_EditPokazanie();
-    void sl_EditPayment();
+    void sl_DeletePayment();
     void sl_Calendar();
     void sl_RefreshLabel();
     void sl_ApartFirst();

@@ -14,7 +14,7 @@ OperWindow::OperWindow(QWidget *parent) :
     connect(ui->pBtn_AddPayment,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
     connect(ui->pBtn_EditPokazanie,SIGNAL(clicked()),SLOT(sl_EditPokazanie()));
     connect(ui->pBtn_EditPokazanie,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
-    connect(ui->pBtn_DeletePayment,SIGNAL(clicked()),SLOT(sl_EditPayment()));
+    connect(ui->pBtn_DeletePayment,SIGNAL(clicked()),SLOT(sl_DeletePayment()));
     connect(ui->pBtn_DeletePayment,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
     connect(ui->tBtn_Calendar,SIGNAL(clicked()),SLOT(sl_Calendar()));
 
@@ -33,6 +33,7 @@ OperWindow::OperWindow(QWidget *parent) :
     ui->lEd_Sum->setValidator(dv);
     ui->dEd_Count->setDate(QDate::currentDate());
     ui->dEd_Payment->setDate(QDate::currentDate().addDays(-QDate::currentDate().day()+1));
+
     QPixmap pixmap(":/ico/base_calendar_32.png");
     ui->tBtn_Calendar->setIcon(QIcon(pixmap));
     ui->tBtn_Calendar->setMask(pixmap.mask());
@@ -48,9 +49,13 @@ void OperWindow::Refresh_tblVPayment(int ApartamenID)
 {
 #ifdef HAVE_QT5
     ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
+//    qDebug()<<"test 1";
     ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
+//    qDebug()<<"test 2";
     ui->tblV_Payment->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+//    qDebug()<<"test 3";
     ui->tblV_Payment->horizontalHeader()->setSectionResizeMode( 3, QHeaderView::Interactive);
+//    qDebug()<<"test 4";
 #else
     ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
     ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
@@ -100,7 +105,7 @@ void OperWindow::Refresh_tblVCount()
     ui->tblV_Count->setModel(db.ModelPokazanie(id_apartament,
                                  ui->dEd_Count->date().month(),
                                  ui->dEd_Count->date().year()));
-    db.new_pokazanie(id_apartament,
+    db.new_pokazanie(id_apartament,                     //новое показание на след месяц
                      ui->dEd_Count->date().month(),
                      ui->dEd_Count->date().year());
     ui->tblV_Count->hideColumn(0);
@@ -149,6 +154,7 @@ void OperWindow::sl_EditPokazanie()
                              trUtf8("Ошибка в поле номер квартиры"),QMessageBox::Ok);
         return;
     }
+//    qDebug() << "edPok2";
 
     //Новое окно редактирования
     dlg = new QDialog(this);
@@ -176,7 +182,9 @@ void OperWindow::sl_EditPokazanie()
  #ifdef HAVE_QT5
     tbl->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tbl->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-    tbl->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive);
+    if(tbl->model()->columnCount()>3){
+        tbl->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive);
+    }
 #else
     tbl->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     tbl->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
@@ -189,6 +197,7 @@ void OperWindow::sl_EditPokazanie()
     dlg->setLayout(main_lay);
     dlg->resize(main_lay->sizeHint().width()+50,main_lay->sizeHint().height());
     dlg->show();
+//    qDebug() << "edPok4";
 
 }
 
@@ -212,7 +221,7 @@ void OperWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void OperWindow::sl_EditPayment()
+void OperWindow::sl_DeletePayment()
 {
     int row;
     int month,year,day;
@@ -318,14 +327,17 @@ void OperWindow::sl_ApartLast()
 void OperWindow::sl_ApartNext()
 {
     int index;
-
+//    qDebug()<<"test 1";
     index = ui->cmBx_NumApartanent->currentIndex();
+//    qDebug()<<"test 2";
     if(index < ui->cmBx_NumApartanent->count()-1){
         index++;
     }
+//    qDebug()<<"test 3";
     ui->cmBx_NumApartanent->setCurrentIndex(index);
-
+//    qDebug()<<"test 4";
     sl_RefreshFull();
+//    qDebug()<<"test 5";
 }
 
 void OperWindow::sl_ApartPrevious()
@@ -343,9 +355,13 @@ void OperWindow::sl_ApartPrevious()
 void OperWindow::sl_RefreshFull()
 {
     int num = ui->cmBx_NumApartanent->model()->index(ui->cmBx_NumApartanent->currentIndex(), 1).data().toInt();
+//    qDebug()<<"test 1 rf";
     Refresh_tblVPayment(num);
+//    qDebug()<<"test 2 rf ";
     Refresh_tblVCount();
+//    qDebug()<<"test 3 rf";
     sl_RefreshLabel();
+//    qDebug()<<"test 4 rf";
 }
 
 void OperWindow::sl_NewCounter()//вызывается когда происходит смена счётчика

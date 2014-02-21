@@ -10,51 +10,43 @@ AdminWindow::AdminWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-
     QRegExpValidator *only_number,*dv;
     only_number = new QRegExpValidator(QRegExp("[0-9]+"),this);                 //валидатор для цифр
     dv = new QRegExpValidator(QRegExp("[0-9]+[\\.|\\,]?[0-9]{,2}"),this);       //валидатор для чисел
 
     setLayout(ui->gridLayout);                                                  //главный слой
 
-    AdminWindow::connect(ui->tabWidget,SIGNAL(currentChanged(int)),SLOT(Refresh()));
+    connect(ui->tabWidget,SIGNAL(tabBarClicked(int)),SLOT(Refresh(int)));
+    connect(this,SIGNAL(destroyed(QObject*)),this,SLOT(deleteLater()));
+
+    ui->tabWidget->setCurrentIndex(0);
 
     // настройка вкладки Организации
     ui->tab_Organization->setLayout(ui->verticalLayout);                        //вкладка Организации
     ui->lEdAcc->setValidator(only_number);                                      // поле с лицевым счётом
-    AdminWindow::connect(ui->pBtn_addOrg,SIGNAL(clicked()),SLOT(AddOrg()));
-    connect(ui->tView_Organization,SIGNAL(doubleClicked(QModelIndex)),SLOT(sl_OrgEdit(QModelIndex)));
+    connect(ui->pBtn_addOrg,SIGNAL(clicked()),SLOT(AddOrg()));
+    connect(ui->tblView_Organization,SIGNAL(doubleClicked(QModelIndex)),SLOT(sl_OrgEdit(QModelIndex)));
     connect(ui->pBtn_SaveOrg,SIGNAL(clicked()),SLOT(sl_SaveOrg()));
     connect(ui->pBtn_DeleteOrg,SIGNAL(clicked()),SLOT(sl_DeleteOrg()));
     connect(ui->pBtn_CancelOrg,SIGNAL(clicked()),SLOT(sl_CancelOrg()));
-    ui->pBtn_SaveOrg->setHidden(true);
-    ui->pBtn_DeleteOrg->setHidden(true);
-    ui->pBtn_CancelOrg->setHidden(true);
-    ID_ORG = -1;
 
-    Refresh_Organization();
+    Mode("org_default");
+    Refresh_Organization(); // Делаем обновление тк сюда мы приходим сразу
     // -------------------------------
-
 
     // настройка вкладки Дома
     ui->tab_Home->setLayout(ui->verticalLayout_3);                              // вкладка дома
-    AdminWindow::connect(ui->pBtn_addHome,SIGNAL(clicked()),SLOT(AddHome()));   // добавление дома
-    ID_HOME = -1;
     Mode("home_default");
+    connect(ui->pBtn_addHome,SIGNAL(clicked()),SLOT(AddHome()));   // добавление дома
     connect(ui->tblView_Home,SIGNAL(doubleClicked(QModelIndex)),SLOT(sl_HomeEdit(QModelIndex)));
     connect(ui->pBtn_CancelHome,SIGNAL(clicked()),SLOT(sl_CancelHome()));
     connect(ui->pBtn_DeleteHome,SIGNAL(clicked()),SLOT(sl_DeleteHome()));
     connect(ui->pBtn_SaveHome,SIGNAL(clicked()),SLOT(sl_SaveHome()));
 
-    Refresh_Home();                                                             // обновление вкладки
     //------------------------------------
-
-
 
     // настройка Квартиры
     ui->tab_Appartament->setLayout(ui->verticalLayout_2);                       //Вкладка квартиры
-
     ui->lEd_Balkon->setValidator(dv);
     ui->lEd_InhabedArea->setValidator(dv);
     ui->lEd_lodggia->setValidator(dv);
@@ -62,12 +54,13 @@ AdminWindow::AdminWindow(QWidget *parent) :
     ui->lEd_RealMen->setValidator(only_number);
     ui->lEd_RentMen->setValidator(only_number);
     ui->lEd_TotalArea->setValidator(dv);
-    ui->lEd_NumApp->setValidator(only_number);
+    ui->lEd_NumApart_onApart->setValidator(only_number);
 
-    AdminWindow::connect(ui->pBtn_Verify,SIGNAL(clicked()),this,SLOT(Verify()));//  проверка наличия квартиры
-    AdminWindow::connect(ui->pBtn_Save,SIGNAL(clicked()),SLOT(SaveApart()));    // сохранение изменения квартир
-
-    Refresh_Appartament();
+//    connect(ui->pBtn_Verify,SIGNAL(clicked()),this,SLOT(Verify()));//  проверка наличия квартиры
+    connect(ui->pBtn_Save,SIGNAL(clicked()),SLOT(SaveApart()));    // сохранение изменения квартир
+    connect(ui->cmBx_Home_on_App,SIGNAL(activated(int)),SLOT(Refresh_cmBx_NumApp_onApartament()));
+    connect(ui->cmBx_Org_on_App,SIGNAL(activated(int)),SLOT(Refresh_cmBx_NumApp_onApartament()));
+    Mode("app_deff");
     //------------------------------------
 
 
@@ -80,9 +73,8 @@ AdminWindow::AdminWindow(QWidget *parent) :
     AdminWindow::connect(ui->cmBx_NumAp_on_Uslugi,SIGNAL(activated(int)),SLOT(UslView()));
     AdminWindow::connect(ui->cmBx_Home_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
     AdminWindow::connect(ui->cmBx_Org_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
-    Refresh_Uslugi();
+//    Refresh_Uslugi();
     //------------------------------------
-
 
     //настройка тарифы
     ui->lEd_Tarif_year->setText(QString::number(QDate::currentDate().year()));
@@ -98,13 +90,10 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
 
     ui->tab_Pensioner->setLayout(ui->mainLay_Pens);
-    Refresh_Pensioner();
     ui->cmBx_PensApart->setModel(
                 db.ModelApartament(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
                                    ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
     ui->cmBx_PensApart->addItem("");
-
-
 
 }
 
@@ -118,7 +107,11 @@ void AdminWindow::AddOrg()                                                  //Д
 
     column<<"name"<<"bank"<<"sett_account";
     value<<ui->lEdNameOrg->text()<<ui->lEdBank->text()<<ui->lEdAcc->text();
-    db.add("organiz",column,value);
+    if (db.add("organiz",column,value) != 0){
+        QMessageBox::warning(this,trUtf8("Предупреждение"),
+                             trUtf8("Запись не создана"),QMessageBox::Ok);
+        return;
+    }
     ui->lEdAcc->setText("");
     ui->lEdBank->setText("");
     ui->lEdNameOrg->setText("");
@@ -198,205 +191,159 @@ void AdminWindow::AddHome()
     QStringList column, value;
     column<<"name";
     value<<ui->lEdHome->text();
-    db.add("homes",column,value);
+    if (db.add("homes",column,value) != 0){
+        QMessageBox::warning(this,trUtf8("Предупреждение"),
+                             trUtf8("Запись не создана"),QMessageBox::Ok);
+        return;
+    }
     ui->lEdHome->setText("");
     Refresh_Home();
 }
 
 
-void AdminWindow::Refresh_Appartament(int id_apartament)
+void AdminWindow::Refresh_Appartament(int id_apartament /*= -1*/)
 {
     if (ui->cmBx_Home_on_App->isEnabled() && id_apartament == -1)
         ui->cmBx_Org_on_App->setModel(db.Model("organiz"));
     if (ui->cmBx_Org_on_App->isEnabled() && id_apartament == -1)
         ui->cmBx_Home_on_App->setModel(db.Model("homes"));
+//    Mode("app_deff");
+    Refresh_cmBx_NumApp_onApartament();
 
-    if(ui->lEd_NumApp->text()!="" && !ui->lEd_NumApp->isEnabled() && id_apartament != -1){
-        QSqlQueryModel *model;
-        model = db.ModelApartament(id_apartament);
-        ui->lEd_PersAcc->setText(
-                    model->index(0,model->query().record().indexOf("personal_account")).data().toString());
-        ui->lEd_TotalArea->setText(
-                    model->index(0,model->query().record().indexOf("total_area")).data().toString());
-        ui->lEd_InhabedArea->setText(
-                    model->index(0,model->query().record().indexOf("inhabed_area")).data().toString());
-        ui->lEd_Balkon->setText(
-                    model->index(0,model->query().record().indexOf("balkon")).data().toString());
-        ui->lEd_lodggia->setText(
-                    model->index(0,model->query().record().indexOf("loggia")).data().toString());
-        ui->lEd_RealMen->setText(
-                    QString::number(db.is_RealMen(id_apartament,QDate::currentDate())));
-        ui->lEd_RentMen->setText(
-                    QString::number(db.is_RentMen(id_apartament,QDate::currentDate())));
-        ui->lEd_ReservMen->setText(
-                    QString::number(db.is_ReservMen(id_apartament,QDate::currentDate())));
-        ui->lEd_Surname->setText(
-                    model->index(0,model->query().record().indexOf("surname")).data().toString());
-        ui->lEd_Name->setText(
-                    model->index(0,model->query().record().indexOf("name")).data().toString());
-        ui->lEd_Partonymic->setText(
-                    model->index(0,model->query().record().indexOf("patronymic")).data().toString());
-    }
+//    if(ui->lEd_NumApp->text()!="" && !ui->lEd_NumApp->isEnabled() && id_apartament != -1){
+//        QSqlQueryModel *model;
+//        model = db.ModelApartament(id_apartament);
+//        ui->lEd_PersAcc->setText(
+//                    model->index(0,model->query().record().indexOf("personal_account")).data().toString());
+//        ui->lEd_TotalArea->setText(
+//                    model->index(0,model->query().record().indexOf("total_area")).data().toString());
+//        ui->lEd_InhabedArea->setText(
+//                    model->index(0,model->query().record().indexOf("inhabed_area")).data().toString());
+//        ui->lEd_Balkon->setText(
+//                    model->index(0,model->query().record().indexOf("balkon")).data().toString());
+//        ui->lEd_lodggia->setText(
+//                    model->index(0,model->query().record().indexOf("loggia")).data().toString());
+//        ui->lEd_RealMen->setText(
+//                    QString::number(db.is_RealMen(id_apartament,QDate::currentDate())));
+//        ui->lEd_RentMen->setText(
+//                    QString::number(db.is_RentMen(id_apartament,QDate::currentDate())));
+//        ui->lEd_ReservMen->setText(
+//                    QString::number(db.is_ReservMen(id_apartament,QDate::currentDate())));
+//        ui->lEd_Surname->setText(
+//                    model->index(0,model->query().record().indexOf("surname")).data().toString());
+//        ui->lEd_Name->setText(
+//                    model->index(0,model->query().record().indexOf("name")).data().toString());
+//        ui->lEd_Partonymic->setText(
+//                    model->index(0,model->query().record().indexOf("patronymic")).data().toString());
+//    }
 }
-bool AdminWindow::Verify()//  Кнопка проверка
-{
-    int OrganiztionID = -1, HomeID = -1, NumApart = -1;
-    int row;
+//bool AdminWindow::Verify()//  Кнопка проверка
+//{
+//    int OrganiztionID = -1, HomeID = -1, NumApart = -1;
+//    int row;
 
-    row = ui->cmBx_Org_on_App->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org_on_App->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                OrganiztionID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-                return false;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-            return false;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-        return false;
-    }
 
-    row = ui->cmBx_Home_on_App->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home_on_App->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                HomeID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-                return false;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-            return false;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-        return false;
-    }
+//    if(ui->lEd_NumApp->text()!=""){
+//        NumApart = ui->lEd_NumApp->text().toInt();
+//    } else{
+//        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+//                             trUtf8("Нет данных в поле номер квартиры"),QMessageBox::Ok);
+//        return false;
+//    }
 
-    if(ui->lEd_NumApp->text()!=""){
-        NumApart = ui->lEd_NumApp->text().toInt();
-    } else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Нет данных в поле номер квартиры"),QMessageBox::Ok);
-        return false;
-    }
-
-    if (db.is_idappart(HomeID,OrganiztionID,NumApart) == -1){
-        if ((QMessageBox::question(this,trUtf8("Квартиры нет"),
-                                   trUtf8("Добавить информацию о квартире? "),
-                                   QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
-            return false;
-        }  else  {
-            db.NewApatament(OrganiztionID,HomeID,NumApart);
-            Mode("app_edit");
-            Refresh_Appartament(db.is_idappart(HomeID,OrganiztionID,NumApart));
-        }
-    }else{
-        if ((QMessageBox::question(this,trUtf8("Квартира существует"),
-                                   trUtf8("Начать редактирование?"),
-                                   QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
-            Refresh_Appartament(db.is_idappart(HomeID,OrganiztionID,NumApart));
-            Mode("app_deff");
-            return false;
-        }  else  {
-            Mode("app_edit");
-            Refresh_Appartament(db.is_idappart(HomeID,OrganiztionID,NumApart));
-        }
-    }
-    return true;
-}
+//    if (db.is_idappart(HomeID,OrganiztionID,NumApart) == -1){
+//        if ((QMessageBox::question(this,trUtf8("Квартиры нет"),
+//                                   trUtf8("Добавить информацию о квартире? "),
+//                                   QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
+//            return false;
+//        }  else  {
+//            db.NewApatament(OrganiztionID,HomeID,NumApart);
+//            Mode("app_edit");
+//            Refresh_Appartament(db.is_idappart(HomeID,OrganiztionID,NumApart));
+//        }
+//    }else{
+//        if ((QMessageBox::question(this,trUtf8("Квартира существует"),
+//                                   trUtf8("Начать редактирование?"),
+//                                   QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
+//            Refresh_Appartament(db.is_idappart(HomeID,OrganiztionID,NumApart));
+//            Mode("app_deff");
+//            return false;
+//        }  else  {
+//            Mode("app_edit");
+//            Refresh_Appartament(db.is_idappart(HomeID,OrganiztionID,NumApart));
+//        }
+//    }
+//    return true;
+//}
 
 void AdminWindow::SaveApart()
 {
-    int OrganiztionID = -1, HomeID = -1, NumApart = -1;
-    int row;
+    int id_org;
+    int id_home;
+    int NumApart;
 
-    row = ui->cmBx_Org_on_App->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org_on_App->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                OrganiztionID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-            return;
-        }
-    }else{
+    id_org = isIdSelectOrganiztion_onApartament();
+    if(id_org == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
+                             trUtf8("Не заполнено поле Организация "),QMessageBox::Ok);
         return;
     }
 
-    row = ui->cmBx_Home_on_App->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home_on_App->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                HomeID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-            return;
-        }
-    }else{
+    id_home = isIdSelectHome_onApartament();
+    if(id_home == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
+                             trUtf8("Не заполнено поле Дом "),QMessageBox::Ok);
         return;
     }
 
-    if(ui->lEd_NumApp->text()!=""){
-        NumApart = ui->lEd_NumApp->text().toInt();
+    if(ui->lEd_NumApart_onApart->text()!=""){
+        NumApart = ui->lEd_NumApart_onApart->text().toInt();
     } else{
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Нет данных в поле номер квартиры"),QMessageBox::Ok);
+                             trUtf8("Не заполнено поле Номер квартиры"),QMessageBox::Ok);
         return;
     }
     //-------------------------------------
-    QStringList col, val;
-    Mode("app_deff");
-    col << "personal_account" << "total_area" << "inhabed_area"
-        << "balkon "          << "loggia"     << "surname"
-        << "name"             << "patronymic";
+//    QStringList col, val;
+//    Mode("app_deff");
+//    col << "personal_account" << "total_area" << "inhabed_area"
+//        << "balkon "          << "loggia"     << "surname"
+//        << "name"             << "patronymic";
 
-    val << ui->lEd_PersAcc->text() << ui->lEd_TotalArea->text() << ui->lEd_InhabedArea->text()
-        << ui->lEd_Balkon->text()  << ui->lEd_lodggia->text()   << ui->lEd_Surname->text()
-        << ui->lEd_Name->text()    << ui->lEd_Partonymic->text();
+//    val << ui->lEd_PersAcc->text() << ui->lEd_TotalArea->text() << ui->lEd_InhabedArea->text()
+//        << ui->lEd_Balkon->text()  << ui->lEd_lodggia->text()   << ui->lEd_Surname->text()
+//        << ui->lEd_Name->text()    << ui->lEd_Partonymic->text();
 
-    db.UpdateApartament(col,val,db.is_idappart(HomeID,OrganiztionID,NumApart));
+//    db.UpdateApartament(col,val,db.is_idappart(id_home,id_org,NumApart));
 
-    col.clear();
-    col << "real_men" << "rent_men" << "reserv_men";
+//    col.clear();
+//    col << "real_men" << "rent_men" << "reserv_men";
 
-    val.clear();
-    val << ui ->lEd_RealMen->text() << ui->lEd_RentMen->text() << ui->lEd_ReservMen->text();
+//    val.clear();
+//    val << ui ->lEd_RealMen->text() << ui->lEd_RentMen->text() << ui->lEd_ReservMen->text();
 
-    db.UpdateMenInApartament(col,val,db.is_idappart(HomeID,OrganiztionID,NumApart),
-                             QDate::currentDate().year(),QDate::currentDate().month());
+//    db.UpdateMenInApartament(col,val,db.is_idappart(id_home,id_org,NumApart),
+//                             QDate::currentDate().year(),QDate::currentDate().month());
+
+    int t = db.is_idappart(id_home,id_org,NumApart);
+    if ( t == -1){
+        db.NewApatament(id_org,id_home,NumApart);
+        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
+    }
+
+//        QMessageBox::warning(this,trUtf8("Ошибка"),
+//                                     trUtf8("Квартира с таким номером уже существует"),QMessageBox::Ok);
+    if ((QMessageBox::question(this,trUtf8("Квартиры"),
+                               trUtf8("test"),
+                               QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
+        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
+        Mode("app_deff");
+//        return fals;
+    }  else  {
+        Mode("app_edit");
+        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
+    }
+//    }
 }
 
 void AdminWindow::Mode(QString m)
@@ -406,7 +353,7 @@ void AdminWindow::Mode(QString m)
         i=1;
     if (m=="app_edit")
         i=2;
-    if (m=="btn_add")
+    if (m=="app_add")
         i=3;
     if (m == "usl_def")
         i = 4;
@@ -421,9 +368,10 @@ void AdminWindow::Mode(QString m)
     if (m == "home_edit")
         i = 9;
     switch(i){
-    case  1:
+    case  1: //app_deff
         ui->cmBx_Home_on_App->setEnabled(1);
         ui->cmBx_Org_on_App->setEnabled(1);
+        ui->pBtn_NewApartament->setEnabled(1);
         ui->lEd_Balkon->setEnabled(0);
         ui->lEd_InhabedArea->setEnabled(0);
         ui->lEd_lodggia->setEnabled(0);
@@ -434,16 +382,15 @@ void AdminWindow::Mode(QString m)
         ui->lEd_RentMen->setEnabled(0);
         ui->lEd_Surname->setEnabled(0);
         ui->lEd_TotalArea->setEnabled(0);
-        ui->pBtn_Save->setEnabled(0);
         ui->lEd_ReservMen->setEnabled(0);
-        ui->lEd_NumApp->setEnabled(1);
-        ui->pBtn_Verify->setEnabled(1);
+        ui->lEd_NumApart_onApart->setHidden(true);
+        ui->cmBx_NumAp_on_Apartament->setHidden(false);
+        ui->pBtn_Cancel_onApart->setHidden(true);
+        ui->pBtn_Save->setHidden(true);
         break;
-    case 2:
+    case 2: //app_edit
         ui->cmBx_Home_on_App->setEnabled(0);
         ui->cmBx_Org_on_App->setEnabled(0);
-        ui->lEd_NumApp->setEnabled(0);
-        ui->pBtn_Verify->setEnabled(0);
         ui->lEd_Balkon->setEnabled(1);
         ui->lEd_InhabedArea->setEnabled(1);
         ui->lEd_lodggia->setEnabled(1);
@@ -457,23 +404,25 @@ void AdminWindow::Mode(QString m)
         ui->pBtn_Save->setEnabled(1);
         ui->lEd_ReservMen->setEnabled(1);
         break;
-    case 3:
+    case 3: //app_add
         ui->cmBx_Home_on_App->setEnabled(0);
         ui->cmBx_Org_on_App->setEnabled(0);
-        ui->lEd_NumApp->setEnabled(0);
-        ui->pBtn_Verify->setEnabled(0);
-        ui->lEd_Balkon->setEnabled(0);
-        ui->lEd_InhabedArea->setEnabled(0);
-        ui->lEd_lodggia->setEnabled(0);
-        ui->lEd_Name->setEnabled(0);
-        ui->lEd_Partonymic->setEnabled(0);
-        ui->lEd_PersAcc->setEnabled(0);
-        ui->lEd_RealMen->setEnabled(0);
-        ui->lEd_RentMen->setEnabled(0);
-        ui->lEd_Surname->setEnabled(0);
-        ui->lEd_TotalArea->setEnabled(0);
-        ui->pBtn_Save->setEnabled(0);
-        ui->lEd_ReservMen->setEnabled(0);
+        ui->pBtn_NewApartament->setEnabled(0);
+        ui->lEd_Balkon->setEnabled(1);
+        ui->lEd_InhabedArea->setEnabled(1);
+        ui->lEd_lodggia->setEnabled(1);
+        ui->lEd_Name->setEnabled(1);
+        ui->lEd_Partonymic->setEnabled(1);
+        ui->lEd_PersAcc->setEnabled(1);
+        ui->lEd_RealMen->setEnabled(1);
+        ui->lEd_RentMen->setEnabled(1);
+        ui->lEd_ReservMen->setEnabled(1);
+        ui->lEd_Surname->setEnabled(1);
+        ui->lEd_TotalArea->setEnabled(1);
+        ui->lEd_NumApart_onApart->setHidden(false);
+        ui->cmBx_NumAp_on_Apartament->setHidden(true);
+        ui->pBtn_Cancel_onApart->setHidden(false);
+        ui->pBtn_Save->setHidden(false);
         break;
     case 4:
         ui->tblV_on_Uslugi->setEnabled(0);
@@ -485,29 +434,42 @@ void AdminWindow::Mode(QString m)
         ui->pBtn_AddUsluga->setEnabled(1);
         ui->cmBx_Uslugi_onUslugi->setEnabled(1);
         break;
-    case 6:
+    case 6: //org_default
         ui->pBtn_SaveOrg->setHidden(true);                                          //скрытие кнопки
         ui->pBtn_DeleteOrg->setHidden(true);
         ui->pBtn_CancelOrg->setHidden(true);
         ui->lEdNameOrg->setText("");                                                // очистка формы
         ui->lEdBank->setText("");
         ui->lEdAcc->setText("");
+        ui->tblView_Organization->setEnabled(true);
+        ui->pBtn_addOrg->setHidden(false);
+
+        ui->pBtn_SaveOrg->setHidden(true);
+        ui->pBtn_DeleteOrg->setHidden(true);
+        ui->pBtn_CancelOrg->setHidden(true);
+
         break;
-    case 7:
+    case 7: //org_edit
         ui->pBtn_SaveOrg->setHidden(false);                                          //скрытие кнопки
         ui->pBtn_DeleteOrg->setHidden(false);
         ui->pBtn_CancelOrg->setHidden(false);
+        ui->tblView_Organization->setEnabled(false);
+        ui->pBtn_addOrg->setHidden(true);
         break;
-    case 8:
+    case 8: //home_default
         ui->pBtn_SaveHome->setHidden(true);
         ui->pBtn_DeleteHome->setHidden(true);
         ui->pBtn_CancelHome->setHidden(true);
         ui->lEdHome->setText("");
+        ui->pBtn_addHome->setHidden(false);
+        ui->tblView_Home->setEnabled(true);
         break;
-    case 9:
+    case 9: //home_edit
         ui->pBtn_SaveHome->setHidden(false);
         ui->pBtn_DeleteHome->setHidden(false);
         ui->pBtn_CancelHome->setHidden(false);
+        ui->pBtn_addHome->setHidden(true);
+        ui->tblView_Home->setEnabled(false);
         break;
     }
 }
@@ -653,15 +615,15 @@ void AdminWindow::UslView()
 
 void AdminWindow::Refresh_Organization()
 {
-    delete ui->tView_Organization->model();
-    ui->tView_Organization->setModel(db.ModelOrganiz());
+    delete ui->tblView_Organization->model();
+    ui->tblView_Organization->setModel(db.ModelOrganiz());
 
-    ui->tView_Organization->horizontalHeader()->setStretchLastSection(false);
+    ui->tblView_Organization->horizontalHeader()->setStretchLastSection(false);
 #ifdef HAVE_QT5
-    ui->tView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-    ui->tView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Interactive);
-    ui->tView_Organization->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Interactive);
+    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
 #else
     ui->tView_Organization->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     ui->tView_Organization->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
@@ -769,18 +731,77 @@ void AdminWindow::Refresh_cmbNumApp_onUslugi()
     Mode("usl_def");
 }
 
-void AdminWindow::Refresh()
+
+void AdminWindow::Refresh_cmBx_NumApp_onApartament()
 {
-    Refresh_Appartament();
-    Refresh_Home();
-    Refresh_Organization();
-    Refresh_Uslugi();
+    int OrganiztionID = -1, HomeID = -1;
+    int row;
+
+    row = ui->cmBx_Org_on_App->currentIndex();
+
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Org_on_App->model()->index(row, 1);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                OrganiztionID = index.data().toInt();
+            }else{
+                return;
+            }
+        }else{
+            return;
+        }
+    }else{
+        return;
+    }
+
+    row = ui->cmBx_Home_on_App->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Home_on_App->model()->index(row, 1);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                HomeID = index.data().toInt();
+            }else{
+                return;
+            }
+        }else{
+            return;
+        }
+    }else{
+        return;
+    }
+
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model = db.ModelApartament(HomeID,OrganiztionID);
+    ui->cmBx_NumAp_on_Apartament->setModel(model);
+    Mode("app_def");
+}
+
+void AdminWindow::Refresh(int num_tab)
+{
+//    qDebug() << "refresh" << num_tab;
+    switch (num_tab) {
+    case 0:
+        Refresh_Organization();
+        break;
+    case 1:
+        Refresh_Home();
+        break;
+    case 2:
+        Refresh_Appartament();
+        break;
+    case 3:
+        Refresh_Uslugi();
+        break;
+    case 4:
+        Refresh_Pensioner();
+        break;
+    default:
+        break;
+    }
 }
 
 void AdminWindow::FillTarif()
 {
-
-
     tbl_tariff.FillTarif(ui->lEd_Tarif_month->text().toInt(),ui->lEd_Tarif_year->text().toInt());
     QMessageBox::information(this,trUtf8("Уведомление"),
                              trUtf8("Загрузка завершена"),QMessageBox::Ok);
@@ -789,42 +810,31 @@ void AdminWindow::FillTarif()
 
 void AdminWindow::sl_OrgEdit(QModelIndex model)
 {
-
-
-    ui->lEdNameOrg->setText(ui->tView_Organization->model()->index(model.row(),1).data().toString());
-    ui->lEdBank->setText(ui->tView_Organization->model()->index(model.row(),2).data().toString());
-    ui->lEdAcc->setText(ui->tView_Organization->model()->index(model.row(),3).data().toString());
-    ID_ORG = ui->tView_Organization->model()->index(model.row(),0).data().toInt();
+    ui->lEdNameOrg->setText(ui->tblView_Organization->model()->index(model.row(),1).data().toString());
+    ui->lEdBank->setText(ui->tblView_Organization->model()->index(model.row(),2).data().toString());
+    ui->lEdAcc->setText(ui->tblView_Organization->model()->index(model.row(),3).data().toString());
+//    ID_ORG = ui->tView_Organization->model()->index(model.row(),0).data().toInt();
     Mode("org_edit");
 
 }
+
 void AdminWindow::sl_HomeEdit(QModelIndex model)
 {
-
-
     ui->lEdHome->setText(ui->tblView_Home->model()->index(model.row(),1).data().toString());
-    ID_HOME = ui->tblView_Home->model()->index(model.row(),0).data().toInt();
     Mode("home_edit");
-
-
 }
+
 void AdminWindow::sl_SaveOrg()
 {
+    //обновление записи
+    db.UpdateOrganization(ui->lEdNameOrg->text(),ui->lEdBank->text(),ui->lEdAcc->text(),
+                          ui->tblView_Organization->model()->index( ui->tblView_Organization->currentIndex().row(), 0 ).data().toInt());
 
-
-    if (ID_ORG < 0){
-        return;
-    }
-    db.UpdateOrganization(ui->lEdNameOrg->text(),ui->lEdBank->text(),ui->lEdAcc->text(),ID_ORG);//обновление записи  
     Refresh_Organization(); //обновление таблицы
     Mode("org_default");
 }
 void AdminWindow::sl_DeleteOrg()
 {
-    if (ID_ORG < 0){
-        return;
-    }
-
     if ((QMessageBox::question(this,trUtf8("ВНИМАНИЕ УДАЛЕНИЕ"),
                                trUtf8("Действительно хотите удалить?"),
                                QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
@@ -832,7 +842,7 @@ void AdminWindow::sl_DeleteOrg()
     }
 
     QString err;
-    err = db.DeleteOrg(ID_ORG);
+    err = db.DeleteOrg(ui->tblView_Organization->model()->index( ui->tblView_Organization->currentIndex().row(), 0 ).data().toInt());
 
     if (err != "")
     {
@@ -868,12 +878,6 @@ void AdminWindow::sl_CancelHome()
 
 void AdminWindow::sl_DeleteHome()
 {
-
-
-    if (ID_HOME < 0){
-        return;
-    }
-
     if ((QMessageBox::question(this,trUtf8("ВНИМАНИЕ УДАЛЕНИЕ"),
                                trUtf8("Действительно хотите удалить?"),
                                QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
@@ -881,7 +885,7 @@ void AdminWindow::sl_DeleteHome()
     }
 
     QString err;
-    err = db.DeleteHome(ID_HOME);
+    err = db.DeleteHome(ui->tblView_Home->model()->index(ui->tblView_Home->currentIndex().row(),0).data().toInt());
 
     if (err != "")
     {
@@ -894,11 +898,7 @@ void AdminWindow::sl_DeleteHome()
 
 void AdminWindow::sl_SaveHome()
 {
-
-    if (ID_HOME < 0){
-        return;
-    }
-    db.UpdateHome(ID_HOME,ui->lEdHome->text());
+    db.UpdateHome(ui->tblView_Home->model()->index(ui->tblView_Home->currentIndex().row(),0).data().toInt(),ui->lEdHome->text());
     Refresh_Home();
     Mode("home_default");
 }
@@ -933,4 +933,78 @@ void AdminWindow::on_tblV_on_Pens_clicked(const QModelIndex &index)
     Q_UNUSED(index);
     ui->pBtn_addPens->setEnabled(false);
     ui->pBtn_delPens->setEnabled(true);
+}
+
+void AdminWindow::on_pBtn_NewApartament_clicked()
+{
+    int id_org;
+    int id_home;
+
+    id_org = isIdSelectOrganiztion_onApartament();
+    if(id_org == -1){
+        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+                             trUtf8("Не заполнено поле Организация "),QMessageBox::Ok);
+        return;
+    }
+
+    id_home = isIdSelectHome_onApartament();
+    if(id_home == -1){
+        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+                             trUtf8("Не заполнено поле Дом "),QMessageBox::Ok);
+        return;
+    }
+
+    Mode("app_add");
+    ui->lEd_NumApart_onApart->setText("");
+}
+
+int AdminWindow::isIdSelectHome_onApartament()
+{
+    int row;
+    int id_home = -1;
+
+    row = ui->cmBx_Home_on_App->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Home_on_App->model()->index(row, 1);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                id_home = index.data().toInt();
+            }else{
+                return -1;
+            }
+        }else{
+            return -1;
+        }
+    }else{
+        return -1;
+    }
+    return id_home;
+}
+
+int AdminWindow::isIdSelectOrganiztion_onApartament()
+{
+    int row;
+    int id_org = -1;
+
+    row = ui->cmBx_Org_on_App->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Org_on_App->model()->index(row, 1);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                id_org = index.data().toInt();
+            }else{
+                return -1;
+            }
+        }else{
+            return -1;
+        }
+    }else{
+        return -1;
+    }
+    return id_org;
+}
+
+void AdminWindow::on_pBtn_Cancel_onApart_clicked()
+{
+    Mode("app_deff");
 }

@@ -145,7 +145,6 @@ int BD::add(QString table, QString column, QString value)
 //--------------------------------------------------------------------------------------------------------
 int BD::add(QString table,QStringList column,QStringList value)
 {
-//    qDebug()<<"Add Line in "<< table;
     QString strF;
     QSqlQuery query;
     int i;
@@ -170,7 +169,7 @@ int BD::add(QString table,QStringList column,QStringList value)
     if (!query.exec(strF)){
         qDebug() << "3c1f9d13f59a784144a975dd9f5f1fc4" << query.lastError() << strF;
         LogOut.logout(query.lastError().text());
-        return -1;
+        return query.lastError().number();
     }else{
         return 0;
     }
@@ -206,7 +205,7 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
                     .arg(where2);
         if (!query.exec(str))
         {
-            qDebug()<<"Eror  "<<query.lastError()<<"\n"<<str;
+            qDebug()<<"bf206b5a653a24ca32249bfd24515d4e" <<"Eror  "<<query.lastError()<<"\n"<<str;
             LogOut.logout(query.lastError().text());
         }
     }
@@ -232,7 +231,7 @@ void BD::UpdateMenInApartament(QStringList column, QStringList value, int idapar
     if (!t.isNull()){
         out = t.toInt();
     }
-    qDebug() << out;
+    qDebug() << "3163221858b740c726032cd15808cfdb" <<out;
     if (out == 1){
         for(int i=0; i<column.count();i++ ){
             UpdateTable("men_in_apartament",column[i],value[i],"id_apartament", QString::number(idapart));
@@ -257,11 +256,11 @@ QString BD::is_nameOrg(int id)
       if (query.next()){
           return query.value(0).toString()+"  "+query.value(1).toString()+"  "+query.value(2).toString();
       }else{
-          qDebug()<<"not record" << str;
+          qDebug()<< "1852a27bb09e15790457d790779a659c" << "not record" << str;
       }
 
     } else{
-        qDebug()<<query.lastError();
+        qDebug()<< "5671923ec9394f969cc87643860bc3f9" <<query.lastError();
         LogOut.logout(query.lastError().text());
     }
     return "";
@@ -293,10 +292,10 @@ QString BD::is_FIO(int id_app)
         if (query.next()){
             return query.value(0).toString()+"  "+query.value(1).toString()+"  "+query.value(2).toString();
         }else{
-            qDebug()<<"not record" << str;
+            qDebug()<< "5c338ca2e2cf8d0530fd61f407f2d214" <<"not record" << str;
         }
     } else{
-        qDebug()<<query.lastError();
+        qDebug()<< "e13253d437b3561bd7e8a82e1e675c55" <<query.lastError();
         LogOut.logout(query.lastError().text());
     }
 return "";
@@ -324,7 +323,7 @@ QStringList BD::sum_app(int id_org, int id_home)
             .arg(id_org);
 
     if (!query.exec(str)){
-        qDebug() << "Eror in "<<str;
+        qDebug() << "98c4ea14e87b9c76588b823d00e3d957" << "Eror in "<<str;
         LogOut.logout(query.lastError().text());
     } else {
         while (query.next()){
@@ -348,7 +347,7 @@ QList<int> BD::is_ListIdApartament(int id_org, int id_home)
           out <<  query.value(0).toInt();
       }
     } else{
-        qDebug()<<query.lastError();
+        qDebug()<< "709737893f541e722add6cf123fad78e" << query.lastError();
         LogOut.logout(query.lastError().text());
     }
 
@@ -366,7 +365,7 @@ QStringList BD::Sum_Schet(int id_apartament)
     str = str.arg(id_apartament);
 
     if (!query.exec(str)){
-        qDebug() << "Eror in "<<str<<query.lastError();
+        qDebug()  << "f435f42f82bda82306942a9e98003d46" << "Eror in "<<str<<query.lastError();
         LogOut.logout(query.lastError().text());
     } else {
         while (query.next()){
@@ -387,7 +386,7 @@ QStringList BD::Sum_Service(int id_apartament)
     str = str.arg(id_apartament);
 
     if (!query.exec(str)){
-        qDebug() << "Eror in "<<str<<query.lastError();
+        qDebug() << "8411f83d9eee8c8a70bc107a613692e2" << "Eror in "<<str<<query.lastError();
         LogOut.logout(query.lastError().text());
     } else {
         while (query.next()){
@@ -409,7 +408,7 @@ QList<int> BD::is_ListIdServiceWithCounter(int id_apartament)
     str = str.arg(id_apartament);
 
     if (!query.exec(str)){
-        qDebug() << "Eror in "<<str<<query.lastError();
+        qDebug() << "92df4946066ff2f748cbd0178e263cac" << "Eror in "<<str<<query.lastError();
         LogOut.logout(query.lastError().text());
     } else {
         while (query.next()){
@@ -457,7 +456,7 @@ int BD::is_LSh(int id_app)
           out = -1;
       }
     } else{
-        qDebug()<<query.lastError();
+        qDebug()<< "9f6207ae3b8d6f1309c5912d6236e009" << query.lastError();
         LogOut.logout(query.lastError().text());
         out = -1;
     }
@@ -473,7 +472,7 @@ int BD::is_RealMen(int id_app, QDate date)
 
     str = "SELECT real_men FROM men_in_apartament "
             " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
-            " ORDER BY year DESC, month DESC";
+            " ORDER BY date_men_in_apartament";
     str = str.arg(id_app)
             .arg(IsDateOfUnix(date));
 
@@ -485,7 +484,7 @@ int BD::is_RealMen(int id_app, QDate date)
           out = -1;
       }
     } else{
-        qDebug()<<query.lastError();
+        qDebug()<< "a2b96b0494c3a26af3e32c7f69aa58b8" << query.lastError();
         LogOut.logout(query.lastError().text());
         out = -1;
     }
@@ -501,8 +500,9 @@ int BD::is_RentMen(int id_app, QDate date)
     QSqlQuery query;
 
     str = "SELECT rent_men FROM men_in_apartament "
-            " WHERE id_apartament=%1  AND date_men_in_apartament <= %1 "
-            " ORDER BY year DESC, month DESC";
+            " WHERE id_apartament=%1  AND date_men_in_apartament <= %2 "
+            " ORDER BY date_men_in_apartament"
+            ;
     str = str.arg(id_app)
             .arg(IsDateOfUnix(date));
 
@@ -514,7 +514,7 @@ int BD::is_RentMen(int id_app, QDate date)
           out = -1;
       }
     } else{
-        qDebug()<<query.lastError()<< str;
+        qDebug()<< "5ede77df948aae3588ce905167103914" << query.lastError()<< str;
         LogOut.logout(query.lastError().text());
         out = -1;
     }
@@ -527,8 +527,9 @@ int BD::is_ReservMen(int id_app, QDate date)
     QSqlQuery query;
 
     str = "SELECT reserv_men FROM men_in_apartament "
-            " WHERE id_apartament=%1 AND date_men_in_apartament <= %1"
-            " ORDER BY year DESC, month DESC";
+            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
+            " ORDER BY date_men_in_apartament"
+            ;
     str = str.arg(id_app)
             .arg(IsDateOfUnix(date));
 
@@ -540,7 +541,7 @@ int BD::is_ReservMen(int id_app, QDate date)
           out = -1;
       }
     } else{
-        qDebug()<<query.lastError();
+        qDebug()<< "fd4b3c3ba3e91ad556cf9349825129b6" << query.lastError();
         LogOut.logout(query.lastError().text());
         out = -1;
     }
@@ -565,7 +566,7 @@ double BD::is_TotalArea(int id_app)
           out = -1;
       }
     } else{
-        qDebug()<<query.lastError();
+        qDebug()<< "21a3cce63f41f666b02173c48ef61963" << query.lastError();
         LogOut.logout(query.lastError().text());
         out = -1;
     }
@@ -781,7 +782,6 @@ QSqlQueryModel* BD::ModelOrganiz()
     QSqlQueryModel *model = new QSqlQueryModel;
     model->setQuery(QSqlQuery("SELECT id_organiz, name, bank,sett_account  FROM organiz"));
 
-
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Организация"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Банк"));
@@ -846,7 +846,6 @@ QSqlQueryModel* BD::ModelPensioner(int id_home, int id_org)
     str = str.arg(id_org)
             .arg(id_home);
     model->setQuery(QSqlQuery(str));
-    qDebug()<<model->lastError();
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("ID"));
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("ФИО"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("№ Квартиры"));
@@ -913,7 +912,7 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
             "AND p.date_pokazanie="+QString::number(IsDateOfUnix(year,month,1));
         model->setQuery(QSqlQuery(str2));
     }
-
+//    qDebug() << "t1 MP";
     if(model->rowCount()==0){  //ООо всё равно пусто, то тогда добавим строчки
         QString str2;
         QSqlQuery query2;
@@ -926,6 +925,10 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
         str2 = str2.arg(id_apartament);
 
         if (query2.exec(str2)){
+            if (query2.size() == -1){
+                return model;
+            }
+
             while (query2.next()){ // переберём все строчки
                 values.clear();
                 values << query2.value(0).toString() << QString::number(IsDateOfUnix(year,month,1))
@@ -936,9 +939,11 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
             qDebug()<<query2.lastError();
             LogOut.logout(query2.lastError().text());
         }
+
         model = ModelPokazanie(id_apartament, month, year); // И теперь попробуем ещё раз получить не пустую модель
 
     }
+//    qDebug() << "t2 MP";
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Счётчик"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Пок посл"));
     model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Пок тек"));
@@ -1067,7 +1072,6 @@ void BD::new_pokazanie(int id_apartament, int month, int year)
 
 int BD::new_pokazanie(int id_pok_old, QString value_home)
 {
-//    qDebug()<<"new int";
     int id_new = -1;
     int date_old = -1, date, id_ListApart=-1;
     QString str;
@@ -1084,7 +1088,7 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
             date_old =  query.value(0).toInt();
             id_ListApart = query.value(2).toInt();
         }else{
-            qDebug()<<"not record" << str;
+//            qDebug()<< "not record " << str;
         }
     } else{
             qDebug()<<query.lastError();
@@ -1094,6 +1098,7 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
 //    month = next_month(month_old);
 //    year = next_year(month_old,year_old);
     date = date_old; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    qDebug()<<date;
 
     //Проверим на существование показаний на след месяц
     str = "SELECT id_pokazanie FROM pokazanie "

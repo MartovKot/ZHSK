@@ -81,7 +81,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>2</number>
       </property>
       <property name="tabsClosable">
        <bool>false</bool>
@@ -119,13 +119,7 @@
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_14">
-             <property name="leftMargin">
-              <number>5</number>
-             </property>
              <property name="topMargin">
-              <number>5</number>
-             </property>
-             <property name="rightMargin">
               <number>5</number>
              </property>
              <item>
@@ -244,7 +238,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Добавить</string>
+            <string>Добавить новую запись</string>
            </property>
           </widget>
          </item>
@@ -277,7 +271,14 @@
           </layout>
          </item>
          <item>
-          <widget class="QTableView" name="tView_Organization"/>
+          <widget class="QTableView" name="tblView_Organization">
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -379,7 +380,14 @@
           </layout>
          </item>
          <item>
-          <widget class="QTableView" name="tblView_Home"/>
+          <widget class="QTableView" name="tblView_Home">
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -397,28 +405,21 @@
           <x>10</x>
           <y>10</y>
           <width>581</width>
-          <height>359</height>
+          <height>379</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>10</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <spacer name="horizontalSpacer_16">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>15</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item>
             <widget class="QLabel" name="label_4">
              <property name="text">
@@ -430,16 +431,13 @@
             <widget class="QComboBox" name="cmBx_Org_on_App"/>
            </item>
            <item>
-            <spacer name="horizontalSpacer_18">
+            <spacer name="horizontalSpacer_2">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>15</width>
+               <width>40</width>
                <height>20</height>
               </size>
              </property>
@@ -449,22 +447,6 @@
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <spacer name="horizontalSpacer_15">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>15</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item>
             <widget class="QLabel" name="label_5">
              <property name="text">
@@ -476,85 +458,13 @@
             <widget class="QComboBox" name="cmBx_Home_on_App"/>
            </item>
            <item>
-            <spacer name="horizontalSpacer_17">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>15</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_7">
-           <item>
-            <spacer name="horizontalSpacer_13">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>15</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_11">
-             <property name="text">
-              <string>Номер квартиры</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="lEd_NumApp"/>
-           </item>
-           <item>
             <spacer name="horizontalSpacer_4">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Maximum</enum>
-             </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pBtn_Verify">
-             <property name="text">
-              <string>Проверить</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_14">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>15</width>
+               <width>40</width>
                <height>20</height>
               </size>
              </property>
@@ -566,22 +476,37 @@
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <property name="spacing">
+              <number>10</number>
+             </property>
              <item>
-              <spacer name="horizontalSpacer_9">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <item>
+                <widget class="QLabel" name="label_11">
+                 <property name="text">
+                  <string>Номер квартиры</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="cmBx_NumAp_on_Apartament"/>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="lEd_NumApart_onApart"/>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pBtn_NewApartament">
+                 <property name="text">
+                  <string>Создать</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_21">
              <item>
               <widget class="QLabel" name="label_20">
                <property name="text">
@@ -603,16 +528,13 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_8">
+              <spacer name="horizontalSpacer_5">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>15</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -702,22 +624,6 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_8">
                <item>
-                <spacer name="horizontalSpacer_10">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>15</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
                 <widget class="QLabel" name="label_13">
                  <property name="text">
                   <string>Общая</string>
@@ -775,22 +681,6 @@
                   <bool>false</bool>
                  </property>
                 </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_7">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>15</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
                </item>
               </layout>
              </item>
@@ -878,22 +768,6 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
-                <spacer name="horizontalSpacer_11">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>15</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
                 <widget class="QLabel" name="label_7">
                  <property name="text">
                   <string>Фактически</string>
@@ -934,22 +808,6 @@
                   <bool>false</bool>
                  </property>
                 </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_6">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>15</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
                </item>
               </layout>
              </item>
@@ -1037,22 +895,6 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_9">
                <item>
-                <spacer name="horizontalSpacer_12">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>15</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
                 <widget class="QLabel" name="label_17">
                  <property name="text">
                   <string>Фамилия</string>
@@ -1094,35 +936,40 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <spacer name="horizontalSpacer_5">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>15</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
               </layout>
              </item>
             </layout>
            </item>
            <item>
-            <widget class="QPushButton" name="pBtn_Save">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Сохранить</string>
+            <widget class="Line" name="line_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
             </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_19">
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pBtn_Save">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="text">
+                <string>Сохранить</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pBtn_Cancel_onApart">
+               <property name="text">
+                <string>Отменить</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <spacer name="verticalSpacer">
@@ -1279,7 +1126,16 @@
              </item>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_18">
-               <property name="margin">
+               <property name="leftMargin">
+                <number>5</number>
+               </property>
+               <property name="topMargin">
+                <number>5</number>
+               </property>
+               <property name="rightMargin">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
                 <number>5</number>
                </property>
                <item>
@@ -1412,7 +1268,7 @@
            <item>
             <widget class="QLineEdit" name="lEd_Tarif_month">
              <property name="inputMask">
-              <string>99; </string>
+              <string>99</string>
              </property>
             </widget>
            </item>

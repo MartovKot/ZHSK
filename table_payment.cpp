@@ -18,13 +18,10 @@ bool Table_Payment::add_line(QString id_apartament, QString y_payment, QString m
     const qint64 MS_COEF = 1000;
     QDate date;
     date.setDate(y_payment.toInt(), m_payment.toInt(), d_payment.toInt());
-//    qDebug() << date;
     QDateTime datetime;
     datetime.setTimeSpec(Qt::OffsetFromUTC);
     datetime.setDate(date);
-//    qDebug() << datetime  << datetime.timeSpec();
     timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
-//    qDebug() << timeInUnix;
 
     column<<"id_apartament"<<"payment_date"<<"payment";
     value<<id_apartament<<QString::number(timeInUnix)<<payment;
@@ -54,12 +51,11 @@ QString Table_Payment::delete_Payment(int id_apartament, int year, int month, in
     QSqlQuery query;
     QString out = "";
 
-    str =   "DELETE FROM payment "
-            "WHERE id_apartament=%1 AND DATE(payment_date,'%Y')=%2 ANDDATE(payment_date,'%M')=%3 AND DATE(payment_date,'%d')=%4";
+    str = "DELETE FROM payment "
+            "WHERE id_apartament=%1 AND payment_date=%2";
+
     str = str.arg(id_apartament)
-            .arg(year)
-            .arg(month)
-            .arg(day);
+            .arg(IsDateOfUnix(year,month,day));
     if (!query.exec(str)){
         out = query.lastError().text();
     }

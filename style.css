@@ -78,6 +78,10 @@ QLineEdit{
     border-color: darkkhaki;
     border-radius: 5px;
 }
+/*QLineEdit:disabled{
+    background-color: #ffe1c2;
+
+}*/
 
 QFrame {
     border-width: 2px;

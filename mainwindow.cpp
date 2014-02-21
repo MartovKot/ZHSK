@@ -18,8 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->setLayout(ui->verticalLayout);
 
     Refresh_win();
-    OrganiztionID = -1;
-    HomeID = -1;
+
     ui->statusBar->showMessage(db.is_DatabaseVersoin());
     QFile styleFile(":/style.css");
     if( styleFile.open(QFile::ReadOnly) ) {
@@ -47,70 +46,29 @@ void MainWindow::Admin_mod()
         AdmWin = new AdminWindow(this);
         AdmWin->setPalette(this->palette());
     }
-
     AdmWin->show();
 }
 
 void MainWindow::Oper_mod()
 {
-    Install_param();
     if (OperWin == NULL){
         OperWin = new OperWindow(this);
     }
 
-    OperWin->set_parametr(OrganiztionID,HomeID);
+    if (isIdSelectOrganiztion() == -1){
+        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+                             trUtf8("Не выбрана организация"),QMessageBox::Ok);
+        return;
+    }
+    if (isIdSelectHome() == -1){
+        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+                             trUtf8("Не выбран дом"),QMessageBox::Ok);
+        return;
+    }
+
+    OperWin->set_parametr(isIdSelectOrganiztion(),isIdSelectHome());
     OperWin->setWindowTitle(ui->pBtnOper->text());
     OperWin->show();
-}
-
-void MainWindow::Install_param()
-{
-
-    int row;
-
-    row = ui->cmBx_Org->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                OrganiztionID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-        return;
-    }
-
-    row = ui->cmBx_Home->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                HomeID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-        return;
-    }
 }
 
 void MainWindow::Print_mod()
@@ -119,8 +77,7 @@ void MainWindow::Print_mod()
 
     QList<int> list_id_apartament; //Список ид квартир
 
-    Install_param();
-    list_id_apartament = db.is_ListIdApartament(OrganiztionID, HomeID);
+    list_id_apartament = db.is_ListIdApartament(isIdSelectOrganiztion(), isIdSelectHome());
 
     QProgressBar *PB = new QProgressBar();
     PB->setWindowIcon(this->windowIcon());
@@ -139,7 +96,7 @@ void MainWindow::Print_mod()
     delete PB;
 
     VwBlank->setDate(QDate::currentDate().year(),QDate::currentDate().month());
-    VwBlank->setInfo(HomeID,OrganiztionID);
+    VwBlank->setInfo(isIdSelectHome(),isIdSelectOrganiztion());
     VwBlank->generate();
     VwBlank->show();
 }
@@ -187,13 +144,54 @@ void MainWindow::sl_setCurDirArh(QString CurDir)
     CurentDirArhiv = CurDir;
 }
 
-void MainWindow::on_pBtnPrint_clicked()
-{
-
-}
-
 void MainWindow::setVersion(QString ver)
 {
     Version = trUtf8("ЖСК-квитанция ")+ver;
     setWindowTitle(Version);
+}
+
+int MainWindow::isIdSelectHome()
+{
+    int row;
+    int id_home = -1;
+
+    row = ui->cmBx_Home->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Home->model()->index(row, 1);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                id_home = index.data().toInt();
+            }else{
+                return -1;
+            }
+        }else{
+            return -1;
+        }
+    }else{
+        return -1;
+    }
+    return id_home;
+}
+
+int MainWindow::isIdSelectOrganiztion()
+{
+    int row;
+    int id_org = -1;
+
+    row = ui->cmBx_Org->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Org->model()->index(row, 1);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                id_org = index.data().toInt();
+            }else{
+                return -1;
+            }
+        }else{
+            return -1;
+        }
+    }else{
+        return -1;
+    }
+    return id_org;
 }
