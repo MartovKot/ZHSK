@@ -56,13 +56,13 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    Updater upd;
-    upd.setVersion(VERSION);
-    upd.RunUpdate();
-
     QPixmap pixmap(":/images/main.png");
     QSplashScreen splash(pixmap);
     splash.show();
+
+    Updater upd;
+    upd.setVersion(VERSION);
+    upd.RunUpdate();
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
     LogReport out;

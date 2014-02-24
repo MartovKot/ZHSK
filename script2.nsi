@@ -70,7 +70,7 @@ SectionEnd ; end the section
 Section "zhsk" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
-  File "..\build-Kvit_main-Desktop_Qt_5_2_0_MinGW_32bit-Выпуск\release\kvit.exe"
+  File ".\release\kvit.exe"
   CreateDirectory "$SMPROGRAMS\ZHSK"
   CreateShortCut "$SMPROGRAMS\ZHSK\ZHSK.lnk" "$INSTDIR\kvit.exe"
   CreateShortCut "$DESKTOP\ZHSK.lnk" "$INSTDIR\kvit.exe"
