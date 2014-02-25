@@ -31,15 +31,14 @@ static bool createConnection() //подключение к БД
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QSplashScreen splash;
     QPixmap pixmap(":/images/main.png");
+    splash.setPixmap(pixmap);
+    splash.show();
 
     Updater upd;
     upd.setVersion(VERSION);
     upd.RunUpdate();
-
-    QSplashScreen splash;
-    splash.setPixmap(pixmap);
-    splash.show();
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
     LogReport out;
