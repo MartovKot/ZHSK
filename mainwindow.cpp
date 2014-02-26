@@ -45,6 +45,7 @@ void MainWindow::Admin_mod()
     if(AdmWin == NULL){
         AdmWin = new AdminWindow(this);
         AdmWin->setPalette(this->palette());
+        connect(AdmWin,SIGNAL(finished(int)),SLOT(sl_AdminWinClose()));
     }
     AdmWin->show();
 }
@@ -53,6 +54,9 @@ void MainWindow::Oper_mod()
 {
     if (OperWin == NULL){
         OperWin = new OperWindow(this);
+        OperWin->setPalette(this->palette());
+
+        connect(OperWin,SIGNAL(finished(int)),SLOT(sl_OperWinClose()));
     }
 
     if (isIdSelectOrganiztion() == -1){
@@ -194,4 +198,16 @@ int MainWindow::isIdSelectOrganiztion()
         return -1;
     }
     return id_org;
+}
+
+void MainWindow::sl_OperWinClose()
+{
+    delete OperWin;
+    OperWin  = NULL;
+}
+
+void MainWindow::sl_AdminWinClose()
+{
+    delete AdmWin;
+    AdmWin  = NULL;
 }

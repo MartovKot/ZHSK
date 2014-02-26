@@ -49,13 +49,9 @@ void OperWindow::Refresh_tblVPayment(int ApartamenID)
 {
 #ifdef HAVE_QT5
     ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
-//    qDebug()<<"test 1";
     ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
-//    qDebug()<<"test 2";
     ui->tblV_Payment->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-//    qDebug()<<"test 3";
     ui->tblV_Payment->horizontalHeader()->setSectionResizeMode( 3, QHeaderView::Interactive);
-//    qDebug()<<"test 4";
 #else
     ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
     ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
@@ -101,7 +97,8 @@ void OperWindow::sl_addPayment()
 void OperWindow::Refresh_tblVCount()
 {
     int id_apartament;
-    id_apartament = ui->cmBx_NumApartanent->model()->index(ui->cmBx_NumApartanent->currentIndex(), 1).data().toInt();
+    id_apartament = isIdSelectApartament();
+
     ui->tblV_Count->setModel(db.ModelPokazanie(id_apartament,
                                  ui->dEd_Count->date().month(),
                                  ui->dEd_Count->date().year()));
@@ -133,28 +130,11 @@ void OperWindow::set_parametr(int id_org, int id_home)
 void OperWindow::sl_EditPokazanie()
 {
     int ApartamentID;// Получим id квартиры
-    int row = ui->cmBx_NumApartanent->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_NumApartanent->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                ApartamentID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле номер квартиры"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле номер квартиры"),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле номер квартиры"),QMessageBox::Ok);
-        return;
+    ApartamentID = isIdSelectApartament();
+    if (ApartamentID == -1){
+        QMessageBox::warning(this,trUtf8("Ошибка"),
+                             trUtf8("Нет номера квартиры"),QMessageBox::Ok);
     }
-//    qDebug() << "edPok2";
 
     //Новое окно редактирования
     dlg = new QDialog(this);
@@ -271,73 +251,48 @@ void OperWindow::sl_Calendar()
     w->open();
 }
 
-void OperWindow::sl_RefreshLabel()
+void OperWindow::sl_RefreshLabel() //обновление выводяшейся оплаты и долга
 {
     int ApartamentID;
-    int row = ui->cmBx_NumApartanent->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_NumApartanent->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                ApartamentID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле организация"),QMessageBox::Ok);
-        return;
+    ApartamentID = isIdSelectApartament();
+    if (ApartamentID == -1){
+        QMessageBox::warning(this,trUtf8("Ошибка"),
+                             trUtf8("Нет номера квартиры"),QMessageBox::Ok);
     }
 
-    int day = QDate::currentDate().day();
     int month = ui->dEd_Count->date().month();
     int year = ui->dEd_Count->date().year();
-
     QDate date_calc;
-    date_calc.setDate(year,month,day);
-    if (date_calc.daysTo(QDate::currentDate()) == 0){ //Расчёт производим только за текущий месяц
-        db.CreditedOfService(ApartamentID,ui->dEd_Count->date());
-    }
-    ui->lblInPayment->setText(QString::number(db.AmountToPay(ApartamentID,ui->dEd_Count->date())));
+    date_calc.setDate(year,month,1);
 
-    ui->lblDolg->setText(db.is_Debt(ApartamentID,ui->dEd_Count->date()));
+    if (ui->dEd_Count->date() == QDate::currentDate()){ //Расчёт производим только за текущий месяц
+        db.CreditedOfService(ApartamentID,date_calc);
+    }
+    ui->lblInPayment->setText(QString::number(db.AmountToPay(ApartamentID,date_calc)));
+    ui->lblDolg->setText(db.is_Debt(ApartamentID,date_calc));
 }
 
 void OperWindow::sl_ApartFirst()
 {
     ui->cmBx_NumApartanent->setCurrentIndex(0);
-
     sl_RefreshFull();
 }
 
 void OperWindow::sl_ApartLast()
 {
     ui->cmBx_NumApartanent->setCurrentIndex(ui->cmBx_NumApartanent->count()-1);
-
     sl_RefreshFull();
 }
 
 void OperWindow::sl_ApartNext()
 {
     int index;
-//    qDebug()<<"test 1";
     index = ui->cmBx_NumApartanent->currentIndex();
-//    qDebug()<<"test 2";
     if(index < ui->cmBx_NumApartanent->count()-1){
         index++;
     }
-//    qDebug()<<"test 3";
     ui->cmBx_NumApartanent->setCurrentIndex(index);
-//    qDebug()<<"test 4";
     sl_RefreshFull();
-//    qDebug()<<"test 5";
 }
 
 void OperWindow::sl_ApartPrevious()
@@ -355,13 +310,9 @@ void OperWindow::sl_ApartPrevious()
 void OperWindow::sl_RefreshFull()
 {
     int num = ui->cmBx_NumApartanent->model()->index(ui->cmBx_NumApartanent->currentIndex(), 1).data().toInt();
-//    qDebug()<<"test 1 rf";
     Refresh_tblVPayment(num);
-//    qDebug()<<"test 2 rf ";
     Refresh_tblVCount();
-//    qDebug()<<"test 3 rf";
     sl_RefreshLabel();
-//    qDebug()<<"test 4 rf";
 }
 
 void OperWindow::sl_NewCounter()//вызывается когда происходит смена счётчика
@@ -380,4 +331,25 @@ void OperWindow::sl_NewCounter()//вызывается когда происхо
     dlg->set_IdPokazanie(id_counter);
     connect(dlg,SIGNAL(finished(int)),this,SLOT(Refresh_tblVCount()));
     dlg->open();
+}
+
+int OperWindow::isIdSelectApartament()
+{
+    int ApartamentID;
+    int row = ui->cmBx_NumApartanent->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_NumApartanent->model()->index(row, 1);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                ApartamentID = index.data().toInt();
+            }else{
+                ApartamentID = -1;
+            }
+        }else{
+            ApartamentID = -1;
+        }
+    }else{
+        ApartamentID = -1;
+    }
+    return ApartamentID;
 }

@@ -912,7 +912,6 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
             "AND p.date_pokazanie="+QString::number(IsDateOfUnix(year,month,1));
         model->setQuery(QSqlQuery(str2));
     }
-//    qDebug() << "t1 MP";
     if(model->rowCount()==0){  //ООо всё равно пусто, то тогда добавим строчки
         QString str2;
         QSqlQuery query2;
@@ -1049,7 +1048,8 @@ void BD::sl_EditPokazanie(int id_pok, QString value)
 }
 void BD::new_pokazanie(int id_apartament, int month, int year)
 {
-//    qDebug()<<"new void";
+//    qDebug() << "new";
+//    new_pokazanie(id_apartament,);
     QString str;
     QSqlQuery query;
     str =   " SELECT id_pokazanie, pokazanie_end "
@@ -1058,11 +1058,16 @@ void BD::new_pokazanie(int id_apartament, int month, int year)
                 " AND lau.id_list_app_usluga = p.id_list_app_usluga "
                 " AND p.date_pokazanie = %2 ";
     str = str.arg(id_apartament)
-                .arg(QString::number(IsDateOfUnix(next_year(month,year),next_month(month),1)));
+                .arg(QString::number(IsDateOfUnix(year,month,1)));
+
+//    qDebug() << month << year << str <<IsDateOfUnix(year,month,1);
+
 
     if (query.exec(str)) {
         while (query.next()) {
+//            qDebug() << "In " <<IsDateOfUnix(year,month,1);
             new_pokazanie(query.value(0).toInt(),query.value(1).toString());
+
         }
     }else{
             qDebug()<<query.lastError();
@@ -1081,29 +1086,34 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
 
     //  найдём дату текущих показаний
     str = "SELECT date_pokazanie, id_list_app_usluga FROM pokazanie WHERE id_pokazanie=%1";
+//    str = "SELECT date_pokazanie FROM pokazanie WHERE id_pokazanie=%1";
     str = str.arg(id_pok_old);
 
     if (query.exec(str)){
         if (query.next()){
             date_old =  query.value(0).toInt();
-            id_ListApart = query.value(2).toInt();
+//            qDebug() << "date out " << date_old;
+            id_ListApart = query.value(1).toInt();
         }else{
-//            qDebug()<< "not record " << str;
+            qDebug()<< "not record " << str;
         }
     } else{
             qDebug()<<query.lastError();
             LogOut.logout(query.lastError().text());
     }
-    //проверим на коректность
 //    month = next_month(month_old);
 //    year = next_year(month_old,year_old);
-    date = date_old; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    qDebug()<<date;
+    QDateTime time;
+    time = time.fromTime_t(date_old);
+    time = time.addMonths(1);
+    date = IsDateOfUnix(time.date()); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//    qDebug() << "date next "<< date;
+//    qDebug()<<date;
 
     //Проверим на существование показаний на след месяц
     str = "SELECT id_pokazanie FROM pokazanie "
             "WHERE date_pokazanie=%1 AND id_list_app_usluga=%2";
-    str = str.arg(date_old)
+    str = str.arg(date)
             .arg(QString::number(id_ListApart));
     QVariant t = SelectFromTable(str);
     if(t.toInt() == -1){//если нет записей
@@ -1119,6 +1129,7 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
             return -1;
         }
     }else{//иначе
+//        qDebug("update");
         //Обновим запись
         UpdateTable("pokazanie","pokazanie_home",value_home,"id_pokazanie",t.toString());
         return t.toInt();
@@ -1427,6 +1438,7 @@ double BD::AmountToPay(int id_apart, QDate date)
     str = str.arg(IsDateOfUnix(date))
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
+//    qDebug() << "AmountToPay";
     if (!t.isNull()){
         debt = t.toDouble();
     }
@@ -1620,7 +1632,7 @@ double BD::PaymentCounters(int id_list_app_usluga, QDate date)  //расчёт �
           return -1;
       }
     } else{
-        qDebug()<<"50989f8dadb00b65e3396658407c7197"<<query.lastError();
+        qDebug()<<"50989f8dadb00b65e3396658407c7197 "<<query.lastError();
         LogOut.logout(query.lastError().text());
         return -1;
     }
@@ -1677,7 +1689,7 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
     if (query.exec(str)){
         if (query.next()){
             Unix_date = query.value(0).toULongLong();
-            qDebug() << Unix_date;
+//            qDebug() << Unix_date;
             id_app = query.value(1).toInt();
         }else{
             return;
@@ -1718,7 +1730,7 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
         LogOut.logout(query.lastError().text());
         return;
     }
-    qDebug()<<"VALUE = "<<value;
+//    qDebug()<<"VALUE = "<<value;
 
     if (!New){
         str = " SELECT id_pokazanie, pokazanie_end ";

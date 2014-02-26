@@ -37,6 +37,7 @@ private:
     int HomeID, OrganizationID;
     int p_id_pokazanie, p_pokazanie;
     Table_Payment t_payment;
+    int isIdSelectApartament();
 
 
 private slots:
@@ -52,6 +53,7 @@ private slots:
     void sl_ApartNext();
     void sl_ApartPrevious();
     void sl_NewCounter();               //вызывается когда происходит смена счётчика
+
 protected:
     void keyPressEvent(QKeyEvent *event);
 

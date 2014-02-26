@@ -46,6 +46,8 @@ private slots:
     void sl_ArhivKvit();  //Архив квитанций
     void sl_setCurDirArh(QString CurDir);
     void sl_OpenArhiv();
+    void sl_OperWinClose();
+    void sl_AdminWinClose();
 };
 
 #endif // MAINWINDOW_H

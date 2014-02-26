@@ -139,11 +139,8 @@ private:
 
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
-
     int next_month (int m);
     int next_year(int m, int y);
-
-
 
     double CreditedOfApartament(int id_list_app_usluga, QDate date);
     void CreditedForApartament(int id_apart, QDate date);
