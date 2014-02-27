@@ -30,6 +30,25 @@
 
 ; MUI end ------
 
+!macro BackupDir FILE_DIR BACKUP_TO
+ IfFileExists "${BACKUP_TO}" +2
+  CreateDirectory "${BACKUP_TO}"
+ IfFileExists "${FILE_DIR}" 0 +2
+  CopyFiles "${FILE_DIR}\*.*" "${BACKUP_TO}"
+MessageBox MB_OK "backup"
+!macroend
+
+!macro RestoreDir BUP_DIR RESTORE_TO
+ IfFileExists "${RESTORE_TO}" +2
+  CreateDirectory "${RESTORE_TO}"
+ IfFileExists "${BUP_DIR}" 0 +2
+  CopyFiles "${BUP_DIR}\*.*" "${RESTORE_TO}"
+  RMDir /r ${BUP_DIR}
+  
+  
+  
+!macroend
+
 !macro BackupFile FILE_DIR FILE BACKUP_TO
  IfFileExists "${BACKUP_TO}\*.*" +2
   CreateDirectory "${BACKUP_TO}"
@@ -50,21 +69,15 @@ ShowInstDetails show
 
 
 Section "" ;No components page, name is not important
-; Put file there   ;SetOutPath $TEMP
-;File setupCheckUfa01_04_2011.exe
-;ExecWait '"C:\Program Files\РМ оператора приема документов\unins000.exe" /verysilent'
+
 IfFileExists $INSTDIR\kvit.exe 0 +6
   !insertmacro BackupFile $INSTDIR "kvitdb.qsl" $TEMP
+  !insertmacro BackupDir "$INSTDIR\kvit" "$TEMP\kvit"
   RMDir /r $INSTDIR
   CreateDirectory $INSTDIR
   !insertmacro RestoreFile $TEMP "kvitdb.qsl" $INSTDIR
-  ;MessageBox MB_OK "проверь"
-
-
-
-;RMDir /r "c:\Program Files\РМ оператора приема документов"
-;ExecWait 'setup.exe /verysilent'
-;CreateShortCut "$DESKTOP\РМ оператора приема документов.lnk" "C:\Program Files\РМ оператора приема документов\operator.exe"
+  !insertmacro RestoreDir "$TEMP\kvit" "$INSTDIR\kvit"
+  MessageBox MB_OK "проверь"
 SectionEnd ; end the section
 
 Section "zhsk" SEC01
@@ -168,6 +181,10 @@ Section "libs" SEC02
   SetOutPath "$INSTDIR\sqldrivers"
 
   File "..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\plugins\sqldrivers\qsqlite.dll"
+  
+  SetOutPath "$INSTDIR\imageformats"
+  
+  File "..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\plugins\imageformats\qico.dll"
   
 SectionEnd
 
