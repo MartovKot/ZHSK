@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     MainWindow::connect(ui->pBtnAdmin,SIGNAL(clicked()),this,SLOT(Admin_mod()));
     MainWindow::connect(ui->pBtnOper,SIGNAL(clicked()),this,SLOT(Oper_mod()));
     MainWindow::connect(ui->pBtnPrint,SIGNAL(clicked()),this,SLOT(Print_mod()));
-    MainWindow::connect(ui->pBtnRefresh,SIGNAL(clicked()),this,SLOT(Refresh_win()));
     MainWindow::connect(ui->pBtn_ArhivBlank,SIGNAL(clicked()),this,SLOT(sl_ArhivKvit()));
 
     ui->centralWidget->setLayout(ui->verticalLayout);
@@ -46,6 +45,7 @@ void MainWindow::Admin_mod()
         AdmWin = new AdminWindow(this);
         AdmWin->setPalette(this->palette());
         connect(AdmWin,SIGNAL(finished(int)),SLOT(sl_AdminWinClose()));
+
     }
     AdmWin->show();
 }
@@ -202,12 +202,14 @@ int MainWindow::isIdSelectOrganiztion()
 
 void MainWindow::sl_OperWinClose()
 {
+    Refresh_win();
     delete OperWin;
     OperWin  = NULL;
 }
 
 void MainWindow::sl_AdminWinClose()
 {
+    Refresh_win();
     delete AdmWin;
     AdmWin  = NULL;
 }
