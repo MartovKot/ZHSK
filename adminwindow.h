@@ -70,7 +70,6 @@ private slots:
     void Refresh(int);
     void Refresh_cmbNumApp_onUslugi();
     void Refresh_cmBx_NumApp_onApartament();
-//    bool Verify();
     void SaveApart();
     void TarifRequest();
     void TarifEdit();

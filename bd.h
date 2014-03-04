@@ -142,7 +142,7 @@ private:
     int next_month (int m);
     int next_year(int m, int y);
 
-    double CreditedOfApartament(int id_list_app_usluga, QDate date);
+    QVariant CreditedOfApartament(int id_list_app_usluga, QDate date);
     void CreditedForApartament(int id_apart, QDate date);
     void PaymentOfDebt(int id_apart, QDate date);                              //расчёт долга
     double PaymentCounters(int id_list_app_usluga, QDate date);

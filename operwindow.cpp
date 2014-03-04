@@ -28,7 +28,6 @@ OperWindow::OperWindow(QWidget *parent) :
     connect(ui->cmBx_NumApartanent,SIGNAL(activated(int)),SLOT(sl_RefreshFull()));
     connect(ui->pBtn_NewCounter,SIGNAL(clicked()),SLOT(sl_NewCounter()));
 
-
     QRegExpValidator *dv = new QRegExpValidator(QRegExp("[0-9]+[\\.|\\,]?[0-9]{,2}"),this); //валидатор для чисел
     ui->lEd_Sum->setValidator(dv);
     ui->dEd_Count->setDate(QDate::currentDate());
@@ -37,6 +36,7 @@ OperWindow::OperWindow(QWidget *parent) :
     QPixmap pixmap(":/ico/base_calendar_32.png");
     ui->tBtn_Calendar->setIcon(QIcon(pixmap));
     ui->tBtn_Calendar->setMask(pixmap.mask());
+
 }
 
 OperWindow::~OperWindow()

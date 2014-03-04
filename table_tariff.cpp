@@ -11,7 +11,7 @@ table_tariff::~table_tariff()
     delete db;
 }
 
-double table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
+float table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
 {
     QString str, strF;
     double out = -1;
@@ -36,7 +36,10 @@ double table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
     if (!t.isNull()){
         out = t.toDouble();
     }
+    out = QString::number(out,'f',2).toDouble();
+    QString t3 = QString::number(out,'f',2);
     return out;
+
 }
 
 QSqlQueryModel* table_tariff::ModelTarifTabl(int year, int month)
