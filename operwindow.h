@@ -2,7 +2,6 @@
 #define OPERWINDOW_H
 
 #include <QDialog>
-//#include <QtSql>
 #include <QSqlRecord>
 #include <QSqlQueryModel>
 #include <QBitmap>

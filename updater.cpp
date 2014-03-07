@@ -144,7 +144,6 @@ void Updater::startRequest(QUrl url)
 {
 //    QFileInfo fileInfo(m_url.path());
 //    QString fileName = fileInfo.fileName();
-//    qDebug() <<"t1"<< fileName;
 
     progressDialog->open();
     reply_download = m_manager_download.get(QNetworkRequest(url));

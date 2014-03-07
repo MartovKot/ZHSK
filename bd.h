@@ -32,7 +32,7 @@ class BD : public  QObject
     Q_OBJECT
 public:
 
-    BD();
+    explicit BD();
     ~BD();
     void Create();
 
@@ -135,6 +135,7 @@ private:
     qint64 IsDateOfUnix(QDate date);
     QSqlDatabase db;
     LogReport LogOut;
+
     bool RunScript(QString filename);
 
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание

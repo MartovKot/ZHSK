@@ -170,15 +170,15 @@
         <property name="enabled">
          <bool>true</bool>
         </property>
+        <property name="displayFormat">
+         <string>MM.yyyy</string>
+        </property>
         <property name="date">
          <date>
           <year>2013</year>
           <month>1</month>
           <day>1</day>
          </date>
-        </property>
-        <property name="displayFormat">
-         <string>MM.yyyy</string>
         </property>
        </widget>
       </item>
@@ -401,7 +401,16 @@
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_5">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
@@ -420,7 +429,16 @@
         </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_12">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -439,7 +457,16 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_10">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -471,8 +498,11 @@
               <property name="verticalScrollBarPolicy">
                <enum>Qt::ScrollBarAlwaysOn</enum>
               </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::SingleSelection</enum>
+              </property>
               <property name="selectionBehavior">
-               <enum>QAbstractItemView::SelectItems</enum>
+               <enum>QAbstractItemView::SelectRows</enum>
               </property>
               <attribute name="horizontalHeaderMinimumSectionSize">
                <number>10</number>
@@ -483,7 +513,16 @@
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item>
@@ -762,13 +801,28 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
            <widget class="QTableView" name="tblV_Count">
             <property name="enabled">
              <bool>true</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
             </property>
            </widget>
           </item>
@@ -802,7 +856,8 @@
             <item>
              <widget class="QPushButton" name="pBtn_NewCounter">
               <property name="text">
-               <string>Новый счётчик</string>
+               <string>Новый счётчик 
+ Текущий месяц</string>
               </property>
              </widget>
             </item>

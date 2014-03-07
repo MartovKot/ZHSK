@@ -61,3 +61,33 @@ QString Table_Payment::delete_Payment(int id_apartament, int year, int month, in
     }
     return out;
 }
+
+//QVariant Table_Payment::SumLastMonthPayment()
+//{
+//    //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
+////    str =   "SELECT payment, DATE(payment_date,'%Y') as y_payment, DATE(payment_date,'%M') as m_payment, DATE(payment_date,'%d') as d_payment  "
+////            "FROM payment "
+////            "WHERE "
+////            "   (( "
+////            "     (y_payment = %3 AND m_payment = %4 AND d_payment >=25 ) "
+////            "     OR (y_payment = %1 AND m_payment = %2 AND d_payment =1 ) "
+////            "   ) "
+////            "   OR "
+////            "   ( "
+////            "     (y_payment = %1 AND m_payment = %2 AND d_payment >=1) "
+////            "     OR (y_payment = %1 AND m_payment = %2 AND d_payment < 25 ) "
+////            "   )) "
+////            "AND id_apartament=%5";
+////    str = str.arg(date.year())
+////            .arg(date.month())
+////            .arg(previous_year(date.year(),date.month()))
+////            .arg(previous_month(date.month()))
+////            .arg(id_apart);
+////    if (query.exec(str)){
+////        while (query.next()){
+////            payment = payment + query.value(0).toDouble();
+////        }
+////    }else{
+////        LogOut.logout(query.lastError().text());
+////    }
+//}

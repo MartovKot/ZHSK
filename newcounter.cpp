@@ -17,7 +17,6 @@ NewCounter::NewCounter(QWidget *parent) :
     connect(ui->pBtn_Ok,SIGNAL(clicked()),SLOT(sl_Ok()));
     connect(ui->lEdCounter,SIGNAL(editingFinished()),SLOT(sl_Ok()));
 
-
 }
 
 NewCounter::~NewCounter()

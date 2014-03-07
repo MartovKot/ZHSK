@@ -125,11 +125,11 @@ QVariant BD::SelectFromTable(QString str)
         if (query.next()){
             out = query.value(0);
         }else{
-            qDebug()<<"In query "<<str<<" not found line ";
-            LogOut.logout("In query " + str + " not found line ");
+//            qDebug()<< "NOT FOUND \n" << "b15887690eebb387ab115d9e4ee2e2d0 " <<str;
+//            LogOut.logout("In query " + str + " not found line ");
         }
     } else{
-        qDebug() << query.lastError() << str;
+        qDebug() <<"ERROR \n"<< "d04157f41fd3c5c4dee3f0e0dd41baed" << query.lastError() << str;
         LogOut.logout(query.lastError().text());
     }
     return out;
@@ -196,6 +196,7 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
     QSqlQuery query;
     QVariant t;
     t = SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where1+" = "+where2);
+//    qDebug() <<"<<<<<<<<<<<<<<<<   " <<"SELECT "+column+" FROM "+table+" WHERE "+where1+" = "+where2;
     if (t.toString() != value ){
         str = "UPDATE %1 SET %2 = '%3' WHERE %4 = '%5'";
         str = str.arg(table)
@@ -1102,7 +1103,7 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
     str = str.arg(date)
             .arg(QString::number(id_ListApart));
     QVariant t = SelectFromTable(str);
-    if(t.toInt() == -1){//если нет записей
+    if(t.isNull()){//если нет записей
         //добавим новое показание на след месяц
         column.clear();
         column<<"id_list_app_usluga"<<"date_pokazanie"<<"pokazanie_home"<<"pokazanie_end";
@@ -1195,15 +1196,15 @@ void BD::CreditedOfService(int id_apartament, QDate date)  //расчёт для
     QString str;
     QSqlQuery query;
     ListService = is_ApartamentService(id_apartament);                  // список ид услуг по квартире
+
     for(int i=0;i<ListService.size();i++){
-        int id_list_ap_usl = 0;
+        int id_list_ap_usl = -1;
         id_list_ap_usl = is_idListAppUsluga(id_apartament, ListService[i]);
 
         str = "SELECT id_credited FROM credited WHERE id_list_app_usluga=%1 AND date_credited=%2 ";
         str = str.arg(id_list_ap_usl)
                 .arg(IsDateOfUnix(date));
 
-        // перебирается все услуги всех квартир
         // начисление по услугам
         if (query.exec(str)){
             QVariant cred = CreditedOfApartament(id_list_ap_usl, date);
@@ -1440,7 +1441,6 @@ void BD::PaymentOfDebt(int id_apart, QDate date)
 
     // --------- К оплате в прошлом месяце
     debt += AmountToPay(id_apart,previous_date);
-
     //---------- Долг за счётчики в этом месяце
     str="SELECT credited_with_counter FROM credited_of_apartament WHERE  date_credited_of_apartament=%1 AND id_apartament=%2";
     str = str.arg(IsDateOfUnix(date))
@@ -1450,24 +1450,13 @@ void BD::PaymentOfDebt(int id_apart, QDate date)
         debt += t.toDouble();
     }
     //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
-    str =   "SELECT payment, DATE(payment_date,'%Y') as y_payment, DATE(payment_date,'%M') as m_payment, DATE(payment_date,'%d') as d_payment  "
-            "FROM payment "
-            "WHERE "
-            "   (( "
-            "     (y_payment = %3 AND m_payment = %4 AND d_payment >=25 ) "
-            "     OR (y_payment = %1 AND m_payment = %2 AND d_payment =1 ) "
-            "   ) "
-            "   OR "
-            "   ( "
-            "     (y_payment = %1 AND m_payment = %2 AND d_payment >=1) "
-            "     OR (y_payment = %1 AND m_payment = %2 AND d_payment < 25 ) "
-            "   )) "
-            "AND id_apartament=%5";
-    str = str.arg(date.year())
-            .arg(date.month())
-            .arg(previous_year(date.year(),date.month()))
-            .arg(previous_month(date.month()))
-            .arg(id_apart);
+    str = "SELECT payment FROM payment "
+            "WHERE payment_date >= %1 AND payment_date <= %2";
+    str = str.arg(IsDateOfUnix
+                    (previous_date.year(),previous_date.month(),25))
+            .arg(IsDateOfUnix
+                    (date.year(),date.month(),25)
+                 );
     if (query.exec(str)){
         while (query.next()){
             payment = payment + query.value(0).toDouble();
@@ -1645,10 +1634,6 @@ double BD::PaymentCounters(int id_list_app_usluga, QDate date)  //расчёт �
     return out;
 }
 
-
-
-
-
 void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт показаний канализации
 {
     QString str;
@@ -1666,7 +1651,6 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
     if (query.exec(str)){
         if (query.next()){
             Unix_date = query.value(0).toULongLong();
-//            qDebug() << Unix_date;
             id_app = query.value(1).toInt();
         }else{
             return;
@@ -1707,7 +1691,6 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
         LogOut.logout(query.lastError().text());
         return;
     }
-//    qDebug()<<"VALUE = "<<value;
 
     if (!New){
         str = " SELECT id_pokazanie, pokazanie_end ";
@@ -1848,10 +1831,8 @@ void BD::UpdatePokazanieHome(int id_pokazanie, int new_pokazanie)
         LogOut.logout(query.lastError().text());
     }
 
-//    qDebug() << "old pok id" << id_pokazanie;
     UpdateTable("pokazanie","pokazanie_home",QString::number(new_pokazanie),"id_pokazanie",QString::number(is_IdPokazanie(id_lau,m,y)));
     SumCount(id_pokazanie,true);
-//    qDebug()<<trUtf8("Обновление");
 }
 
 int BD::is_IdPokazanie(int id_list_app_usluga, int month, int year)
