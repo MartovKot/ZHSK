@@ -9,7 +9,7 @@
 #include "logreport.h"
 #include "updater.h"
 
-#define VERSION "1.5.1"
+#define VERSION "1.5.2"
 
 static bool createConnection() //подключение к БД
 {
@@ -56,11 +56,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QPixmap pixmap(":/images/main.png");
+    QPixmap pixmap(":/ico/splash.png");
     QSplashScreen splash(pixmap);
     splash.show();
 
-    Updater upd;
+    Updater upd;   //Обновление ПО
     upd.setVersion(VERSION);
     upd.RunUpdate();
 
