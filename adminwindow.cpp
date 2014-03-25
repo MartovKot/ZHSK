@@ -90,10 +90,15 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
 
     ui->tab_Pensioner->setLayout(ui->mainLay_Pens);
-    ui->cmBx_PensApart->setModel(
-                db.ModelApartament(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
-                                   ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
-    ui->cmBx_PensApart->addItem("");
+    Refresh_Pensioner();
+//    ui->cmBx_PensApart->setModel(
+//                db.ModelApartament(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
+//                                   ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
+//    ui->cmBx_PensApart->addItem("");
+
+    //настройка настройки
+    ui->tab_Settings->setLayout(ui->vLay_Settings);
+    Refresh_Settings();
 
 }
 
@@ -570,6 +575,10 @@ void AdminWindow::Refresh_Uslugi()
 
 void AdminWindow::Refresh_Pensioner()
 {
+    ui->cmBx_PensApart->setModel(
+    db.ModelApartament(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
+                       ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
+    ui->cmBx_PensApart->addItem("");
     ui->cmBx_Org_on_Pens->setModel(db.Model("organiz"));
     ui->cmBx_Home_on_Pens->setModel(db.Model("homes"));
     ui->tblV_on_Pens->setModel(db.ModelPensioner(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
@@ -702,6 +711,9 @@ void AdminWindow::Refresh(int num_tab)
         break;
     case 4:
         Refresh_Pensioner();
+        break;
+    case 5:
+        Refresh_Settings();
         break;
     default:
         break;
@@ -913,4 +925,45 @@ int AdminWindow::isIdSelectOrganiztion_onApartament()
 void AdminWindow::on_pBtn_Cancel_onApart_clicked()
 {
     Mode("app_deff");
+}
+
+void AdminWindow::Refresh_Settings()
+{
+//    qDebug() << "refresh";
+    ui->tblV_on_Settings->setModel(db.ModelSettings());
+
+    ui->tblV_on_Settings->horizontalHeader()->setStretchLastSection(false);
+    ui->tblV_on_Settings->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+}
+
+void AdminWindow::on_tBtn_AddSetting_clicked()
+{
+    QStringList column, value;
+    column << "name_setting" << "value_setting";
+    value << "" << "";
+    db.add("settings", column, value);
+    Refresh_Settings();
+}
+
+void AdminWindow::on_tBtn_DeleteSetting_clicked()
+{
+    db.DeleteSetting(ui->tblV_on_Settings->model()->index(ui->tblV_on_Settings->currentIndex().row(),0).data().toString());
+    Refresh_Settings();
+}
+
+void AdminWindow::on_tBtn_EditSetting_clicked()
+{
+    QString name_setting;
+
+    if (ui->tblV_on_Settings->currentIndex().row() == -1){
+//        qDebug() << "exit";
+        return;
+    }
+
+    name_setting = ui->tblV_on_Settings->model()->index(ui->tblV_on_Settings->currentIndex().row(),0).data().toString();
+    EditSetting *dlg = new EditSetting(this);
+    dlg->setNameSetting(name_setting);
+    connect(dlg,SIGNAL(s_Ok()),this,SLOT(Refresh_Settings()));
+    dlg->open();
 }

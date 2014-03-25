@@ -106,6 +106,7 @@ public:
     QSqlQueryModel* ModelOrganiz();
     QSqlQueryModel* ModelHome();
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания
+    QSqlQueryModel* ModelSettings();
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
     QSqlQueryModel* ModelPensioner(int id_home, int id_org);
 
@@ -119,14 +120,17 @@ public:
     QString DeleteHome(int id_home);
     QSqlError DeletePension(int id_apart);
     QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
+    QSqlError DeleteSetting(QString name_setting);
 
     void UpdateDataBase();
     void new_pokazanie(int id_apartament, int month, int year);
+    QString isValueSetting(QString NameSetting);
     //----new interface
     QVariant SelectFromTable (QString str);
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     int previous_month(int m);
     int previous_year(int y, int m);
+
 
 private:
     qint64 IsDateOfUnix(int year, int month, int day);

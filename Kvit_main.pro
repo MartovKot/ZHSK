@@ -34,10 +34,12 @@ HEADERS += adminwindow.h \
     my_function.h \
     counter.h \
     updater.h \
-    mysplashscreen.h
+    mysplashscreen.h \
+    editsetting.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
-    authenticationdialog.ui
+    authenticationdialog.ui \
+    editsetting.ui
 SOURCES += adminwindow.cpp \
            apartament.cpp \
            bd.cpp \
@@ -55,7 +57,8 @@ SOURCES += adminwindow.cpp \
     table_tariff.cpp \
     counter.cpp \
     updater.cpp \
-    mysplashscreen.cpp
+    mysplashscreen.cpp \
+    editsetting.cpp
 
 RESOURCES += \
     qrc.qrc
@@ -73,5 +76,6 @@ OTHER_FILES += \
     update_db/01_06_005.sql \
     update_db/01_06_006.sql \
     update_db/01_06_007.sql \
-    script2.nsi
+    script2.nsi \
+    update_db/01_06_008.sql
 

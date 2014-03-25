@@ -1,5 +1,4 @@
 #include "updater.h"
-//#include <QSplashScreen>
 #include <QProcess>
 
 Updater::Updater(QWidget *parent) :

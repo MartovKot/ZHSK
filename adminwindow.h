@@ -11,6 +11,7 @@
 
 #include "bd.h"
 #include "table_tariff.h"
+#include "editsetting.h"
 
 namespace Ui {
     class AdminWindow;
@@ -42,6 +43,7 @@ private:
     void Refresh_Uslugi();
     void Refresh_Pensioner();
 
+
     QList<QHBoxLayout> list;
     QDialog *dlg;
     QLineEdit *lEd_tarif;
@@ -64,6 +66,7 @@ private:
     int isIdSelectHome_onApartament();
     int isIdSelectOrganiztion_onApartament();
 private slots:
+    void Refresh_Settings();
     void AddOrg();                                  // добавление организации
     void AddHome();                                 // добавление дома
     void AddUsluga_of_Apartament();                 // Добавить услуги в квартиру
@@ -91,6 +94,9 @@ private slots:
     void on_tblV_on_Pens_clicked(const QModelIndex &index);
     void on_pBtn_NewApartament_clicked();
     void on_pBtn_Cancel_onApart_clicked();
+    void on_tBtn_AddSetting_clicked();
+    void on_tBtn_DeleteSetting_clicked();
+    void on_tBtn_EditSetting_clicked();
 };
 
 #endif // ADMINWINDOW_H

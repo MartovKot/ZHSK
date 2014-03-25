@@ -77,6 +77,7 @@ void BD::UpdateDataBase()
         UpdateDataBase();
         return;
     }
+//    qDebug() << res;
 
     QDir dir_with_sql("./update_db");
     QStringList filters;
@@ -100,7 +101,7 @@ void BD::UpdateDataBase()
             if(list_with_sql.at(i).mid(3,2).toInt() > minor.toInt()){
                 list_update << dir_with_sql.absoluteFilePath(list_with_sql.at(i));
             }else if (list_with_sql.at(i).mid(3,2).toInt() == minor.toInt()){
-                if((list_with_sql.at(i).right(3).toInt() > subversion.toInt())){
+                if((list_with_sql.at(i).mid(6,3).toInt() > subversion.toInt())){
                     list_update << dir_with_sql.absoluteFilePath(list_with_sql.at(i));
                 }
             }
@@ -110,6 +111,8 @@ void BD::UpdateDataBase()
     for (int i=0;i<list_update.count();i++){
         if (!RunScript(list_update.at(i))){
             qDebug() << "Error run " << list_update.at(i);
+        }else{
+            qDebug() << "run script" << list_update.at(i);
         }
     }
 
@@ -195,7 +198,7 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
     QString str;
     QSqlQuery query;
     QVariant t;
-    t = SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where1+" = "+where2);
+    t = SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where1+" = '"+where2+"'");
 //    qDebug() <<"<<<<<<<<<<<<<<<<   " <<"SELECT "+column+" FROM "+table+" WHERE "+where1+" = "+where2;
     if (t.toString() != value ){
         str = "UPDATE %1 SET %2 = '%3' WHERE %4 = '%5'";
@@ -1879,4 +1882,45 @@ qint64 BD::IsDateOfUnix(QDate date)
     datetime.setDate(date);
     timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
     return timeInUnix;
+}
+
+QSqlQueryModel* BD::ModelSettings()
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery(QSqlQuery("SELECT name_setting,value_setting FROM settings"));
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Название"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Значение"));
+    return model;
+}
+
+QSqlError BD::DeleteSetting(QString name_setting)
+{
+    QString str;
+    QSqlQuery query;
+    QSqlError out;
+
+    str = "DELETE FROM settings WHERE name_setting = '%1'";
+    str = str.arg(name_setting);
+    if (!query.exec(str)){
+        out = query.lastError();
+    }
+    return out;
+}
+
+QString BD::isValueSetting(QString NameSetting)
+{
+    QString out = "";
+    QString str;
+    QSqlQuery query;
+
+    str = "SELECT value_setting FROM settings WHERE name_setting = '%1'";
+    str = str.arg(NameSetting);
+
+    if (query.exec(str)){
+        if (query.next()){
+            out = query.value(0).toString();
+        }
+    }
+
+    return  out;
 }

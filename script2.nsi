@@ -110,6 +110,16 @@ Section "zhsk" SEC01
   File "ico\right_blue.ico"
   File "ico\right_end.ico"
   
+  SetOutPath "$INSTDIR\update_db"
+  File "update_db\01_06_001.sql"
+  File "update_db\01_06_002.sql"
+  File "update_db\01_06_003.sql"
+  File "update_db\01_06_004.sql"
+  File "update_db\01_06_005.sql"
+  File "update_db\01_06_006.sql"
+  File "update_db\01_06_007.sql"
+  File "update_db\Baseline.sql"
+  
 ;  SetOutPath "$INSTDIR\images"
  ; File "images\checkbox_checked.png"
 ;  File "images\checkbox_checked_hover.png"
