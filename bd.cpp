@@ -575,6 +575,7 @@ double BD::is_TotalArea(int id_app)
         out = -1;
     }
 
+//    qDebug() << out;
     return out;
 }
 
@@ -599,7 +600,6 @@ double BD::is_LivedArea(int id_app)
         LogOut.logout(query.lastError().text());
         out = -1;
     }
-
     return out;
 }
 

@@ -182,7 +182,7 @@ void parser_blank::generating()
 
 
     QStringList str_L = db.sum_app(ConfData.Org_id,ConfData.Home_id);
-    qDebug() << str_L;
+//    qDebug() << str_L;
 
     str_NameFile_base = db.is_SmallnameOrg(ConfData.Org_id)+" "+db.is_nameHome(ConfData.Home_id);
 

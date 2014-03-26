@@ -5,7 +5,7 @@
 !define PRODUCT_NAME "ZHSK"
 !define PRODUCT_VERSION "1.5.3"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kvit.exe"
-!define QT_INSTALL "E:\Qt\Qt5.2.0"
+!define QT_INSTALL "D:\Qt\Qt5.2.1\5.2.1"
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
@@ -85,7 +85,7 @@ Section "zhsk" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
 ;  File ".\release\kvit.exe"
-File "E:\QT-sourse\build-Kvit_main-Desktop_Qt_5_2_0_MinGW_32bit-Выпуск\release\kvit.exe"
+File "D:\Qt-project\build-Kvit_main-Desktop_Qt_5_2_1_MinGW_32bit-Release\release\kvit.exe"
   CreateDirectory "$SMPROGRAMS\ZHSK"
   CreateShortCut "$SMPROGRAMS\ZHSK\ZHSK.lnk" "$INSTDIR\kvit.exe"
   CreateShortCut "$DESKTOP\ZHSK.lnk" "$INSTDIR\kvit.exe"
@@ -159,45 +159,45 @@ SectionEnd
 Section "libs" SEC02
   SetOverwrite ifnewer
   SetOutPath "$INSTDIR"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Core.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Gui.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Network.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5PrintSupport.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Widgets.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Sql.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5WebKitWidgets.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Multimedia.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5MultimediaWidgets.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5OpenGL.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Sensors.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5WebKit.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Positioning.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Qml.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\Qt5Quick.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Core.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Gui.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Network.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5PrintSupport.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Widgets.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Sql.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5WebKitWidgets.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Multimedia.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5MultimediaWidgets.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5OpenGL.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Sensors.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5WebKit.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Positioning.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Qml.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\Qt5Quick.dll"
   
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\libgcc_s_dw2-1.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\libwinpthread-1.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\libstdc++-6.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\icuin51.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\icuuc51.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\bin\icudt51.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\libgcc_s_dw2-1.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\libwinpthread-1.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\libstdc++-6.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\icuin51.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\icuuc51.dll"
+  File "${QT_INSTALL}\mingw48_32\bin\icudt51.dll"
 
   SetOutPath "$INSTDIR\bearer"
   
-  File "${QT_INSTALL}\5.2.0\mingw48_32\plugins\bearer\qgenericbearer.dll"
-  File "${QT_INSTALL}\5.2.0\mingw48_32\plugins\bearer\qnativewifibearer.dll"
+  File "${QT_INSTALL}\mingw48_32\plugins\bearer\qgenericbearer.dll"
+  File "${QT_INSTALL}\mingw48_32\plugins\bearer\qnativewifibearer.dll"
   
   SetOutPath "$INSTDIR\platforms"
   
-  File "${QT_INSTALL}\5.2.0\mingw48_32\plugins\platforms\qwindows.dll"
+  File "${QT_INSTALL}\mingw48_32\plugins\platforms\qwindows.dll"
   
   SetOutPath "$INSTDIR\sqldrivers"
 
-  File "${QT_INSTALL}\5.2.0\mingw48_32\plugins\sqldrivers\qsqlite.dll"
+  File "${QT_INSTALL}\mingw48_32\plugins\sqldrivers\qsqlite.dll"
   
   SetOutPath "$INSTDIR\imageformats"
   
-  File "${QT_INSTALL}\5.2.0\mingw48_32\plugins\imageformats\qico.dll"
+  File "${QT_INSTALL}\mingw48_32\plugins\imageformats\qico.dll"
   
 SectionEnd
 

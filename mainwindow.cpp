@@ -83,16 +83,20 @@ void MainWindow::Print_mod()
 
     list_id_apartament = db.is_ListIdApartament(isIdSelectOrganiztion(), isIdSelectHome());
 
-    QProgressBar *PB = new QProgressBar();
+    QProgressBar *PB = new QProgressBar( );
     PB->setWindowIcon(this->windowIcon());
     PB->setWindowTitle(trUtf8("Идёт формирование..."));
     PB->setMinimum(0);
     PB->setMaximum(list_id_apartament.size()-1);
     PB->show();
     //------------------------------------------------------------------------------------------
+    QDate date;
+    date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
+    qDebug() << date;
     for(int i = 0;i<list_id_apartament.size();i++){
-        db.CreditedOfService(list_id_apartament.at(i),QDate::currentDate());// Формирование данных по i той квартире
+        db.CreditedOfService(list_id_apartament.at(i),date);// Формирование данных по i той квартире
         PB->setValue(i);
+//        PB->show();
     }
     //-------------------------------------------------------------------------------------------
 //    db.DataProcessing(OrganiztionID, HomeID, month, year);
