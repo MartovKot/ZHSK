@@ -3,7 +3,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "ZHSK"
-!define PRODUCT_VERSION "1.5.2"
+!define PRODUCT_VERSION "1.5.3"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kvit.exe"
 !define QT_INSTALL "E:\Qt\Qt5.2.0"
 
@@ -84,7 +84,8 @@ SectionEnd ; end the section
 Section "zhsk" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
-  File ".\release\kvit.exe"
+;  File ".\release\kvit.exe"
+File "E:\QT-sourse\build-Kvit_main-Desktop_Qt_5_2_0_MinGW_32bit-Выпуск\release\kvit.exe"
   CreateDirectory "$SMPROGRAMS\ZHSK"
   CreateShortCut "$SMPROGRAMS\ZHSK\ZHSK.lnk" "$INSTDIR\kvit.exe"
   CreateShortCut "$DESKTOP\ZHSK.lnk" "$INSTDIR\kvit.exe"
@@ -118,6 +119,7 @@ Section "zhsk" SEC01
   File "update_db\01_06_005.sql"
   File "update_db\01_06_006.sql"
   File "update_db\01_06_007.sql"
+  File "update_db\01_06_008.sql"
   File "update_db\Baseline.sql"
   
 ;  SetOutPath "$INSTDIR\images"

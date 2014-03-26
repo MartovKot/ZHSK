@@ -1919,6 +1919,11 @@ QString BD::isValueSetting(QString NameSetting)
     if (query.exec(str)){
         if (query.next()){
             out = query.value(0).toString();
+        }else{
+            QStringList column, value;
+            column << "name_setting" << "value_setting";
+            value << NameSetting << "";
+            add("settings", column, value);
         }
     }
 

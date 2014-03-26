@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 #include <QTimer>
+#include "bd.h"
 
 #ifdef HAVE_QT5
     #include <QJsonDocument>
@@ -37,6 +38,7 @@ private:
     QFile *file;
     QProgressDialog *progressDialog;
     bool httpRequestAborted;
+    BD db;
 
 
     void downloadFile(QUrl url);

@@ -9,7 +9,7 @@
 #include "logreport.h"
 #include "updater.h"
 
-#define VERSION "1.5.2"
+#define VERSION "1.5.3"
 
 static bool createConnection() //подключение к БД
 {
@@ -60,9 +60,7 @@ int main(int argc, char *argv[])
     QSplashScreen splash(pixmap);
     splash.show();
 
-    Updater upd;   //Обновление ПО
-    upd.setVersion(VERSION);
-    upd.RunUpdate();
+
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
     LogReport out;
@@ -75,6 +73,12 @@ int main(int argc, char *argv[])
         return -1;
     }
     out.logout(QObject::trUtf8("Соединение с базой установленно"));
+
+    Updater upd;   //Обновление ПО
+    upd.setVersion(VERSION);
+    upd.RunUpdate();
+
+
     BD bd;
     QString str = "SELECT version FROM version";
     QSqlQuery query;
