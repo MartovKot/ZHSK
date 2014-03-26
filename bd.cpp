@@ -1431,6 +1431,7 @@ double BD::AmountToPay(int id_apart, QDate date)
     }
 
     out = debt + AmountForServices(id_apart,date);
+//    qDebug() << out << date << debt;
     return out;
 }
 
@@ -1444,6 +1445,7 @@ void BD::PaymentOfDebt(int id_apart, QDate date)
 
     // --------- К оплате в прошлом месяце
     debt += AmountToPay(id_apart,previous_date);
+//    qDebug() << "t1" << debt;
     //---------- Долг за счётчики в этом месяце
     str="SELECT credited_with_counter FROM credited_of_apartament WHERE  date_credited_of_apartament=%1 AND id_apartament=%2";
     str = str.arg(IsDateOfUnix(date))
@@ -1452,14 +1454,17 @@ void BD::PaymentOfDebt(int id_apart, QDate date)
     if(!t.isNull()){
         debt += t.toDouble();
     }
+//    qDebug() << "t2" << t.toDouble() << debt;
     //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
     str = "SELECT payment FROM payment "
-            "WHERE payment_date >= %1 AND payment_date <= %2";
+            "WHERE payment_date >= %1 AND payment_date <= %2 AND id_apartament = %3";
     str = str.arg(IsDateOfUnix
                     (previous_date.year(),previous_date.month(),25))
             .arg(IsDateOfUnix
                     (date.year(),date.month(),25)
-                 );
+                 )
+            .arg(id_apart);
+//    qDebug() << str;
     if (query.exec(str)){
         while (query.next()){
             payment = payment + query.value(0).toDouble();
@@ -1468,6 +1473,7 @@ void BD::PaymentOfDebt(int id_apart, QDate date)
         LogOut.logout(query.lastError().text());
     }
     debt = debt - payment;
+//    qDebug() << "t3" << payment << debt;
     //-----обновление/добавление долга
     str = "SELECT id_debt, debt FROM debt WHERE date_debt=%1 AND id_apartament=%2";
     str = str.arg(IsDateOfUnix(date))
