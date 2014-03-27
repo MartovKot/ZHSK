@@ -3,9 +3,9 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "ZHSK"
-!define PRODUCT_VERSION "1.5.3"
+!define PRODUCT_VERSION "1.5.4"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kvit.exe"
-!define QT_INSTALL "D:\Qt\Qt5.2.1\5.2.1"
+!define QT_INSTALL "E:\Qt\Qt5.2.0\5.2.0"
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
@@ -85,7 +85,8 @@ Section "zhsk" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
 ;  File ".\release\kvit.exe"
-File "D:\Qt-project\build-Kvit_main-Desktop_Qt_5_2_1_MinGW_32bit-Release\release\kvit.exe"
+;File "D:\Qt-project\build-Kvit_main-Desktop_Qt_5_2_1_MinGW_32bit-Release\release\kvit.exe"
+File "E:\QT-sourse\build-Kvit_main-Desktop_Qt_5_2_0_MinGW_32bit-Выпуск\release\kvit.exe"
   CreateDirectory "$SMPROGRAMS\ZHSK"
   CreateShortCut "$SMPROGRAMS\ZHSK\ZHSK.lnk" "$INSTDIR\kvit.exe"
   CreateShortCut "$DESKTOP\ZHSK.lnk" "$INSTDIR\kvit.exe"
