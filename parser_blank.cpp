@@ -179,28 +179,24 @@ void parser_blank::generating()
     QString str_NameFile_base; //общая часть названия файлов
     QString str_NameFile_pach; //отличительная часть файлов
 
-
-
     QStringList str_L = db.sum_app(ConfData.Org_id,ConfData.Home_id);
-//    qDebug() << str_L;
 
     str_NameFile_base = db.is_SmallnameOrg(ConfData.Org_id)+" "+db.is_nameHome(ConfData.Home_id);
 
-    QProgressBar *PB = new QProgressBar();
-    PB->setWindowIcon(QIcon(":/ico/cash_register_6356.ico"));
-    PB->setWindowTitle(QObject::trUtf8("Создание файлов"));
-    PB->setMinimum(0);
-    PB->setMaximum(str_L.size()-1);
-    PB->show();
+    QProgressDialog progress(trUtf8("Создание файлов..."), trUtf8("Отмена"), 0, str_L.size()-1, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setWindowTitle(trUtf8("Расчёт"));
 
     for(int i=0;i<str_L.size();i++){
+        progress.setValue(i);
+        if (progress.wasCanceled())
+            break;
         str_NameFile_pach = QObject::trUtf8(" кв ") + str_L.at(i);
         creat_blank(str_NameFile_base+str_NameFile_pach+".html",
                     db.is_idappart(ConfData.Home_id,ConfData.Org_id,str_L.at(i).toInt()),
                     ConfData.date);
-        PB->setValue(i);
     }
-    delete PB;
+    progress.setValue(str_L.size()-1);
 
 }
 void parser_blank::setDir(QString str_dirFolder)

@@ -83,25 +83,24 @@ void MainWindow::Print_mod()
 
     list_id_apartament = db.is_ListIdApartament(isIdSelectOrganiztion(), isIdSelectHome());
 
-    QProgressBar *PB = new QProgressBar( );
-    PB->setWindowIcon(this->windowIcon());
-    PB->setWindowTitle(trUtf8("Идёт формирование..."));
-    PB->setMinimum(0);
-    PB->setMaximum(list_id_apartament.size()-1);
-    PB->show();
-    //------------------------------------------------------------------------------------------
+    QProgressDialog progress(trUtf8("Идёт формирование..."), trUtf8("Отмена"), 0, list_id_apartament.size()-1, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setWindowTitle(trUtf8("Расчёт"));
+
     QDate date;
     date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
-    qDebug() << date;
+
     for(int i = 0;i<list_id_apartament.size();i++){
+        progress.setValue(i);
+        if (progress.wasCanceled())
+            break;
         db.CreditedOfService(list_id_apartament.at(i),date);// Формирование данных по i той квартире
-        PB->setValue(i);
-//        PB->show();
     }
+    progress.setValue(list_id_apartament.size()-1);
+
     //-------------------------------------------------------------------------------------------
 //    db.DataProcessing(OrganiztionID, HomeID, month, year);
     //-------------------------------------------------------------------------------------------
-    delete PB;
 
     VwBlank->setDate(QDate::currentDate().year(),QDate::currentDate().month());
     VwBlank->setInfo(isIdSelectHome(),isIdSelectOrganiztion());

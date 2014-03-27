@@ -7,7 +7,8 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QMessageBox>
-#include <QProgressBar>
+//#include <QProgressBar>
+#include <QProgressDialog>
 
 #include "bd.h"
 #include "table_tariff.h"

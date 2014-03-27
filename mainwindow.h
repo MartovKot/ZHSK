@@ -4,8 +4,9 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QDebug>
-#include <QProgressBar>
+
 #include <QImageReader>
+#include <QProgressDialog>
 
 #include "adminwindow.h"
 #include "operwindow.h"

@@ -5,15 +5,12 @@ Updater::Updater(QWidget *parent) :
     QWidget(parent)
 {
     //настройки прокси вынести отдельно
-
-    if (db.isValueSetting("proxy_HostName") != ""){
+    if (db.isValueSetting("proxy_HostName") != "" || db.isValueSetting("proxy_Port") != ""){
         proxy.setType(QNetworkProxy::HttpProxy);
         proxy.setHostName(db.isValueSetting("proxy_HostName"));
         proxy.setPort(db.isValueSetting("proxy_Port").toInt());
         m_manager_download.setProxy(proxy);
     }
-
-//    QNetworkProxy::setApplicationProxy(proxy);
     //
 
 
