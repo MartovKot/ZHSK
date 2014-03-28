@@ -1,6 +1,9 @@
 QWidget, QDialog {
    background-color: beige;
 }
+QWebView {
+   background-color: white;
+}
 
 
 /* Nice Windows-XP-style password character. */

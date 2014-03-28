@@ -12,6 +12,8 @@
 #include <QBitmap>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QTextDocument>
+#include <QDesktopServices>
 #include "parser_blank.h"
 
 class ViewBlank : public QDialog
@@ -38,6 +40,7 @@ signals:
 public slots:
 private slots:
     void Print();
+    void Pdf();
     void Next();
     void Preview();
     void First_Page();
