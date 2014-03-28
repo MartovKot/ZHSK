@@ -53,6 +53,8 @@ private slots:
     void sl_ApartPrevious();
     void sl_NewCounter();               //вызывается когда происходит смена счётчика
 
+    void on_pBtn_NewCounterNext_clicked();
+
 protected:
     void keyPressEvent(QKeyEvent *event);
 

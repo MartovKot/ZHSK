@@ -199,7 +199,6 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
     QSqlQuery query;
     QVariant t;
     t = SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where1+" = '"+where2+"'");
-//    qDebug() <<"<<<<<<<<<<<<<<<<   " <<"SELECT "+column+" FROM "+table+" WHERE "+where1+" = "+where2;
     if (t.toString() != value ){
         str = "UPDATE %1 SET %2 = '%3' WHERE %4 = '%5'";
         str = str.arg(table)
@@ -1680,16 +1679,8 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
             " AND lau.id_list_app_usluga = p.id_list_app_usluga "
             " AND (id_usluga=1 OR id_usluga=2)";                // Воды и ГВС
 
-    if (!New){
-        str = str.arg(Unix_date)
+    str = str.arg(Unix_date)
                 .arg(id_app);
-    }else{
-        QDateTime dt;
-        dt.fromMSecsSinceEpoch(qint64(Unix_date));
-        dt = dt.addMonths(1);
-        str = str.arg(IsDateOfUnix(dt.date()))
-                .arg(id_app);
-    }
 
     if (query.exec(str)){
         while (query.next()){
@@ -1711,16 +1702,9 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
             " AND date_pokazanie = %1 "
             " AND id_apartament = %2"
             " AND id_usluga = 3";                           //ид счётчика канализации
-    if (!New){
+
         str = str.arg(Unix_date)
                 .arg(id_app);
-    } else {
-        QDateTime dt;
-        dt.fromMSecsSinceEpoch(qint64(Unix_date));
-        dt = dt.addMonths(1);
-        str = str.arg(IsDateOfUnix(dt.date()))
-                .arg(id_app);
-    }
 
     if (query.exec(str)){
         if (query.next()){
@@ -1734,7 +1718,9 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
                                 QString::number(value),"id_pokazanie",QString::number(id_sumpok));
                 }
             }
-            new_pokazanie(id_sumpok,QString::number(value)); //показание на начало след месяца
+            if (!New){
+                new_pokazanie(id_sumpok,QString::number(value)); //показание на начало след месяца
+            }
         }else{           
             return;
         }
@@ -1821,38 +1807,23 @@ QString BD::is_NameCounter(int id_counter)
 
 void BD::UpdatePokazanieHome(int id_pokazanie, int new_pokazanie)
 {
-    QString str;
-    QSqlQuery query;
-    int m = 0,y = 0 ,id_lau = 0;
-
-    str = "SELECT id_list_app_usluga, date_year, date_month FROM pokazanie WHERE id_pokazanie = %1";
-    str = str.arg(id_pokazanie);
-    if (query.exec(str)) {
-        if (query.next()){
-            id_lau = query.value(0).toInt();
-            y = query.value(1).toInt();
-            m = query.value(2).toInt();
-        }else{
-            qDebug()<< "not found in" << str;
-        }
-    }else{
-        qDebug() << query.lastError().text();
-        LogOut.logout(query.lastError().text());
-    }
-
-    UpdateTable("pokazanie","pokazanie_home",QString::number(new_pokazanie),"id_pokazanie",QString::number(is_IdPokazanie(id_lau,m,y)));
+    UpdateTable("pokazanie","pokazanie_home",QString::number(new_pokazanie),"id_pokazanie",QString::number(id_pokazanie));
     SumCount(id_pokazanie,true);
 }
 
-int BD::is_IdPokazanie(int id_list_app_usluga, int month, int year)
+int BD::is_IdPokazanie(int id_list_app_usluga, qint64 unix_date)
 {
     QString str;
     int out = -1;
+    QDate nextdate;
 
-    str = "SELECT id_pokazanie FROM pokazanie WHERE id_list_app_usluga = %1 AND date_month = %2 AND date_year = %3";
+    nextdate = QDateTime::fromMSecsSinceEpoch(qint64(unix_date*1000)).addMonths(1).date();
+
+
+    str = "SELECT id_pokazanie FROM pokazanie WHERE id_list_app_usluga = %1 AND date_pokazanie = %2";
     str = str.arg(id_list_app_usluga)
-            .arg(next_month(month))
-            .arg(next_year(month,year));
+            .arg(IsDateOfUnix(nextdate));
+
     QVariant t = SelectFromTable(str);
     if(!t.isNull()){
         out = t.toInt();

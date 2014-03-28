@@ -27,7 +27,6 @@ OperWindow::OperWindow(QWidget *parent) :
     connect(ui->dEd_Count,SIGNAL(customContextMenuRequested(QPoint)),SLOT(sl_RefreshFull()));
     connect(ui->cmBx_NumApartanent,SIGNAL(activated(int)),SLOT(sl_RefreshFull()));
     connect(ui->pBtn_NewCounter,SIGNAL(clicked()),SLOT(sl_NewCounter()));
-//    connect()
 
     QRegExpValidator *dv = new QRegExpValidator(QRegExp("[0-9]+[\\.|\\,]?[0-9]{,2}"),this); //валидатор для чисел
     ui->lEd_Sum->setValidator(dv);
@@ -331,7 +330,7 @@ void OperWindow::sl_NewCounter()//вызывается когда происхо
 
     NewCounter *dlg = new NewCounter(this);
     dlg->set_IdPokazanie(id_counter);
-    connect(dlg,SIGNAL(finished(int)),this,SLOT(Refresh_tblVCount()));
+    connect(dlg,SIGNAL(finished(int)),this,SLOT(sl_RefreshFull()));
     dlg->open();
 }
 
@@ -354,4 +353,21 @@ int OperWindow::isIdSelectApartament()
         ApartamentID = -1;
     }
     return ApartamentID;
+}
+
+void OperWindow::on_pBtn_NewCounterNext_clicked()
+{
+    int id_counter,row;
+
+    row = ui->tblV_Count->currentIndex().row(); //Номер строки
+    if(row == -1){
+        QMessageBox::warning(this,trUtf8("Предупреждение!"),
+                             trUtf8("Не выбран счётчик. \nВыберите нужный и повторите ещё раз."),QMessageBox::Ok);
+        return;
+    }
+    id_counter = ui->tblV_Count->model()->index(row,0).data().toInt(); //ID Показания Счётчика
+
+    NewCounter *dlg = new NewCounter(this);
+    dlg->set_IdPokazanie(db.new_pokazanie(id_counter,"0"));
+    dlg->open();
 }

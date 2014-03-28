@@ -64,7 +64,7 @@ public:
 
 
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
-    int is_IdPokazanie(int id_list_app_usluga, int month, int year);
+    int is_IdPokazanie(int id_list_app_usluga, qint64 unix_date);
 
     double is_TotalArea(int id_app);
     double is_LivedArea(int id_app);
@@ -91,7 +91,7 @@ public:
     void UpdateMenInApartament(QStringList column, QStringList value, int idapart, int year, int month);
 
     void UpdateOrganization(QString name = "", QString bank="", QString acc="", int idorg = -1);
-    void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);
+    void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
     void UpdateHome(int id_home, QString home);
 
     void CreditedOfService (int id_apartament, QDate date);                             //начисление по квартире
@@ -125,6 +125,8 @@ public:
     void UpdateDataBase();
     void new_pokazanie(int id_apartament, int month, int year);
     QString isValueSetting(QString NameSetting);
+    int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
+                                                                                        //на сдед месяц
     //----new interface
     QVariant SelectFromTable (QString str);
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
@@ -140,8 +142,7 @@ private:
 
     bool RunScript(QString filename);
 
-    int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
-                                                                                        //на сдед месяц
+
     int next_month (int m);
     int next_year(int m, int y);
 

@@ -33,13 +33,10 @@ public:
     void generate();
     void open_blank(QString dir);
 
-
-    
 signals:
     
 public slots:
 private slots:
-//    void sl_ReWriteDir();
     void Print();
     void Next();
     void Preview();

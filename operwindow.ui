@@ -828,6 +828,9 @@
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_6">
+            <property name="spacing">
+             <number>15</number>
+            </property>
             <property name="leftMargin">
              <number>0</number>
             </property>
@@ -850,6 +853,16 @@
               </property>
               <property name="text">
                <string>Редактировать показания</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pBtn_NewCounterNext">
+              <property name="text">
+               <string>
+Новый счётчик 
+ Следующий месяц
+</string>
               </property>
              </widget>
             </item>
