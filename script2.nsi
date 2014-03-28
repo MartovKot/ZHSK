@@ -3,7 +3,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "ZHSK"
-!define PRODUCT_VERSION "1.5.4"
+!define PRODUCT_VERSION "1.5.5"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kvit.exe"
 !define QT_INSTALL "E:\Qt\Qt5.2.0\5.2.0"
 
@@ -36,7 +36,7 @@
   CreateDirectory "${BACKUP_TO}"
  IfFileExists "${FILE_DIR}" 0 +2
   CopyFiles "${FILE_DIR}\*.*" "${BACKUP_TO}"
-MessageBox MB_OK "backup"
+;MessageBox MB_OK "backup"
 !macroend
 
 !macro RestoreDir BUP_DIR RESTORE_TO
@@ -78,7 +78,7 @@ IfFileExists $INSTDIR\kvit.exe 0 +6
   CreateDirectory $INSTDIR
   !insertmacro RestoreFile $TEMP "kvitdb.qsl" $INSTDIR
   !insertmacro RestoreDir "$TEMP\kvit" "$INSTDIR\kvit"
-  MessageBox MB_OK "проверь"
+  ;MessageBox MB_OK "проверь"
 SectionEnd ; end the section
 
 Section "zhsk" SEC01
