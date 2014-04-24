@@ -32,14 +32,17 @@ HEADERS += adminwindow.h \
     table_payment.h \
     table_tariff.h \
     my_function.h \
-    counter.h \
     updater.h \
     mysplashscreen.h \
-    editsetting.h
+    editsetting.h \
+    selecter_with_combobox.h \
+    transposeproxymodel.h \
+    sqlquerymodelapartament.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
-    editsetting.ui
+    editsetting.ui \
+    selecter_with_combobox.ui
 SOURCES += adminwindow.cpp \
            apartament.cpp \
            bd.cpp \
@@ -55,10 +58,12 @@ SOURCES += adminwindow.cpp \
     viewblank.cpp \
     table_payment.cpp \
     table_tariff.cpp \
-    counter.cpp \
     updater.cpp \
     mysplashscreen.cpp \
-    editsetting.cpp
+    editsetting.cpp \
+    selecter_with_combobox.cpp \
+    transposeproxymodel.cpp \
+    sqlquerymodelapartament.cpp
 
 RESOURCES += \
     qrc.qrc

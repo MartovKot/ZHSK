@@ -62,6 +62,7 @@ QString Table_Payment::delete_Payment(int id_apartament, int year, int month, in
     return out;
 }
 
+
 //QVariant Table_Payment::SumLastMonthPayment()
 //{
 //    //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца

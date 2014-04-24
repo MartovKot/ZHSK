@@ -7,25 +7,13 @@
 #include <QSqlQuery>
 #include <QDate>
 #include <QFile>
-
-#include "qsqlquerymodel.h"
-#include "qsqlrelationaldelegate.h"
-#include "qsqlrelationaltablemodel.h"
-#include "qsqltablemodel.h"
-#include "qsql.h"
-#include "qsqldatabase.h"
-#include "qsqldriver.h"
-#include "qsqldriverplugin.h"
-#include "qsqlerror.h"
-#include "qsqlfield.h"
-#include "qsqlindex.h"
-#include "qsqlquery.h"
-#include "qsqlrecord.h"
-#include "qsqlresult.h"
-
+#include <QSqlDatabase>
+#include <QSqlQueryModel>
+#include <QSqlError>
 
 #include "sqlqueryeditmodel.h"
 #include "logreport.h"
+#include "TransposeProxyModel.h"
 
 class BD : public  QObject
 {
@@ -34,7 +22,7 @@ public:
 
     explicit BD();
     ~BD();
-    void Create();
+    bool Create();
 
     QString is_nameOrg(int id);                                 //Возвращает название организации c банком и расч счётом по ид
     QStringList is_nameOrg();
@@ -71,6 +59,8 @@ public:
     double is_Balkon(int id_app);
     double is_Lodjia(int id_app);
     int is_NumberAppartament(int id_app);
+    int is_IdHome(QString Home_name);
+    int is_IdOrg(QString Org_name);
     QString is_DatabaseVersoin();
 
 
@@ -99,7 +89,7 @@ public:
 
 
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
-    QSqlQueryModel* ModelApartament(int id_apartament);                                 //модель для квартиры
+    QAbstractItemModel* ModelApartament(int id_apartament);                                 //модель для квартиры
     QSqlQueryModel* ModelApartament(int id_home, int id_org);                           //модель квартир для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
     QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
@@ -158,6 +148,9 @@ private:
     bool is_pensioner_living_alone(int id_apartament);
 private slots:
     void sl_EditPokazanie(int id_pok, QString value);
+    void sl_ModelPokazanieHeaderData(QAbstractTableModel* t);
+    void sl_EditApartament(int,QString,int);
+    void sl_ModelApartamentHeaderData(QAbstractTableModel* t);
 signals:
     void SelectError(int error);
 

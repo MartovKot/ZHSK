@@ -60,8 +60,6 @@ int main(int argc, char *argv[])
     QSplashScreen splash(pixmap);
     splash.show();
 
-
-
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
     LogReport out;
     out.setFileName("out.log");
@@ -84,7 +82,11 @@ int main(int argc, char *argv[])
     QSqlQuery query;
     if (!query.exec(str)){
         qDebug()<<"Creat db";
-        bd.Create();//Создаём структу
+        if (!bd.Create()){//Создаём структу
+            QMessageBox::critical(new QWidget(),QObject::trUtf8("Ошибка"),
+                                 QObject::trUtf8("Не создана структура БД"),QMessageBox::Ok);
+            return a.exec();
+        }
     }
 
     out.logout(QObject::trUtf8("Производятся установки"));

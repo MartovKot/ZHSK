@@ -88,9 +88,9 @@ void Updater::finished_json(QNetworkReply*)
     // Some http error received
     else
     {
-        QMessageBox::critical(this, trUtf8("Ошибка"),
-                                          tr("Ошибка соединения %1").arg(m_reply->errorString()),
-                                          QMessageBox::Ok);
+//        QMessageBox::critical(this, trUtf8("Ошибка"),
+//                                          tr("Ошибка соединения %1").arg(m_reply->errorString()),
+//                                          QMessageBox::Ok);
 
         qDebug()<< m_reply->errorString();
         // handle errors here

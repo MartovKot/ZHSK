@@ -49,18 +49,10 @@ OperWindow::~OperWindow()
 
 void OperWindow::Refresh_tblVPayment(int ApartamenID)
 {
-#ifdef HAVE_QT5
     ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
     ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
     ui->tblV_Payment->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblV_Payment->horizontalHeader()->setSectionResizeMode( 3, QHeaderView::Interactive);
-#else
-    ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
-    ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
-    ui->tblV_Payment->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblV_Payment->horizontalHeader()->setResizeMode( 3, QHeaderView::Interactive);
-#endif
-
 }
 
 void OperWindow::sl_addPayment()
@@ -109,13 +101,8 @@ void OperWindow::Refresh_tblVCount()
                      ui->dEd_Count->date().year());
     ui->tblV_Count->hideColumn(0);
     ui->tblV_Count->horizontalHeader()->setStretchLastSection(false);
-#ifdef HAVE_QT5
     ui->tblV_Count->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblV_Count->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
-#else
-    ui->tblV_Count->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblV_Count->horizontalHeader()->setResizeMode(1,QHeaderView::ResizeToContents);
-#endif
 
 }
 //-----------------------------------------------------------------------------------------------------------
@@ -149,7 +136,7 @@ void OperWindow::sl_EditPokazanie()
     QHBoxLayout *lay_1 = new QHBoxLayout;
     tbl = new TableViewPokazanie(this);
     MyItemDelegate * dDeleg = new MyItemDelegate ();
-    SqlQueryEditModel *edModel = new SqlQueryEditModel(this);
+    SqlQueryEditModel *edModel;
 
     edModel = db.ModelEditPokazanie(ApartamentID,ui->dEd_Count->date().month(),ui->dEd_Count->date().year());
 
@@ -161,17 +148,12 @@ void OperWindow::sl_EditPokazanie()
     connect(dlg,SIGNAL(finished(int)),SLOT(sl_RefreshLabel()));
 
     tbl->horizontalHeader()->setStretchLastSection(false);
- #ifdef HAVE_QT5
+
     tbl->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tbl->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
     if(tbl->model()->columnCount()>3){
         tbl->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive);
     }
-#else
-    tbl->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    tbl->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
-    tbl->horizontalHeader()->setResizeMode(3, QHeaderView::Interactive);
-#endif
 
     lay_1->addWidget(tbl);
     main_lay->addLayout(lay_1);

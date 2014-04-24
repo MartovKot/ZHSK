@@ -9,7 +9,7 @@
 #include <QCalendarWidget>
 #include <QHBoxLayout>
 
-#include"bd.h"
+#include "bd.h"
 #include "tableviewpokazanie.h"
 #include "newcounter.h"
 #include "table_payment.h"

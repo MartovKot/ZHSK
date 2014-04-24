@@ -12,6 +12,8 @@
 #include "bd.h"
 #include "table_tariff.h"
 #include "editsetting.h"
+#include "selecter_with_combobox.h"
+#include "myitemdelegate.h"
 
 namespace Ui {
     class AdminWindow;
@@ -39,9 +41,10 @@ private:
 
     void Refresh_Organization();
     void Refresh_Home();
-    void Refresh_Appartament(int id_apartament=-1);
+    void Refresh_Appartament(/*int id_apartament=-1*/);
     void Refresh_Uslugi();
     void Refresh_Pensioner();
+
 
 
     QList<QHBoxLayout> list;
@@ -63,8 +66,8 @@ private:
         return timeInUnix;
     }
 
-    int isIdSelectHome_onApartament();
-    int isIdSelectOrganiztion_onApartament();
+//    int isIdSelectHome_onApartament();
+//    int isIdSelectOrganiztion_onApartament();
 private slots:
     void Refresh_Settings();
     void AddOrg();                                  // добавление организации
@@ -73,6 +76,7 @@ private slots:
     void Refresh(int);
     void Refresh_cmbNumApp_onUslugi();
     void Refresh_cmBx_NumApp_onApartament();
+    void Refresh_tblView_Apartament();
     void SaveApart();
     void TarifRequest();
     void TarifEdit();
@@ -97,6 +101,10 @@ private slots:
     void on_tBtn_AddSetting_clicked();
     void on_tBtn_DeleteSetting_clicked();
     void on_tBtn_EditSetting_clicked();
+    void on_pBtn_OrgSelect_clicked();
+    void on_pBtn_HomeSelect_clicked();
+    void sl_SelectHome(QString home_name);
+    void sl_SelectOrg(QString org_name);
 };
 
 #endif // ADMINWINDOW_H

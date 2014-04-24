@@ -21,10 +21,10 @@ QWidget * MyItemDelegate :: createEditor( QWidget * parent,
     only_number = new QRegExpValidator(QRegExp("[0-9]+"),parent);   //валидатор для цифр
 
     QLineEdit *led = 0;
-    if (index.column() == 2){
+//    if (index.column() == 2){
         led = new QLineEdit(parent);
         led->setValidator(only_number);
-    }
+//    }
 
     return led;
 }

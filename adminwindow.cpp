@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include <qtextcodec.h>
 
+#include <QStandardItemModel>
 
 AdminWindow::AdminWindow(QWidget *parent) :
     QDialog(parent),
@@ -37,7 +38,7 @@ AdminWindow::AdminWindow(QWidget *parent) :
     // настройка вкладки Дома
     ui->tab_Home->setLayout(ui->verticalLayout_3);                              // вкладка дома
     Mode("home_default");
-    connect(ui->pBtn_addHome,SIGNAL(clicked()),SLOT(AddHome()));   // добавление дома
+    connect(ui->pBtn_addHome,SIGNAL(clicked()),SLOT(AddHome()));                // добавление дома
     connect(ui->tblView_Home,SIGNAL(doubleClicked(QModelIndex)),SLOT(sl_HomeEdit(QModelIndex)));
     connect(ui->pBtn_CancelHome,SIGNAL(clicked()),SLOT(sl_CancelHome()));
     connect(ui->pBtn_DeleteHome,SIGNAL(clicked()),SLOT(sl_DeleteHome()));
@@ -46,6 +47,8 @@ AdminWindow::AdminWindow(QWidget *parent) :
     //------------------------------------
 
     // настройка Квартиры
+    ui->lbl_HomeSelect->setText("");
+    ui->lbl_OrgSelect->setText("");
     ui->tab_Appartament->setLayout(ui->verticalLayout_2);                       //Вкладка квартиры
     ui->lEd_Balkon->setValidator(dv);
     ui->lEd_InhabedArea->setValidator(dv);
@@ -56,10 +59,11 @@ AdminWindow::AdminWindow(QWidget *parent) :
     ui->lEd_TotalArea->setValidator(dv);
     ui->lEd_NumApart_onApart->setValidator(only_number);
 
-//    connect(ui->pBtn_Verify,SIGNAL(clicked()),this,SLOT(Verify()));//  проверка наличия квартиры
     connect(ui->pBtn_Save,SIGNAL(clicked()),SLOT(SaveApart()));    // сохранение изменения квартир
-    connect(ui->cmBx_Home_on_App,SIGNAL(activated(int)),SLOT(Refresh_cmBx_NumApp_onApartament()));
-    connect(ui->cmBx_Org_on_App,SIGNAL(activated(int)),SLOT(Refresh_cmBx_NumApp_onApartament()));
+    connect(ui->cmBx_NumAp_on_Apartament,SIGNAL(activated(int)),SLOT(Refresh_tblView_Apartament()));
+
+//    connect(ui->cmBx_Home_on_App,SIGNAL(activated(int)),SLOT(Refresh_cmBx_NumApp_onApartament()));
+//    connect(ui->cmBx_Org_on_App,SIGNAL(activated(int)),SLOT(Refresh_cmBx_NumApp_onApartament()));
     Mode("app_deff");
     //------------------------------------
 
@@ -73,7 +77,6 @@ AdminWindow::AdminWindow(QWidget *parent) :
     AdminWindow::connect(ui->cmBx_NumAp_on_Uslugi,SIGNAL(activated(int)),SLOT(UslView()));
     AdminWindow::connect(ui->cmBx_Home_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
     AdminWindow::connect(ui->cmBx_Org_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
-//    Refresh_Uslugi();
     //------------------------------------
 
     //настройка тарифы
@@ -91,10 +94,7 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
     ui->tab_Pensioner->setLayout(ui->mainLay_Pens);
     Refresh_Pensioner();
-//    ui->cmBx_PensApart->setModel(
-//                db.ModelApartament(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
-//                                   ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
-//    ui->cmBx_PensApart->addItem("");
+    //----------------------------------------
 
     //настройка настройки
     ui->tab_Settings->setLayout(ui->vLay_Settings);
@@ -206,14 +206,36 @@ void AdminWindow::AddHome()
 }
 
 
-void AdminWindow::Refresh_Appartament(int id_apartament /*= -1*/)
+void AdminWindow::Refresh_Appartament(/*int id_apartament = -1*/)
 {
-    if (ui->cmBx_Home_on_App->isEnabled() && id_apartament == -1)
-        ui->cmBx_Org_on_App->setModel(db.Model("organiz"));
-    if (ui->cmBx_Org_on_App->isEnabled() && id_apartament == -1)
-        ui->cmBx_Home_on_App->setModel(db.Model("homes"));
+    if (ui->lbl_HomeSelect->text() == ""){
+        ui->lbl_HomeSelect->setText(trUtf8("<font color = red>Дом не выбран</font>"));
+    }
+    if ( ui->lbl_OrgSelect->text() == ""){
+        ui->lbl_OrgSelect->setText(trUtf8("<font color = red>Организация не выбрана</font>"));
+    }
     Refresh_cmBx_NumApp_onApartament();
+    Refresh_tblView_Apartament();
 }
+
+void AdminWindow::Refresh_tblView_Apartament()
+{
+    int id_apartament;
+    MyItemDelegate * dDeleg = new MyItemDelegate ();
+
+    id_apartament = ui->cmBx_NumAp_on_Apartament->model()->index(ui->cmBx_NumAp_on_Apartament->currentIndex(),1).data().toInt();
+
+    ui->tblView_Apartament->setModel(db.ModelApartament(id_apartament));
+    ui->tblView_Apartament->setItemDelegate(dDeleg);
+
+    ui->tblV_on_Uslugi->horizontalHeader()->setStretchLastSection(false);
+    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
+//    ui->tblView_Organization->hideColumn(1);
+
+}
+
 
 void AdminWindow::SaveApart()
 {
@@ -221,14 +243,14 @@ void AdminWindow::SaveApart()
     int id_home;
     int NumApart;
 
-    id_org = isIdSelectOrganiztion_onApartament();
+    id_org = db.is_IdOrg(ui->lbl_OrgSelect->text());
     if(id_org == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Организация "),QMessageBox::Ok);
         return;
     }
 
-    id_home = isIdSelectHome_onApartament();
+    id_home = db.is_IdHome(ui->lbl_HomeSelect->text());
     if(id_home == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Дом "),QMessageBox::Ok);
@@ -246,17 +268,17 @@ void AdminWindow::SaveApart()
     int t = db.is_idappart(id_home,id_org,NumApart);
     if ( t == -1){
         db.NewApatament(id_org,id_home,NumApart);
-        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
+//        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
     }
 
     if ((QMessageBox::question(this,trUtf8("Квартиры"),
                                trUtf8("test"),
                                QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
-        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
+//        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
         Mode("app_deff");
     }  else  {
         Mode("app_edit");
-        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
+//        Refresh_Appartament(db.is_idappart(id_home,id_org,NumApart));
     }
 }
 
@@ -283,8 +305,8 @@ void AdminWindow::Mode(QString m)
         i = 9;
     switch(i){
     case  1: //app_deff
-        ui->cmBx_Home_on_App->setEnabled(1);
-        ui->cmBx_Org_on_App->setEnabled(1);
+        ui->pBtn_OrgSelect->setEnabled(1);
+        ui->pBtn_HomeSelect->setEnabled(1);
         ui->pBtn_NewApartament->setEnabled(1);
         ui->lEd_Balkon->setEnabled(0);
         ui->lEd_InhabedArea->setEnabled(0);
@@ -303,8 +325,8 @@ void AdminWindow::Mode(QString m)
         ui->pBtn_Save->setHidden(true);
         break;
     case 2: //app_edit
-        ui->cmBx_Home_on_App->setEnabled(0);
-        ui->cmBx_Org_on_App->setEnabled(0);
+        ui->pBtn_OrgSelect->setEnabled(0);
+        ui->pBtn_HomeSelect->setEnabled(0);
         ui->lEd_Balkon->setEnabled(1);
         ui->lEd_InhabedArea->setEnabled(1);
         ui->lEd_lodggia->setEnabled(1);
@@ -319,8 +341,8 @@ void AdminWindow::Mode(QString m)
         ui->lEd_ReservMen->setEnabled(1);
         break;
     case 3: //app_add
-        ui->cmBx_Home_on_App->setEnabled(0);
-        ui->cmBx_Org_on_App->setEnabled(0);
+        ui->pBtn_OrgSelect->setEnabled(0);
+        ui->pBtn_HomeSelect->setEnabled(0);
         ui->pBtn_NewApartament->setEnabled(0);
         ui->lEd_Balkon->setEnabled(1);
         ui->lEd_InhabedArea->setEnabled(1);
@@ -533,17 +555,10 @@ void AdminWindow::Refresh_Organization()
     ui->tblView_Organization->setModel(db.ModelOrganiz());
 
     ui->tblView_Organization->horizontalHeader()->setStretchLastSection(false);
-#ifdef HAVE_QT5
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Interactive);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
-#else
-    ui->tView_Organization->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(1,QHeaderView::Interactive);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(2,QHeaderView::ResizeToContents);
-#endif
 
 }
 
@@ -552,13 +567,8 @@ void AdminWindow::Refresh_Home()
     delete ui->tblView_Home->model();
     ui->tblView_Home->setModel(db.ModelHome());
     ui->tblView_Home->horizontalHeader()->setStretchLastSection(false);
-#ifdef HAVE_QT5
     ui->tblView_Home->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Home->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-#else
-    ui->tblView_Home->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblView_Home->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
-#endif
 //    ui->tblView_Home->horizontalHeader()->setResizeMode(0,QHeaderView::Interactive);
 }
 
@@ -653,40 +663,9 @@ void AdminWindow::Refresh_cmbNumApp_onUslugi()
 void AdminWindow::Refresh_cmBx_NumApp_onApartament()
 {
     int OrganiztionID = -1, HomeID = -1;
-    int row;
 
-    row = ui->cmBx_Org_on_App->currentIndex();
-
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org_on_App->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                OrganiztionID = index.data().toInt();
-            }else{
-                return;
-            }
-        }else{
-            return;
-        }
-    }else{
-        return;
-    }
-
-    row = ui->cmBx_Home_on_App->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home_on_App->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                HomeID = index.data().toInt();
-            }else{
-                return;
-            }
-        }else{
-            return;
-        }
-    }else{
-        return;
-    }
+    OrganiztionID = db.is_IdOrg(ui->lbl_OrgSelect->text());
+    HomeID = db.is_IdHome(ui->lbl_HomeSelect->text());
 
     QSqlQueryModel *model = new QSqlQueryModel;
     model = db.ModelApartament(HomeID,OrganiztionID);
@@ -858,14 +837,14 @@ void AdminWindow::on_pBtn_NewApartament_clicked()
     int id_org;
     int id_home;
 
-    id_org = isIdSelectOrganiztion_onApartament();
+    id_org = db.is_IdOrg(ui->lbl_OrgSelect->text());
     if(id_org == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Организация "),QMessageBox::Ok);
         return;
     }
 
-    id_home = isIdSelectHome_onApartament();
+    id_home = db.is_IdHome(ui->lbl_HomeSelect->text());
     if(id_home == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Дом "),QMessageBox::Ok);
@@ -876,52 +855,6 @@ void AdminWindow::on_pBtn_NewApartament_clicked()
     ui->lEd_NumApart_onApart->setText("");
 }
 
-int AdminWindow::isIdSelectHome_onApartament()
-{
-    int row;
-    int id_home = -1;
-
-    row = ui->cmBx_Home_on_App->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home_on_App->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                id_home = index.data().toInt();
-            }else{
-                return -1;
-            }
-        }else{
-            return -1;
-        }
-    }else{
-        return -1;
-    }
-    return id_home;
-}
-
-int AdminWindow::isIdSelectOrganiztion_onApartament()
-{
-    int row;
-    int id_org = -1;
-
-    row = ui->cmBx_Org_on_App->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org_on_App->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                id_org = index.data().toInt();
-            }else{
-                return -1;
-            }
-        }else{
-            return -1;
-        }
-    }else{
-        return -1;
-    }
-    return id_org;
-}
-
 void AdminWindow::on_pBtn_Cancel_onApart_clicked()
 {
     Mode("app_deff");
@@ -929,7 +862,6 @@ void AdminWindow::on_pBtn_Cancel_onApart_clicked()
 
 void AdminWindow::Refresh_Settings()
 {
-//    qDebug() << "refresh";
     ui->tblV_on_Settings->setModel(db.ModelSettings());
 
     ui->tblV_on_Settings->horizontalHeader()->setStretchLastSection(false);
@@ -966,4 +898,49 @@ void AdminWindow::on_tBtn_EditSetting_clicked()
     dlg->setNameSetting(name_setting);
     connect(dlg,SIGNAL(s_Ok()),this,SLOT(Refresh_Settings()));
     dlg->open();
+}
+
+void AdminWindow::on_pBtn_OrgSelect_clicked()
+{
+    Selecter_with_ComboBox *dlg = new Selecter_with_ComboBox(this);
+    connect(dlg,SIGNAL(CurrentValue(QString)),SLOT(sl_SelectOrg(QString)));
+    connect(dlg,SIGNAL(CurrentValue(QString)),dlg,SLOT(close()));
+//    connect(dlg,SIGNAL(CurrentValue(QString)),dlg,SLOT(close()));
+//    connect(dlg,SIGNAL(accepted()),SLOT(Refresh_cmBx_NumApp_onApartament()));
+//    connect(dlg,SIGNAL(finished(int)),SLOT(Refresh_cmBx_NumApp_onApartament()));
+    dlg->setWindowTitle(trUtf8("Выбор организации"));
+    dlg->setContentsComboBox(db.Model("organiz"));
+    dlg->open();
+}
+
+void AdminWindow::on_pBtn_HomeSelect_clicked()
+{
+    Selecter_with_ComboBox *dlg = new Selecter_with_ComboBox(this);
+    connect(dlg,SIGNAL(CurrentValue(QString)),SLOT(sl_SelectHome(QString)));
+    connect(dlg,SIGNAL(CurrentValue(QString)),dlg,SLOT(close()));
+//    connect(dlg,SIGNAL(accepted()),SLOT(Refresh_cmBx_NumApp_onApartament()));
+//    connect(dlg,SIGNAL(destroyed()),SLOT(Refresh_cmBx_NumApp_onApartament()));
+    dlg->setWindowTitle(trUtf8("Выбор дома"));
+    dlg->setContentsComboBox(db.Model("homes"));
+    dlg->open();
+}
+
+void AdminWindow::sl_SelectHome(QString home_name)
+{
+    if (db.is_IdHome(home_name) != -1){
+        ui->lbl_HomeSelect->setText(home_name);
+    }else{
+        ui->lbl_HomeSelect->setText(trUtf8("<font color = red>Дом не выбран</font>"));
+    }
+    Refresh_cmBx_NumApp_onApartament();
+}
+
+void AdminWindow::sl_SelectOrg(QString org_name)
+{
+    if (db.is_IdOrg(org_name) != -1){
+        ui->lbl_OrgSelect->setText(org_name);
+    }else{
+        ui->lbl_OrgSelect->setText(trUtf8("<font color = red>Организация не выбрана</font>"));
+    }
+    Refresh_cmBx_NumApp_onApartament();
 }

@@ -1,5 +1,7 @@
 #include "bd.h"
 #include "table_tariff.h"
+#include "sqlqueryeditmodel.h"
+#include "sqlquerymodelapartament.h"
 
 
 BD::BD()
@@ -39,12 +41,13 @@ bool BD::RunScript(QString sqlfilename)
     return true;
 }
 //------------------------------------------------------------------------------------------------------
-void BD::Create()
+bool BD::Create()
 {
     if (!RunScript("./update_db/baseline.sql")){
         qDebug() << "Error run " << "./update_db/baseline.sql";
+        return false;
     }
-
+    return true;
 }
 //------------------------------------------------------------------------------------------------------
 void BD::UpdateDataBase()
@@ -217,6 +220,7 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
 //----------------------------------------------------------------------------------------------------
 void BD::UpdateApartament(QStringList column, QStringList value, int idapart)
 {
+//    qDebug() << column << value << idapart;
     for(int i=0; i<column.count();i++ ){
         UpdateTable("apartament",column[i],value[i],"id_apartament", QString::number(idapart));
     }
@@ -800,13 +804,83 @@ QSqlQueryModel* BD::ModelHome(){
     return model;
 }
 
-QSqlQueryModel* BD::ModelApartament(int id_apartament) //
-{
-    QSqlQueryModel *model = new QSqlQueryModel;
-    model->setQuery(QSqlQuery("SELECT * FROM apartament "
-                              " WHERE id_apartament="+QString::number(id_apartament)));
+QAbstractItemModel* BD::ModelApartament(int id_apartament) //
+{     
+    SqlQueryModelApartament *model = new SqlQueryModelApartament;
+    model->SetIdApartament(id_apartament);
 
-    return model;
+    connect(model,SIGNAL(sgn_RefreshModel(QAbstractTableModel*)),this,SLOT(sl_ModelApartamentHeaderData(QAbstractTableModel*)));
+    connect(model,SIGNAL(sgn_EditIndex(int,QString,int)),this,SLOT(sl_EditApartament(int,QString,int)));
+    QList<int> lst;
+    lst << 0 << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9;
+    model->setEditColumn(lst);
+
+    model->setMyQuery(" SELECT "
+                              " number, surname, name, patronymic, "
+                              " total_area, inhabed_area,balkon, loggia,  personal_account  "
+                              " FROM apartament "
+                              " WHERE id_apartament = "+QString::number(id_apartament));
+
+    sl_ModelApartamentHeaderData(model);
+
+    TransposeProxyModel *trans = new TransposeProxyModel;
+    trans->setSourceModel(model);
+    return trans;
+
+}
+
+void BD::sl_ModelApartamentHeaderData(QAbstractTableModel *model)
+{
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Фамилия"));
+    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Имя"));
+    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Отчество"));
+    model->setHeaderData(4,Qt::Horizontal,QObject::trUtf8("Общ. Площадь"));
+    model->setHeaderData(5,Qt::Horizontal,QObject::trUtf8("Жил. Площадь"));
+    model->setHeaderData(6,Qt::Horizontal,QObject::trUtf8("Балкон"));
+    model->setHeaderData(7,Qt::Horizontal,QObject::trUtf8("Лоджия"));
+    model->setHeaderData(8,Qt::Horizontal,QObject::trUtf8("Личн. счёт"));
+}
+
+void BD::sl_EditApartament(int col,QString val,int id_apart)
+{
+    QStringList lst_col;
+    QStringList lst_val;
+
+    qDebug() << col;
+
+    switch(col){
+        case 0:
+        lst_col << "number";
+        break;
+        case 1:
+        lst_col << "surname";
+        break;
+        case 2:
+        lst_col << "name";
+        break;
+        case 3:
+        lst_col << "patronymic";
+        break;
+        case 4:
+        lst_col << "total_area";
+        break;
+        case 5:
+        lst_col << "inhabed_area";
+        break;
+        case 6:
+        lst_col << "balkon";
+        break;
+        case 7:
+        lst_col << "loggia";
+        break;
+        case 8:
+        lst_col << "personal_account";
+        break;
+    }
+
+    lst_val << val;
+    UpdateApartament(lst_col,lst_val,id_apart);
 }
 
 QSqlQueryModel* BD::ModelApartament(int id_home, int id_org)
@@ -900,10 +974,12 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
             "AND t.tariff_date=p.date_pokazanie "
             "AND p.date_pokazanie="+QString::number(IsDateOfUnix(year,month,1));
     model->setQuery(QSqlQuery(str));
+
     if(model->lastError().number() != -1){
         qDebug()<<"e825d464c306efe892a28669bdcefb13"<<model->lastError();
     }
 
+//    qDebug() << "1";
     if(model->rowCount()==0){//  если строки не найдены, скорее всего нет тарифов - сделаем без них
         QString str2 = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end "
             "FROM list_app_usluga lau, usluga u, pokazanie p "
@@ -915,7 +991,13 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
             "AND p.date_pokazanie="+QString::number(IsDateOfUnix(year,month,1));
         model->setQuery(QSqlQuery(str2));
     }
+    if(model->lastError().number() != -1){
+        qDebug()<<"e825d464c306efe823628669bdcefb13"<<model->lastError();
+    }
+//    qDebug() << "2";
+
     if(model->rowCount()==0){  //ООо всё равно пусто, то тогда добавим строчки
+//        qDebug() << "4";
         QString str2;
         QSqlQuery query2;
         QStringList column, values;
@@ -927,11 +1009,14 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
         str2 = str2.arg(id_apartament);
 
         if (query2.exec(str2)){
+//            qDebug() << "7";
             if (query2.size() == -1){
                 return model;
             }
 
+//            qDebug() << "5";
             while (query2.next()){ // переберём все строчки
+//                qDebug() << "6";
                 values.clear();
                 values << query2.value(0).toString() << QString::number(IsDateOfUnix(year,month,1))
                        << QString::number(0)         << QString::number(0);
@@ -943,8 +1028,11 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
         }
 
         model = ModelPokazanie(id_apartament, month, year); // И теперь попробуем ещё раз получить не пустую модель
-
     }
+    if(model->lastError().number() != -1){
+        qDebug()<<"e8237664c306efe892a28669bdcefb13"<<model->lastError();
+    }
+//    qDebug() << "3";
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Счётчик"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Пок посл"));
     model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Пок тек"));
@@ -959,9 +1047,13 @@ SqlQueryEditModel* BD::ModelEditPokazanie(int id_apartament, int month, int year
 {
     SqlQueryEditModel *model = new SqlQueryEditModel;
     connect(model,SIGNAL(sgn_EditPokazanie(int,QString)),this,SLOT(sl_EditPokazanie(int,QString)));
+    connect(model,SIGNAL(sgn_RefreshModel(QAbstractTableModel*)),this,SLOT(sl_ModelPokazanieHeaderData(QAbstractTableModel*)));
+    QList<int> lst;
+    lst << 2;
+    model->setEditColumn(lst);
 
     QString str;
-    str = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end, t.tariff "
+    str = "SELECT p.id_pokazanie, u.name, p.pokazanie_end"
             " FROM list_app_usluga lau, usluga u, tariff t, pokazanie p "
             " WHERE "
             " lau.id_usluga = u.id_usluga "
@@ -973,7 +1065,15 @@ SqlQueryEditModel* BD::ModelEditPokazanie(int id_apartament, int month, int year
             " AND t.tariff_date=p.date_pokazanie "
             " AND p.date_pokazanie="+QString::number(IsDateOfUnix(year,month,1));
     model->setMyQuery(str);
+    sl_ModelPokazanieHeaderData(model);
     return model;
+}
+
+void BD::sl_ModelPokazanieHeaderData(QAbstractTableModel *t)
+{
+    t->setHeaderData(0, Qt::Horizontal, QObject::trUtf8("№"));
+    t->setHeaderData(1, Qt::Horizontal, QObject::trUtf8("Счётчик"));
+    t->setHeaderData(2, Qt::Horizontal, QObject::trUtf8("Показазия текущие"));
 }
 
 int BD::NewApatament(int id_org, int id_home, int num_apart)
@@ -1905,4 +2005,36 @@ QString BD::isValueSetting(QString NameSetting)
     }
 
     return  out;
+}
+
+int BD::is_IdHome(QString Home_name)
+{
+    int out = -1;
+    QString str;
+
+    str = "SELECT id_homes FROM homes WHERE name = '%1'";
+    str = str.arg(Home_name);
+
+    QVariant t = SelectFromTable(str);
+    if(!t.isNull()){
+        out = t.toInt();
+    }
+
+    return out;
+}
+
+int BD::is_IdOrg(QString Org_name)
+{
+    int out = -1;
+    QString str;
+
+    str = "SELECT id_organiz FROM organiz WHERE name = '%1'";
+    str = str.arg(Org_name);
+
+    QVariant t = SelectFromTable(str);
+    if(!t.isNull()){
+        out = t.toInt();
+    }
+
+    return out;
 }
