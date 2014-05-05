@@ -111,6 +111,7 @@ void ViewBlank::Print()
     printer.setFromTo(1 ,strL_page.count());
     QPrintDialog printDialog(&printer,this);
 
+    qDebug() << printDialog.exec();
     if  (printDialog.exec()){
         printer.setPageSize(QPrinter::A4);
 
@@ -134,6 +135,8 @@ void ViewBlank::Print()
             delete page;
         }
 
+    }else{
+        qDebug() << "printer error";
     }
 }
 

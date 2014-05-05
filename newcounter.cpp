@@ -15,7 +15,6 @@ NewCounter::NewCounter(QWidget *parent) :
 
     connect(ui->pBtn_Cancel,SIGNAL(clicked()),SLOT(close()));
     connect(ui->pBtn_Ok,SIGNAL(clicked()),SLOT(sl_Ok()));
-//    connect(ui->lEdCounter,SIGNAL(editingFinished()),SLOT(sl_Ok()));
     this->adjustSize();
 
 }
@@ -33,7 +32,7 @@ void NewCounter::set_IdPokazanie(int id_pok)
 
 void NewCounter::sl_Ok()
 {   
-    qDebug()  << id_pokazanie << ui->lEdCounter->text().toInt();
+//    qDebug()  << id_pokazanie << ui->lEdCounter->text().toInt();
     db.UpdatePokazanieHome(id_pokazanie,ui->lEdCounter->text().toInt());
     close();
 }

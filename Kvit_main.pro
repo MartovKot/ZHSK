@@ -14,7 +14,7 @@ greaterThan(QT_MAJOR_VERSION, 4){
             webkitwidgets
     DEFINES += HAVE_QT5
 }
-
+CONFIG += c++11
 # Input
 HEADERS += adminwindow.h \
            apartament.h \
