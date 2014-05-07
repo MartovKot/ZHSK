@@ -1,5 +1,4 @@
 #include "table_tariff.h"
-#include "my_function.h"
 
 table_tariff::table_tariff()
 {
@@ -15,9 +14,7 @@ float table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
 {
     QString str, strF;
     double out = -1;
-    QDate t_date;
-
-    t_date.setDate(date.year(),date.month(),1);
+    DateOfUnixFormat t_date(date.year(),date.month(),1);
 
     switch (tariff) {
     case 1:
@@ -30,7 +27,7 @@ float table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
         break;
     }
     str += "FROM tariff WHERE id_usluga=%2  AND tariff_date=%1 ";
-    strF = str.arg(IsDateOfUnix(t_date))
+    strF = str.arg(t_date.Second())
             .arg(usluga);
     QVariant t = db->SelectFromTable(strF);
     if (!t.isNull()){
@@ -47,15 +44,16 @@ QSqlQueryModel* table_tariff::ModelTarifTabl(int year, int month)
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
     QVariant count_tarif;
+    DateOfUnixFormat date(year,month,1);
 
     //----Вынести в другое место----
     str = "SELECT COUNT() FROM tariff "
-            " WHERE tariff_date = " + QString::number(IsDateOfUnix(year,month,1));
+            " WHERE tariff_date = " + QString::number(date.Second());
     count_tarif = db->SelectFromTable(str);
     if(!count_tarif.isNull()){
         if(count_tarif.toInt()==0){
             QString str2 = "INSERT INTO tariff(id_usluga, tariff_date) SELECT id_usluga, %1 FROM usluga";
-            str2 = str2.arg(QString::number(IsDateOfUnix(year,month,1)));
+            str2 = str2.arg(QString::number(date.Second()));
             QSqlQuery query2;
             if(query2.exec(str2)){
 
@@ -67,7 +65,7 @@ QSqlQueryModel* table_tariff::ModelTarifTabl(int year, int month)
     //-----конец
 
     str = "SELECT t.id_tariff, u.name, t.tariff, t.tariff2, t.norm FROM tariff t, usluga u "
-            " WHERE t.tariff_date = " + QString::number(IsDateOfUnix(year,month,1)) + " AND u.id_usluga=t.id_usluga";
+            " WHERE t.tariff_date = " + QString::number(date.Second()) + " AND u.id_usluga=t.id_usluga";
     model->setQuery(QSqlQuery(str));
     if (model->lastError().number() != -1){
         qDebug() << "d79f962a16168e6156e982b602b533dc" << model->lastError();
@@ -92,16 +90,16 @@ int table_tariff::FillTarif(int month, int year)
 {
     QString str;
     QSqlQuery query;
+    DateOfUnixFormat date(year,month,1);
 
     str ="SELECT tariff, tariff2, norm, id_usluga FROM tariff WHERE tariff_date=%1";
-    str = str.arg(QString::number(IsDateOfUnix(
-                                      db->previous_year(year,month),db->previous_month(month),1)));
+    str = str.arg(QString::number(date.Second(-1)));
     if (query.exec(str)){
         while(query.next()){
             QString str2;
             QSqlQuery query2;
             str2 = "SELECT id_tariff FROM tariff WHERE tariff_date=%1 AND id_usluga=%2";
-            str2 = str2.arg(QString::number(IsDateOfUnix(year,month,1)))
+            str2 = str2.arg(date.Second())
                     .arg(query.value(3).toInt());
             if (query2.exec(str2)){
               if (query2.next()){
@@ -112,7 +110,7 @@ int table_tariff::FillTarif(int month, int year)
                   QStringList column, value;
                   column << "tariff" <<"tariff2" <<"norm"<<"id_usluga"<<"tariff_date";
                   value << query.value(0).toString() << query.value(1).toString() << query.value(2).toString()
-                           << query.value(3).toString() << QString::number(IsDateOfUnix(year,month,1));
+                           << query.value(3).toString() << QString::number(date.Second());
                   db->add("tariff",column,value);
               }
             } else{

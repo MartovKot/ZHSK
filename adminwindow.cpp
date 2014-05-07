@@ -179,11 +179,12 @@ void AdminWindow::AddUsluga_of_Apartament()
     }
     if(db.is_TypeUsluga(UslugaID)==1)
     {
+        DateOfUnixFormat date(QDate::currentDate().year(),QDate::currentDate().month(),1);
         column.clear();
         value.clear();
         column << "id_list_app_usluga" << "date_pokazanie" << "pokazanie_home" << "pokazanie_end";
         value << QString::number(db.is_idListAppUsluga(ApartamentID,UslugaID))
-              << QString::number(IsDateOfUnix(QDate::currentDate().year(),QDate::currentDate().month(),1))
+              << QString::number(date.Second())
               << "0" <<"0";
         db.add("pokazanie",column,value);
     }
@@ -230,10 +231,6 @@ void AdminWindow::Refresh_tblView_Apartament()
 
     ui->tblV_on_Uslugi->horizontalHeader()->setStretchLastSection(false);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
-//    ui->tblView_Organization->hideColumn(1);
-
 }
 
 

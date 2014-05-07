@@ -50,12 +50,13 @@ QString Table_Payment::delete_Payment(int id_apartament, int year, int month, in
     QString str;
     QSqlQuery query;
     QString out = "";
+    DateOfUnixFormat date(year,month,day);
 
     str = "DELETE FROM payment "
             "WHERE id_apartament=%1 AND payment_date=%2";
 
     str = str.arg(id_apartament)
-            .arg(IsDateOfUnix(year,month,day));
+            .arg(date.Second());
     if (!query.exec(str)){
         out = query.lastError().text();
     }

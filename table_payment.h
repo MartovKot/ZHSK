@@ -1,24 +1,13 @@
 #ifndef TABLE_PAYMENT_H
 #define TABLE_PAYMENT_H
 #include "bd.h"
+#include "dateofunixformat.h"
 
 class Table_Payment
 {
 
 private:
     BD *db;
-    qint64 IsDateOfUnix(int year, int month, int day)
-    {
-        qint64 timeInUnix;
-        const qint64 MS_COEF = 1000;
-        QDate date;
-        date.setDate(year, month, day);
-        QDateTime datetime;
-        datetime.setTimeSpec(Qt::OffsetFromUTC);
-        datetime.setDate(date);
-        timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
-        return timeInUnix;
-    }
 public:
     Table_Payment();
     ~Table_Payment();

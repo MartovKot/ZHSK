@@ -31,13 +31,13 @@ HEADERS += adminwindow.h \
     viewblank.h \
     table_payment.h \
     table_tariff.h \
-    my_function.h \
     updater.h \
     mysplashscreen.h \
     editsetting.h \
     selecter_with_combobox.h \
     transposeproxymodel.h \
-    sqlquerymodelapartament.h
+    sqlquerymodelapartament.h \
+    dateofunixformat.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -63,7 +63,8 @@ SOURCES += adminwindow.cpp \
     editsetting.cpp \
     selecter_with_combobox.cpp \
     transposeproxymodel.cpp \
-    sqlquerymodelapartament.cpp
+    sqlquerymodelapartament.cpp \
+    dateofunixformat.cpp
 
 RESOURCES += \
     qrc.qrc

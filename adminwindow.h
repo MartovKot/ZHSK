@@ -14,6 +14,7 @@
 #include "editsetting.h"
 #include "selecter_with_combobox.h"
 #include "myitemdelegate.h"
+#include "dateofunixformat.h"
 
 namespace Ui {
     class AdminWindow;
@@ -53,21 +54,6 @@ private:
     QLineEdit *lEd_tarif2;
     QLineEdit *lEd_norm;
 
-    qint64 IsDateOfUnix(int year, int month, int day)
-    {
-        qint64 timeInUnix;
-        const qint64 MS_COEF = 1000;
-        QDate date;
-        date.setDate(year, month, day);
-        QDateTime datetime;
-        datetime.setTimeSpec(Qt::OffsetFromUTC);
-        datetime.setDate(date);
-        timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
-        return timeInUnix;
-    }
-
-//    int isIdSelectHome_onApartament();
-//    int isIdSelectOrganiztion_onApartament();
 private slots:
     void Refresh_Settings();
     void AddOrg();                                  // добавление организации

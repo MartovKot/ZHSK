@@ -49,6 +49,7 @@ OperWindow::~OperWindow()
 
 void OperWindow::Refresh_tblVPayment(int ApartamenID)
 {
+    Table_Payment t_payment;
     ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
     ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
     ui->tblV_Payment->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -81,7 +82,7 @@ void OperWindow::sl_addPayment()
                              trUtf8("Уже изобрели машину времени? \nПроверте дату ;)"),QMessageBox::Ok);
         return;
     }
-
+    Table_Payment t_payment;
     t_payment.add_line(QString::number(num),QString::number(year),QString::number(month),QString::number(day),Payment);
 
     Refresh_tblVPayment(num);
@@ -205,6 +206,7 @@ void OperWindow::sl_DeletePayment()
                          QDate::longMonthName(month)+" "+QString::number(year)+trUtf8(" года"),
                     QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
         QString err;
+        Table_Payment t_payment;
         err = t_payment.delete_Payment(
                     db.is_idappart(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt()),
                     ui->tblV_Payment->model()->index(row,2).data().toInt(),

@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
     MainWindow::connect(ui->pBtnOper,SIGNAL(clicked()),this,SLOT(Oper_mod()));
     MainWindow::connect(ui->pBtnPrint,SIGNAL(clicked()),this,SLOT(Print_mod()));
     MainWindow::connect(ui->pBtn_ArhivBlank,SIGNAL(clicked()),this,SLOT(sl_ArhivKvit()));
-
 }
 
 MainWindow::~MainWindow()

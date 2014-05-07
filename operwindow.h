@@ -35,7 +35,7 @@ private:
     QDialog *dlg;
     int HomeID, OrganizationID;
     int p_id_pokazanie, p_pokazanie;
-    Table_Payment t_payment;
+
     int isIdSelectApartament();
 
 

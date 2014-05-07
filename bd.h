@@ -14,6 +14,7 @@
 #include "sqlqueryeditmodel.h"
 #include "logreport.h"
 #include "TransposeProxyModel.h"
+#include "dateofunixformat.h"
 
 class BD : public  QObject
 {
@@ -46,13 +47,13 @@ public:
 
     int is_LSh(int id_app);                                     //возвращает лицевой счёт квартиры
 
-    int is_RealMen(int id_app, QDate date);                     //возвращает количество проживающих.
-    int is_RentMen(int id_app, QDate date);                     //возвращает количество снимающих
-    int is_ReservMen(int id_app, QDate date);                   //возвращает количество на брони
+    int is_RealMen(int id_app, DateOfUnixFormat date);                     //возвращает количество проживающих.
+    int is_RentMen(int id_app, DateOfUnixFormat date);                     //возвращает количество снимающих
+    int is_ReservMen(int id_app, DateOfUnixFormat date);                   //возвращает количество на брони
 
 
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
-    int is_IdPokazanie(int id_list_app_usluga, qint64 unix_date);
+    int is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date/*qint64 unix_date*/);
 
     double is_TotalArea(int id_app);
     double is_LivedArea(int id_app);
@@ -84,8 +85,8 @@ public:
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
     void UpdateHome(int id_home, QString home);
 
-    void CreditedOfService (int id_apartament, QDate date);                             //начисление по квартире
-    double CreditedForReport(int id_apartament, int id_usluga,  QDate date);
+    void CreditedOfService (int id_apartament, DateOfUnixFormat date);                             //начисление по квартире
+    double CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
 
 
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
@@ -102,9 +103,9 @@ public:
 
     int NewApatament(int id_org, int id_home, int num_apart);                           //новая квартира
 
-    double AmountToPay(int id_apart, QDate date);                                       //сумма к оплате
-    QString is_Debt(int id_apart, QDate date);
-    double AmountForServices(int id_apart, QDate date);
+    double AmountToPay(int id_apart, DateOfUnixFormat date);                                       //сумма к оплате
+    QString is_Debt(int id_apart, DateOfUnixFormat date);
+    double AmountForServices(int id_apart, DateOfUnixFormat date);
 
     QString DeleteOrg(int id_org);
     QString DeleteHome(int id_home);
@@ -125,8 +126,7 @@ public:
 
 
 private:
-    qint64 IsDateOfUnix(int year, int month, int day);
-    qint64 IsDateOfUnix(QDate date);
+
     QSqlDatabase db;
     LogReport LogOut;
 
@@ -136,16 +136,20 @@ private:
     int next_month (int m);
     int next_year(int m, int y);
 
-    QVariant CreditedOfApartament(int id_list_app_usluga, QDate date);
-    void CreditedForApartament(int id_apart, QDate date);
-    void PaymentOfDebt(int id_apart, QDate date);                                       //расчёт долга
-    double PaymentCounters(int id_list_app_usluga, QDate date);
+    QVariant CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date);
+    void CreditedForApartament(int id_apart, DateOfUnixFormat date);
+    void PaymentOfDebt(int id_apart, DateOfUnixFormat date);                                       //расчёт долга
+    double PaymentCounters(int id_list_app_usluga, DateOfUnixFormat date);
 
     void SumCount(int id_pokazanie, bool New = false);                                  //Расчёт показаний канализации
     void DataProcessing(int id_org, int id_home, int month, int year);                  //начало оптимизированного расчёта
 
     bool isElectroUsluga(int id_usluga);
     bool is_pensioner_living_alone(int id_apartament);
+
+    //delete dublicate
+    QStringList strL_from_query(QString str);
+    QVariant qVariant_from_query(QString str);
 private slots:
     void sl_EditPokazanie(int id_pok, QString value);
     void sl_ModelPokazanieHeaderData(QAbstractTableModel* t);
