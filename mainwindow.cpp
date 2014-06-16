@@ -8,9 +8,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->centralWidget->setLayout(ui->verticalLayout);
 
+    AdmWin = nullptr;
+    OperWin = nullptr;
+
     Refresh_win();
 
     ui->statusBar->showMessage(db.is_DatabaseVersoin());
+
     QFile styleFile(":/style.css");
     if( styleFile.open(QFile::ReadOnly) ) {
         QString styleSheet = QLatin1String(styleFile.readAll());
@@ -23,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     MainWindow::connect(ui->pBtnOper,SIGNAL(clicked()),this,SLOT(Oper_mod()));
     MainWindow::connect(ui->pBtnPrint,SIGNAL(clicked()),this,SLOT(Print_mod()));
     MainWindow::connect(ui->pBtn_ArhivBlank,SIGNAL(clicked()),this,SLOT(sl_ArhivKvit()));
+
 }
 
 MainWindow::~MainWindow()
@@ -38,18 +43,17 @@ void MainWindow::Refresh_win()
 
 void MainWindow::Admin_mod()
 {
-    if(AdmWin == NULL){
+    if(AdmWin == nullptr){
         AdmWin = new AdminWindow(this);
         AdmWin->setPalette(this->palette());
         connect(AdmWin,SIGNAL(finished(int)),SLOT(sl_AdminWinClose()));
-
     }
     AdmWin->show();
 }
 
 void MainWindow::Oper_mod()
 {
-    if (OperWin == NULL){
+    if (OperWin == nullptr){
         OperWin = new OperWindow(this);
         OperWin->setPalette(this->palette());
 
@@ -204,12 +208,12 @@ void MainWindow::sl_OperWinClose()
 {
     Refresh_win();
     delete OperWin;
-    OperWin  = NULL;
+    OperWin  = nullptr;
 }
 
 void MainWindow::sl_AdminWinClose()
 {
     Refresh_win();
     delete AdmWin;
-    AdmWin  = NULL;
+    AdmWin  = nullptr;
 }

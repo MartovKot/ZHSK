@@ -266,6 +266,7 @@ QString parser_blank::process_main(QString str_in, int id_app)
               << "@DolgOpl#"
               << "@prKOpl#"
               << "@ItogKOpl#";
+    DateOfUnixFormat u_date(ConfData.date);
     strL_replace << QString(db.is_nameOrg(ConfData.Org_id))     << db.is_FIO(id_app)
                  << QString::number(db.is_LSh(id_app))          << QString::number(db.is_RealMen(id_app,ConfData.date))
                  << QString::number(db.is_RentMen(id_app,ConfData.date))
@@ -277,10 +278,10 @@ QString parser_blank::process_main(QString str_in, int id_app)
                     + QString::number(db.is_NumberAppartament(id_app))
                  << QString::number(ConfData.date.month())+" / "+QString::number(ConfData.date.year())
                  << QDate::longMonthName(ConfData.date.month())+"  "+QString::number(ConfData.date.year())+QObject::trUtf8(" г.")
-                 << QString::number(db.AmountToPay(id_app,ConfData.date))
+                 << QString::number(db.AmountToPay(id_app,u_date.Second()))
                  << db.is_Debt(id_app,ConfData.date)
-                 << QString::number(db.AmountForServices(id_app,ConfData.date))
-                 << QString::number(db.AmountForServices(id_app,ConfData.date));
+                 << QString::number(db.AmountForServices(id_app,u_date.Second()))
+                 << QString::number(db.AmountForServices(id_app,u_date.Second()));
 
     str_out = str_in;
     for (int i=0;i<strL_find.size();i++){

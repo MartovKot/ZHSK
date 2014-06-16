@@ -10,7 +10,6 @@
 
 #include "adminwindow.h"
 #include "operwindow.h"
-#include "apartament.h"
 #include "viewblank.h"
 
 namespace Ui {
@@ -24,7 +23,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    Apartament Apartament_Share;
     void setVersion(QString ver);
 
 private:

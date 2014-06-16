@@ -1355,57 +1355,58 @@ void BD::CreditedForApartament(int id_apart, DateOfUnixFormat date)
         qDebug()<<query.lastError()<<str;
         LogOut.logout(query.lastError().text());
     }
-    PaymentOfDebt(id_apart,date);// Расчёт долга
+    PaymentOfDebt(id_apart,date.year(),date.month());// Расчёт долга
 }
 
-double BD::AmountToPay(int id_apart, DateOfUnixFormat date)
+double BD::AmountToPay(int id_apart, qint64 u_date)
 {
     QString str;
     double out = 0.0, debt = 0.0;
 
     str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";
-    str = str.arg(date.Second())
+
+    str = str.arg(u_date)
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
     if (!t.isNull()){
         debt = t.toDouble();
     }
 
-    out = debt + AmountForServices(id_apart,date);
-//    qDebug() << out << date << debt;
+    out = debt + AmountForServices(id_apart,u_date);
+//    qDebug() << out << u_date << debt;
     return out;
 }
 
-void BD::PaymentOfDebt(int id_apart, DateOfUnixFormat date)
+void BD::PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*/)
 {
     QString str;
     QSqlQuery query;
     double debt = 0.0, payment = 0.0;
-    DateOfUnixFormat  previous_date(date.year(),date.month(),25);
-    previous_date = date.addMonths(-1);
+    DateOfUnixFormat  date(year,month,25);
 
     // --------- К оплате в прошлом месяце
-    debt += AmountToPay(id_apart,previous_date);
-//    qDebug() << "t1" << debt;
+    debt = debt + AmountToPay(id_apart,date.Second_first_day(-1));
+//    qDebug() <<"debt1 " << debt;
     //---------- Долг за счётчики в этом месяце
     str="SELECT credited_with_counter FROM credited_of_apartament WHERE  date_credited_of_apartament=%1 AND id_apartament=%2";
     str = str.arg(date.Second())
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
     if(!t.isNull()){
-        debt += t.toDouble();
+        debt = debt + t.toDouble();
     }
-//    qDebug() << "t2" << t.toDouble() << debt;
+//    qDebug() << "t4" << payment << debt;
     //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
     str = "SELECT payment FROM payment "
             "WHERE payment_date >= %1 AND payment_date <= %2 AND id_apartament = %3";
-    str = str.arg(previous_date.Second())
+    str = str.arg(date.Second(-1))
             .arg(date.Second())
             .arg(id_apart);
-//    qDebug() << str;
+
     if (query.exec(str)){
         while (query.next()){
             payment = payment + query.value(0).toDouble();
+//            qDebug() << query.value(0);
         }
     }else{
         LogOut.logout(query.lastError().text());
@@ -1414,21 +1415,25 @@ void BD::PaymentOfDebt(int id_apart, DateOfUnixFormat date)
 //    qDebug() << "t3" << payment << debt;
     //-----обновление/добавление долга
     str = "SELECT id_debt, debt FROM debt WHERE date_debt=%1 AND id_apartament=%2";
-    str = str.arg(date.Second())
+    str = str.arg(date.Second_first_day())
             .arg(id_apart);
     if (query.exec(str)){
+//        qDebug() << "z1";
         if (query.next()){
-            if(QString::number(debt,'f',2) == query.value(1).toString()){
+            if(fabs(debt - query.value(1).toDouble()) <0.01){
                 return;
             }else{
                 UpdateTable("debt","debt",QString::number(debt,'f',2),"id_debt",query.value(0).toString());
             }
+//            qDebug() << "z2";
         }else{
             QStringList column,value;
             column << "date_debt" << "id_apartament" << "debt";
             value << QString::number(date.Second())
                   << QString::number(id_apart) << QString::number(debt,'f',2);
             add("debt",column,value);
+
+//            qDebug() << "z3";
         }
     }else{
         qDebug()<<query.lastError()<<str;
@@ -1460,13 +1465,13 @@ QString BD::is_Debt(int id_apart, DateOfUnixFormat date)
 }
 
 
-double BD::AmountForServices(int id_apart, DateOfUnixFormat date)
+double BD::AmountForServices(int id_apart, qint64 u_date)
 {
     QString str;
     double out = 0;
 
     str="SELECT credited_out_counter FROM credited_of_apartament WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
-    str = str.arg(date.Second())
+    str = str.arg(u_date)
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
     if(!t.isNull()){

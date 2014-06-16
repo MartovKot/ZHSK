@@ -11,6 +11,7 @@
 
 #include "bd.h"
 #include "table_tariff.h"
+#include "dateofunixformat.h"
 
 class parser_blank :public QWidget
 {

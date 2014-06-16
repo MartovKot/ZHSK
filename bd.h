@@ -103,9 +103,9 @@ public:
 
     int NewApatament(int id_org, int id_home, int num_apart);                           //новая квартира
 
-    double AmountToPay(int id_apart, DateOfUnixFormat date);                                       //сумма к оплате
+    double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
     QString is_Debt(int id_apart, DateOfUnixFormat date);
-    double AmountForServices(int id_apart, DateOfUnixFormat date);
+    double AmountForServices(int id_apart, qint64 u_date);
 
     QString DeleteOrg(int id_org);
     QString DeleteHome(int id_home);
@@ -138,7 +138,7 @@ private:
 
     QVariant CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date);
     void CreditedForApartament(int id_apart, DateOfUnixFormat date);
-    void PaymentOfDebt(int id_apart, DateOfUnixFormat date);                                       //расчёт долга
+    void PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*/);                                       //расчёт долга
     double PaymentCounters(int id_list_app_usluga, DateOfUnixFormat date);
 
     void SumCount(int id_pokazanie, bool New = false);                                  //Расчёт показаний канализации

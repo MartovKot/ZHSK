@@ -17,7 +17,6 @@ greaterThan(QT_MAJOR_VERSION, 4){
 CONFIG += c++11
 # Input
 HEADERS += adminwindow.h \
-           apartament.h \
            bd.h \
            mainwindow.h \
            message.h \
@@ -44,7 +43,6 @@ FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     editsetting.ui \
     selecter_with_combobox.ui
 SOURCES += adminwindow.cpp \
-           apartament.cpp \
            bd.cpp \
            main.cpp \
            mainwindow.cpp \

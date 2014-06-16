@@ -13,18 +13,10 @@ Table_Payment::~Table_Payment()
 bool Table_Payment::add_line(QString id_apartament, QString y_payment, QString m_payment, QString d_payment, QString payment)
 {
     QStringList column, value;
+    DateOfUnixFormat date(y_payment.toInt(), m_payment.toInt(), d_payment.toInt());
 
-    qint64 timeInUnix;
-    const qint64 MS_COEF = 1000;
-    QDate date;
-    date.setDate(y_payment.toInt(), m_payment.toInt(), d_payment.toInt());
-    QDateTime datetime;
-    datetime.setTimeSpec(Qt::OffsetFromUTC);
-    datetime.setDate(date);
-    timeInUnix = datetime.toMSecsSinceEpoch() / MS_COEF;
-
-    column<<"id_apartament"<<"payment_date"<<"payment";
-    value<<id_apartament<<QString::number(timeInUnix)<<payment;
+    column << "id_apartament" << "payment_date" << "payment";
+    value << id_apartament << QString::number(date.Second()) << payment;
     if (db->add("payment",column,value)!=0){
         return false;
     }
@@ -35,7 +27,10 @@ QSqlQueryModel* Table_Payment::ModelPayment(int id_apartament)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
-    str = "SELECT  strftime('%d',payment_date,'unixepoch'), strftime('%m',payment_date,'unixepoch'),strftime('%Y',payment_date,'unixepoch'), payment FROM payment WHERE id_apartament = "+QString::number(id_apartament);
+    str = "SELECT  strftime('%d',payment_date,'unixepoch'), "
+            " strftime('%m',payment_date,'unixepoch'), "
+            " strftime('%Y',payment_date,'unixepoch'), payment "
+            " FROM payment WHERE id_apartament = "+QString::number(id_apartament);
     model->setQuery(QSqlQuery(str));
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("День"));
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Месяц"));

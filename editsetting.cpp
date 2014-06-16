@@ -8,7 +8,6 @@ EditSetting::EditSetting(QWidget *parent) :
 {
     ui->setupUi(this);
     setLayout(ui->mainLay);
-//    this->resize(this->minimumSize());
     this->adjustSize();
     ui->lEd_NameSetting->setText(name_setting);
 }
@@ -20,7 +19,6 @@ EditSetting::~EditSetting()
 
 void EditSetting::setNameSetting(QString NameSetting)
 {
-//    qDebug() << NameSetting;
     name_setting = NameSetting;
     ui->lEd_NameSetting->setText(name_setting);
     ui->lEd_ValueSetting->setText(db.isValueSetting(NameSetting));

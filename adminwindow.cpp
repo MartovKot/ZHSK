@@ -100,6 +100,7 @@ AdminWindow::AdminWindow(QWidget *parent) :
     ui->tab_Settings->setLayout(ui->vLay_Settings);
     Refresh_Settings();
 
+
 }
 
 AdminWindow::~AdminWindow()
