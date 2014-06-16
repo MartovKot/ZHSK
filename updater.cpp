@@ -14,7 +14,7 @@ Updater::Updater(QWidget *parent) :
     //
 
 
-#if defined(QT_NO_SSL) && defined(HAVE_QT5)
+#if defined(QT_NO_SSL)
     connect(&m_manager_download, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)),
             this, SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
 #endif
@@ -42,7 +42,6 @@ void Updater::RunUpdate()
 
 void Updater::finished_json(QNetworkReply*)
 {
-#ifdef HAVE_QT5
     if (m_reply->error() == QNetworkReply::NoError)
     {
         QString json_reply(m_reply->readAll()); // json ответ от сервера
@@ -88,9 +87,9 @@ void Updater::finished_json(QNetworkReply*)
     // Some http error received
     else
     {
-        QMessageBox::critical(this, trUtf8("Ошибка"),
-                                          tr("Ошибка соединения %1").arg(m_reply->errorString()),
-                                          QMessageBox::Ok);
+//        QMessageBox::critical(this, trUtf8("Ошибка"),
+//                                          tr("Ошибка соединения %1").arg(m_reply->errorString()),
+//                                          QMessageBox::Ok);
 
         qDebug()<< m_reply->errorString();
         // handle errors here
@@ -98,7 +97,6 @@ void Updater::finished_json(QNetworkReply*)
 
     delete m_reply;
     delete m_manager_json;
-#endif
 
 }
 

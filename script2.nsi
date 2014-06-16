@@ -3,7 +3,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "ZHSK"
-!define PRODUCT_VERSION "1.5.5"
+!define PRODUCT_VERSION "1.6.0"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kvit.exe"
 !define QT_INSTALL "E:\Qt\Qt5.2.0\5.2.0"
 

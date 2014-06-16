@@ -24,6 +24,7 @@ AdminWindow::AdminWindow(QWidget *parent) :
     // настройка вкладки Организации
     ui->tab_Organization->setLayout(ui->verticalLayout);                        //вкладка Организации
     ui->lEdAcc->setValidator(only_number);                                      // поле с лицевым счётом
+    ui->lEdINN->setValidator(only_number);
     connect(ui->pBtn_addOrg,SIGNAL(clicked()),SLOT(AddOrg()));
     connect(ui->tblView_Organization,SIGNAL(doubleClicked(QModelIndex)),SLOT(sl_OrgEdit(QModelIndex)));
     connect(ui->pBtn_SaveOrg,SIGNAL(clicked()),SLOT(sl_SaveOrg()));
@@ -106,12 +107,13 @@ AdminWindow::~AdminWindow()
 {
     delete ui;
 }
+
 void AdminWindow::AddOrg()                                                  //Добавление организации
 {
     QStringList column, value;
 
-    column<<"name"<<"bank"<<"sett_account";
-    value<<ui->lEdNameOrg->text()<<ui->lEdBank->text()<<ui->lEdAcc->text();
+    column << "name" << "bank" << "sett_account" << "inn";
+    value << ui->lEdNameOrg->text() << ui->lEdBank->text() << ui->lEdAcc->text() << ui->lEdINN->text();
     if (db.add("organiz",column,value) != 0){
         QMessageBox::warning(this,trUtf8("Предупреждение"),
                              trUtf8("Запись не создана"),QMessageBox::Ok);
@@ -355,6 +357,7 @@ void AdminWindow::Mode(QString m)
         ui->lEdNameOrg->setText("");                                                // очистка формы
         ui->lEdBank->setText("");
         ui->lEdAcc->setText("");
+        ui->lEdINN->setText("");
         ui->tblView_Organization->setEnabled(true);
         ui->pBtn_addOrg->setHidden(false);
 
@@ -519,11 +522,7 @@ void AdminWindow::UslView()
     ui->tblV_on_Uslugi->hideColumn(0);
 
     ui->tblV_on_Uslugi->horizontalHeader()->setStretchLastSection(false);
-#ifdef HAVE_QT5
     ui->tblV_on_Uslugi->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-#else
-    ui->tblV_on_Uslugi->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-#endif
     Mode("usl_add");
 }
 
@@ -533,18 +532,11 @@ void AdminWindow::Refresh_Organization()
     ui->tblView_Organization->setModel(db.ModelOrganiz());
 
     ui->tblView_Organization->horizontalHeader()->setStretchLastSection(false);
-#ifdef HAVE_QT5
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Interactive);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
-#else
-    ui->tView_Organization->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(1,QHeaderView::Interactive);
-    ui->tView_Organization->horizontalHeader()->setResizeMode(2,QHeaderView::ResizeToContents);
-#endif
-
+    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(3,QHeaderView::ResizeToContents);
 }
 
 void AdminWindow::Refresh_Home()
@@ -552,14 +544,8 @@ void AdminWindow::Refresh_Home()
     delete ui->tblView_Home->model();
     ui->tblView_Home->setModel(db.ModelHome());
     ui->tblView_Home->horizontalHeader()->setStretchLastSection(false);
-#ifdef HAVE_QT5
     ui->tblView_Home->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Home->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-#else
-    ui->tblView_Home->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblView_Home->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
-#endif
-//    ui->tblView_Home->horizontalHeader()->setResizeMode(0,QHeaderView::Interactive);
 }
 
 void AdminWindow::Refresh_Uslugi()
@@ -585,13 +571,8 @@ void AdminWindow::Refresh_Pensioner()
                                                  ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
     ui->tblV_on_Pens->hideColumn(0);
     ui->tblV_on_Pens->horizontalHeader()->setStretchLastSection(false);
-#ifdef HAVE_QT5
     ui->tblV_on_Pens->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblV_on_Pens->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-#else
-    ui->tblV_on_Pens->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    ui->tblV_on_Pens->horizontalHeader()->setResizeMode(0,QHeaderView::ResizeToContents);
-#endif
 }
 
 void AdminWindow::Refresh_cmbNumApp_onUslugi()
@@ -733,6 +714,7 @@ void AdminWindow::sl_OrgEdit(QModelIndex model)
     ui->lEdNameOrg->setText(ui->tblView_Organization->model()->index(model.row(),1).data().toString());
     ui->lEdBank->setText(ui->tblView_Organization->model()->index(model.row(),2).data().toString());
     ui->lEdAcc->setText(ui->tblView_Organization->model()->index(model.row(),3).data().toString());
+    ui->lEdINN->setText(ui->tblView_Organization->model()->index(model.row(),4).data().toString());
     Mode("org_edit");
 
 }
@@ -746,7 +728,10 @@ void AdminWindow::sl_HomeEdit(QModelIndex model)
 void AdminWindow::sl_SaveOrg()
 {
     //обновление записи
-    db.UpdateOrganization(ui->lEdNameOrg->text(),ui->lEdBank->text(),ui->lEdAcc->text(),
+    db.UpdateOrganization(ui->lEdNameOrg->text(),
+                          ui->lEdBank->text(),
+                          ui->lEdAcc->text(),
+                          ui->lEdINN->text(),
                           ui->tblView_Organization->model()->index( ui->tblView_Organization->currentIndex().row(), 0 ).data().toInt());
 
     Refresh_Organization(); //обновление таблицы

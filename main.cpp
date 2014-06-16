@@ -9,7 +9,7 @@
 #include "logreport.h"
 #include "updater.h"
 
-#define VERSION "1.5.5"
+#define VERSION "1.6.0"
 
 static bool createConnection() //подключение к БД
 {
@@ -87,15 +87,17 @@ int main(int argc, char *argv[])
         bd.Create();//Создаём структу
     }
 
+
+
+    query.finish();
+    out.logout(QObject::trUtf8("Проверка обновлений ..."));
+    bd.UpdateDataBase();
+
     out.logout(QObject::trUtf8("Производятся установки"));
     str = "PRAGMA foreign_keys = true;";
     if (query.exec(str)){
         out.logout(QObject::trUtf8("Успешно"));
     }
-
-    query.finish();
-    out.logout(QObject::trUtf8("Проверка обновлений ..."));
-    bd.UpdateDataBase();
 
     MainWindow w;
     QObject::connect(&upd,SIGNAL(s_run_update()),&w,SLOT(close()));

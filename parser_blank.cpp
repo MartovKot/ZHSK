@@ -265,8 +265,10 @@ QString parser_blank::process_main(QString str_in, int id_app)
               << "@SumOpl#"
               << "@DolgOpl#"
               << "@prKOpl#"
-              << "@ItogKOpl#";
-    strL_replace << QString(db.is_nameOrg(ConfData.Org_id))     << db.is_FIO(id_app)
+              << "@ItogKOpl#"
+              << "@INN#"
+              << "@Bank#";
+    strL_replace << db.is_nameOrg(ConfData.Org_id)     << db.is_FIO(id_app)
                  << QString::number(db.is_LSh(id_app))          << QString::number(db.is_RealMen(id_app,ConfData.date))
                  << QString::number(db.is_RentMen(id_app,ConfData.date))
                  << QString::number(db.is_ReservMen(id_app,ConfData.date))
@@ -280,7 +282,9 @@ QString parser_blank::process_main(QString str_in, int id_app)
                  << QString::number(db.AmountToPay(id_app,ConfData.date))
                  << db.is_Debt(id_app,ConfData.date)
                  << QString::number(db.AmountForServices(id_app,ConfData.date))
-                 << QString::number(db.AmountForServices(id_app,ConfData.date));
+                 << QString::number(db.AmountForServices(id_app,ConfData.date))
+                << db.is_INN(ConfData.Org_id) << db.is_Bank(ConfData.Org_id);
+
 
     str_out = str_in;
     for (int i=0;i<strL_find.size();i++){

@@ -28,6 +28,8 @@ bool BD::RunScript(QString sqlfilename)
                 qDebug() << str << query.lastError();
                 LogOut.logout(query.lastError().text());
                 return false;
+            } else {
+               // qDebug() << "Run script " << str;
             }
             pos = count+1;
             count = bArrSqlFile.indexOf(";",pos);
@@ -246,18 +248,68 @@ void BD::UpdateMenInApartament(QStringList column, QStringList value, int idapar
     }
 }
 
+QString BD::is_Bank(int id)
+{
+    QString str;
+    QSqlQuery query;
+
+    str = "SELECT bank, sett_account FROM organiz WHERE id_organiz = %1";
+    str = str.arg(id);
+
+    if (query.exec(str)){
+      if (query.next()){
+          return query.value(0).toString() + " " + query.value(1).toString();
+      }else{
+          qDebug()<< "5d8798a23d763aa605102f3ff5d8a22a" << "not record" << str;
+      }
+
+    } else{
+        qDebug()<< "499dc77144423b7969993e2accf16d49" <<query.lastError();
+        LogOut.logout(query.lastError().text());
+    }
+    return "";
+}
+
+QString BD::is_INN(int id)
+{
+    QString str;
+    QSqlQuery query;
+    QString out = "";
+
+    str = "SELECT inn FROM organiz WHERE id_organiz = %1";
+    str = str.arg(id);
+
+    if (query.exec(str)){
+      if (query.next()){
+          out =  query.value(0).toString();
+          if (out != ""){
+            out = trUtf8("ИНН ") + out;
+          }
+      }else{
+          qDebug()<< "5d8798a23d763aa605102f3ff5d8a22a" << "not record" << str;
+          out = "";
+      }
+
+    } else{
+        qDebug()<< "499dc77144423b7969993e2accf16d49" <<query.lastError();
+        LogOut.logout(query.lastError().text());
+        out = "";
+    }
+    return out;
+}
+
 //-------------------------------------------------------------------------------------------------------
 QString BD::is_nameOrg(int id)
 {
     QString str;
     QSqlQuery query;
 
-    str = "SELECT name, bank, sett_account FROM organiz WHERE id_organiz = %1";
+    str = "SELECT name FROM organiz WHERE id_organiz = %1";
     str = str.arg(id);
 
     if (query.exec(str)){
       if (query.next()){
-          return query.value(0).toString()+"  "+query.value(1).toString()+"  "+query.value(2).toString();
+          return query.value(0).toString();
       }else{
           qDebug()<< "1852a27bb09e15790457d790779a659c" << "not record" << str;
       }
@@ -783,12 +835,14 @@ QSqlQueryModel* BD::Model(QString table)
 QSqlQueryModel* BD::ModelOrganiz()
 {
     QSqlQueryModel *model = new QSqlQueryModel;
-    model->setQuery(QSqlQuery("SELECT id_organiz, name, bank,sett_account  FROM organiz"));
+    model->setQuery(QSqlQuery("SELECT id_organiz, name, bank,sett_account, inn  FROM organiz"));
 
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Организация"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Банк"));
     model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Лицевой счёт"));
+    model->setHeaderData(4,Qt::Horizontal,QObject::trUtf8("ИНН"));
+
     return model;
 }
 
@@ -1731,11 +1785,12 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
     } 
 }
 
-void BD::UpdateOrganization(QString name, QString bank, QString acc, int idorg)
+void BD::UpdateOrganization(QString name, QString bank, QString acc, QString inn, int idorg)
 {
     UpdateTable("organiz","name",name,"id_organiz",QString::number(idorg));
     UpdateTable("organiz","bank",bank,"id_organiz",QString::number(idorg));
     UpdateTable("organiz","sett_account",acc,"id_organiz",QString::number(idorg));
+    UpdateTable("organiz","inn",inn,"id_organiz",QString::number(idorg));
 }
 
 QString BD::DeleteOrg(int id_org)
