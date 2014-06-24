@@ -81,5 +81,9 @@ OTHER_FILES += \
     update_db/01_06_006.sql \
     update_db/01_06_007.sql \
     script2.nsi \
-    update_db/01_06_008.sql
+    update_db/01_06_008.sql \
+    blank/blank_main.html \
+    blank/blank_s.html \
+    blank/blank_u.html \
+    update_db/01_07_001.sql
 

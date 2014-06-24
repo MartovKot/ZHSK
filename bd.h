@@ -25,7 +25,7 @@ public:
     ~BD();
     bool Create();
 
-    QString is_nameOrg(int id);                                 //Возвращает название организации c банком и расч счётом по ид
+    QString is_nameOrg(int id);                                 //Возвращает название организации  по ид
     QStringList is_nameOrg();
     QString is_SmallnameOrg(int id);                            //Возвращает название организации  по ид
     QString is_nameHome(int id);                                //Возвращает название дома по ид
@@ -39,6 +39,8 @@ public:
     QStringList Sum_Service(int id_apartament);                 //Возвращает список услуг
 
 
+    QString is_Bank(int id);                                    //Возвращает информацию по банку  по ид организации
+    QString is_INN(int id);                                     //Возвращает ИНН Организации
 
     int is_TypeUsluga(int id_usluga);                           //возвращает ид типа услуги
     int is_idListAppUsluga(int id_apartament, int id_usluga);
@@ -81,7 +83,7 @@ public:
     void UpdateApartament(QStringList column,QStringList value, int idapart);           //Обновление таблицы с квартирами
     void UpdateMenInApartament(QStringList column, QStringList value, int idapart, int year, int month);
 
-    void UpdateOrganization(QString name = "", QString bank="", QString acc="", int idorg = -1);
+    void UpdateOrganization(QString name = "", QString bank="", QString acc="", QString inn="", int idorg = -1);
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
     void UpdateHome(int id_home, QString home);
 

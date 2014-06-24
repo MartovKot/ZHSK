@@ -14,7 +14,7 @@ Updater::Updater(QWidget *parent) :
     //
 
 
-#if defined(QT_NO_SSL) && defined(HAVE_QT5)
+#if defined(QT_NO_SSL)
     connect(&m_manager_download, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)),
             this, SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
 #endif
@@ -42,7 +42,6 @@ void Updater::RunUpdate()
 
 void Updater::finished_json(QNetworkReply*)
 {
-#ifdef HAVE_QT5
     if (m_reply->error() == QNetworkReply::NoError)
     {
         QString json_reply(m_reply->readAll()); // json ответ от сервера
@@ -98,7 +97,6 @@ void Updater::finished_json(QNetworkReply*)
 
     delete m_reply;
     delete m_manager_json;
-#endif
 
 }
 
@@ -221,22 +219,14 @@ void Updater::httpFinished()  //Завершение загрузки
 
 void Updater::httpReadyRead()
 {
-//    qDebug()<<"httpReadyRead";
-    // this slot gets called every time the QNetworkReply has new data.
-    // We read all of its new data and write it into the file.
-    // That way we use less RAM than when reading it at the finished()
-    // signal of the QNetworkReply
     if (file)
         file->write(reply_download->readAll());
 }
 
 void Updater::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
 {
-//    qDebug()<<"updateDataReadProgress";
     if (httpRequestAborted)
         return;
-//    qDebug()<<totalBytes;
-//    progressDialog->show();
     progressDialog->setMaximum(totalBytes);
     progressDialog->setValue(bytesRead);
 }
@@ -244,7 +234,7 @@ void Updater::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
 #ifndef QT_NO_SSL
 void Updater::sslErrors(QNetworkReply*,const QList<QSslError> &errors)
 {
-#ifdef HAVE_QT
+//#ifdef HAVE_QT
     QString errorString;
     foreach (const QSslError &error, errors) {
         if (!errorString.isEmpty())
@@ -257,9 +247,9 @@ void Updater::sslErrors(QNetworkReply*,const QList<QSslError> &errors)
 //                             QMessageBox::Ignore | QMessageBox::Abort) == QMessageBox::Ignore) {
         reply_download->ignoreSslErrors();
 //    }
-#else
-    Q_UNUSED(errors)
-#endif
+//#else
+//    Q_UNUSED(errors)
+//#endif
 }
 #endif
 
