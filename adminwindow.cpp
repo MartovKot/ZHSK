@@ -32,7 +32,9 @@ AdminWindow::AdminWindow(QWidget *parent) :
     connect(ui->pBtn_CancelOrg,SIGNAL(clicked()),SLOT(sl_CancelOrg()));
 
     Mode("org_default");
+    qDebug()<<"test3";
     Refresh_Organization(); // Делаем обновление тк сюда мы приходим сразу
+    qDebug()<<"test4";
     // -------------------------------
 
     // настройка вкладки Дома
@@ -530,7 +532,6 @@ void AdminWindow::Refresh_Organization()
 {
     delete ui->tblView_Organization->model();
     ui->tblView_Organization->setModel(db.ModelOrganiz());
-
     ui->tblView_Organization->horizontalHeader()->setStretchLastSection(false);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);

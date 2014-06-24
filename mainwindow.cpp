@@ -42,11 +42,12 @@ void MainWindow::Refresh_win()
 void MainWindow::Admin_mod()
 {
     if(AdmWin == NULL){
+        qDebug()<<"test2";
         AdmWin = new AdminWindow(this);
         AdmWin->setPalette(this->palette());
         connect(AdmWin,SIGNAL(finished(int)),SLOT(sl_AdminWinClose()));
-
     }
+    qDebug()<<"test";
     AdmWin->show();
 }
 

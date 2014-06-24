@@ -9,8 +9,6 @@ public:
 private:
     int id_apartament;
 
-
-
 };
 
 #endif // COUNTER_H
