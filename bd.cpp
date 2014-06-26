@@ -42,7 +42,7 @@ bool BD::RunScript(QString sqlfilename)
     }
     return true;
 }
-//------------------------------------------------------------------------------------------------------
+
 bool BD::Create()
 {
     if (!RunScript("./update_db/baseline.sql")){
@@ -51,7 +51,7 @@ bool BD::Create()
     }
     return true;
 }
-//------------------------------------------------------------------------------------------------------
+
 void BD::UpdateDataBase()
 {
     QString str;
@@ -122,9 +122,8 @@ void BD::UpdateDataBase()
     }
 
 }
-//-------------------------------------------------------------------------------------------------------
 
-QVariant BD::SelectFromTable(QString str)
+QVariant BD::SelectFromTable(QString str)  //Функция возврящает только одно поле((
 {
     QSqlQuery query;
     QVariant out;
@@ -142,7 +141,7 @@ QVariant BD::SelectFromTable(QString str)
     }
     return out;
 }
-//--------------------------------------------------------------------------------------------------------
+
 int BD::add(QString table, QString column, QString value)
 {
     QStringList C_sl, V_sl;
@@ -150,7 +149,7 @@ int BD::add(QString table, QString column, QString value)
     V_sl<<value;
     return add(table,C_sl,V_sl);
 }
-//--------------------------------------------------------------------------------------------------------
+
 int BD::add(QString table,QStringList column,QStringList value)
 {
     QString strF;
@@ -182,22 +181,7 @@ int BD::add(QString table,QStringList column,QStringList value)
         return 0;
     }
 }
-//--------------------------------------------------------------------------------------------------------
-int BD::is_idappart(int id_home, int id_org, int num)
-{
-    int out = -1;
-    QString str, strF;
-    str = "SELECT id_apartament FROM apartament WHERE id_homes='%1' AND id_organiz='%2' AND number='%3'";
-    strF = str.arg(id_home)
-           .arg(id_org)
-           .arg(num);
-    QVariant t = SelectFromTable(strF);
-    if (!t.isNull()){
-        out = t.toInt();
-    }
-    return out;
-}
-//---------------------------------------------------------------------------------------------------
+
 void BD::UpdateTable(QString table, QString column, QString value, QString where1, QString where2  )
 {
     QString str;
@@ -219,15 +203,30 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
     }
 }
 
-//----------------------------------------------------------------------------------------------------
+//======================================================================
+// Квартиры
+int BD::is_idappart(int id_home, int id_org, int num)
+{
+    int out = -1;
+    QString str, strF;
+    str = "SELECT id_apartament FROM apartament WHERE id_homes='%1' AND id_organiz='%2' AND number='%3'";
+    strF = str.arg(id_home)
+           .arg(id_org)
+           .arg(num);
+    QVariant t = SelectFromTable(strF);
+    if (!t.isNull()){
+        out = t.toInt();
+    }
+    return out;
+}
+
 void BD::UpdateApartament(QStringList column, QStringList value, int idapart)
 {
-//    qDebug() << column << value << idapart;
     for(int i=0; i<column.count();i++ ){
         UpdateTable("apartament",column[i],value[i],"id_apartament", QString::number(idapart));
     }
 }
-//----------------------------------------------------------------------------------------------------
+
 void BD::UpdateMenInApartament(QStringList column, QStringList value, int idapart, int year, int month)
 {
     QString str;
@@ -252,27 +251,8 @@ void BD::UpdateMenInApartament(QStringList column, QStringList value, int idapar
     }
 }
 
-QString BD::is_Bank(int id)
-{
-    QString str;
-    QSqlQuery query;
+//======================================================================
 
-    str = "SELECT bank, sett_account FROM organiz WHERE id_organiz = %1";
-    str = str.arg(id);
-
-    if (query.exec(str)){
-      if (query.next()){
-          return query.value(0).toString() + " " + query.value(1).toString();
-      }else{
-          qDebug()<< "5d8798a23d763aa605102f3ff5d8a22a" << "not record" << str;
-      }
-
-    } else{
-        qDebug()<< "499dc77144423b7969993e2accf16d49" <<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    return "";
-}
 
 QString BD::is_INN(int id)
 {
@@ -692,20 +672,6 @@ QSqlQueryModel* BD::Model(QString table)
     }else if(table == "usluga"){
         model->setQuery(QSqlQuery("SELECT name, id_usluga FROM usluga"));
     }
-    return model;
-}
-
-QSqlQueryModel* BD::ModelOrganiz()
-{
-    QSqlQueryModel *model = new QSqlQueryModel;
-    model->setQuery(QSqlQuery("SELECT id_organiz, name, bank,sett_account, inn  FROM organiz"));
-
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
-    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Организация"));
-    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Банк"));
-    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Лицевой счёт"));
-    model->setHeaderData(4,Qt::Horizontal,QObject::trUtf8("ИНН"));
-
     return model;
 }
 
@@ -1141,34 +1107,6 @@ int BD::next_year(int m, int y)
     if(next_month(m) == 1){
         out = y+1;
     }else if(next_month(m) != -1){
-        out = y;
-    }
-
-    return out;
-}
-
-int BD::previous_month(int m)
-{
-    int out = -1;
-    if(m > 1 && m <= 12){
-        out = m - 1;
-    }else if(m==1){
-        out = 12;
-    }
-    return out;
-}
-
-int BD::previous_year(int y, int m)
-{
-    int out = -1;
-
-    if(y<0){
-        return -1;
-    }
-
-    if(previous_month(m) == 12){
-        out = y-1;
-    }else if(previous_month(m) != -1){
         out = y;
     }
 

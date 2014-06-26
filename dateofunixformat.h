@@ -7,7 +7,6 @@
 class DateOfUnixFormat : public QDate
 {
 public:
-
     DateOfUnixFormat(int year, int month, int day);
     DateOfUnixFormat(QDate date);
     qint64 Second(int delta_month = 0);

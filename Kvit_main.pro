@@ -36,7 +36,8 @@ HEADERS += adminwindow.h \
     selecter_with_combobox.h \
     transposeproxymodel.h \
     sqlquerymodelapartament.h \
-    dateofunixformat.h
+    dateofunixformat.h \
+    organization.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -62,7 +63,8 @@ SOURCES += adminwindow.cpp \
     selecter_with_combobox.cpp \
     transposeproxymodel.cpp \
     sqlquerymodelapartament.cpp \
-    dateofunixformat.cpp
+    dateofunixformat.cpp \
+    organization.cpp
 
 RESOURCES += \
     qrc.qrc

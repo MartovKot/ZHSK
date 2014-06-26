@@ -7,6 +7,7 @@ parser_blank::parser_blank(QWidget *parent):
 }
 void parser_blank::creat_blank(QString name,int id_app, QDate date)
 {
+    qDebug() << "TEST14";
     QFile f_m,f_s,f_u;
     f_m.setFileName("./blank/blank_main.html");
     f_s.setFileName("./blank/blank_s.html");
@@ -30,8 +31,10 @@ void parser_blank::creat_blank(QString name,int id_app, QDate date)
 
     int find_pos;
 
+    qDebug() << "TEST15";
     str_m = process_main(str_m,id_app);
 
+    qDebug() << "TEST13";
     // обработка счётчиков
     find_pos = str_m.indexOf("@tab_sch#");
     while (find_pos>=0){
@@ -148,6 +151,7 @@ QString parser_blank::process_schet(QString str_in_sch, int id_app, QDate date)
 
 void parser_blank::generating()
 {
+
     str_folder_arhiv = "./arhiv/"+QDateTime::currentDateTime().toString("yyMMdd-hhmmss");   //архивный каталог
     str_folder = "./kvit/"+QDate::currentDate().toString("MMMM_yyyy");                      // текущтй каталог
     QDir dir;
@@ -175,7 +179,7 @@ void parser_blank::generating()
         dir.setPath("./");
         dir.mkdir(str_folder_arhiv);//создали архивный каталог
     }
-
+    qDebug() << "TEST8";
     QString str_NameFile_base; //общая часть названия файлов
     QString str_NameFile_pach; //отличительная часть файлов
 
@@ -187,16 +191,20 @@ void parser_blank::generating()
     progress.setWindowModality(Qt::WindowModal);
     progress.setWindowTitle(trUtf8("Расчёт"));
 
+    qDebug() << "TEST9";
     for(int i=0;i<str_L.size();i++){
         progress.setValue(i);
         if (progress.wasCanceled())
             break;
         str_NameFile_pach = QObject::trUtf8(" кв ") + str_L.at(i);
+        qDebug() << "TEST12";
         creat_blank(str_NameFile_base+str_NameFile_pach+".html",
                     db.is_idappart(ConfData.Home_id,ConfData.Org_id,str_L.at(i).toInt()),
                     ConfData.date);
     }
+    qDebug() << "TEST10";
     progress.setValue(str_L.size()-1);
+    qDebug() << "TEST11";
 
 }
 void parser_blank::setDir(QString str_dirFolder)
@@ -249,9 +257,12 @@ void parser_blank::setDate( int year,int month, int id_home, int id_org)
 
 QString parser_blank::process_main(QString str_in, int id_app)
 {
+    qDebug() << "TEST16";
     QString str_out;
     QStringList strL_find, strL_replace;
     int find_pos;
+    Organization *organization = new Organization(id_app);
+
 
     strL_find << "@NameOrganization#"   << "@FIO#"
               << "@LSh#"                << "@RealMen#"
@@ -268,6 +279,7 @@ QString parser_blank::process_main(QString str_in, int id_app)
               << "@ItogKOpl#"
               << "@INN#"
               << "@Bank#";
+
     DateOfUnixFormat u_date(ConfData.date);
     strL_replace << db.is_nameOrg(ConfData.Org_id)     << db.is_FIO(id_app)
                  << QString::number(db.is_LSh(id_app))          << QString::number(db.is_RealMen(id_app,ConfData.date))
@@ -283,15 +295,22 @@ QString parser_blank::process_main(QString str_in, int id_app)
                  << QString::number(db.AmountToPay(id_app,u_date.Second()))
                  << db.is_Debt(id_app,ConfData.date)
                  << QString::number(db.AmountForServices(id_app,u_date.Second()))
-                 << db.is_INN(ConfData.Org_id) << db.is_Bank(ConfData.Org_id);
+                 << db.is_INN(ConfData.Org_id)
+                 << organization->getBank();
 
+    qDebug() << "TEST17 " << trUtf8(strL_replace);
     str_out = str_in;
-    for (int i=0;i<strL_find.size();i++){
+    for (int i=0; i<strL_find.size(); i++){
         find_pos = str_out.indexOf(strL_find.at(i));
+        qDebug() << "TS  " <<strL_replace.size() << "  " << strL_find.size() << "  " << i;
         while (find_pos>=0){
+            qDebug () << "TEST18";
             str_out.replace(find_pos,strL_find.at(i).size(),strL_replace.at(i));
+            qDebug () << "TEST19";
             find_pos = str_out.indexOf(strL_find.at(i));
+            qDebug () << "TEST20";
         }
+        //qDebug() << "TEST18";
     }
 
     return str_out;

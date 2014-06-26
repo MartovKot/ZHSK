@@ -88,6 +88,7 @@ void MainWindow::Print_mod()
     progress.setWindowModality(Qt::WindowModal);
     progress.setWindowTitle(trUtf8("Расчёт"));
 
+
     QDate date;
     date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
 
@@ -103,9 +104,13 @@ void MainWindow::Print_mod()
 //    db.DataProcessing(OrganiztionID, HomeID, month, year);
     //-------------------------------------------------------------------------------------------
 
+    qDebug()<< "TEST1";
     VwBlank->setDate(QDate::currentDate().year(),QDate::currentDate().month());
+    qDebug() << "TEST2";
     VwBlank->setInfo(isIdSelectHome(),isIdSelectOrganiztion());
+    qDebug() << "TEST3";
     VwBlank->generate();
+    qDebug() << "TEST4";
     VwBlank->show();
 }
 

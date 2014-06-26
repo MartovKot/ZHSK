@@ -13,12 +13,9 @@
 #include <QProgressDialog>
 #include <QTimer>
 #include "bd.h"
-
-#ifdef HAVE_QT5
-    #include <QJsonDocument>
-    #include <QJsonArray>
-    #include <QJsonObject>
-#endif
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 
 class Updater : public QWidget
 {

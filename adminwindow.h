@@ -15,6 +15,7 @@
 #include "selecter_with_combobox.h"
 #include "myitemdelegate.h"
 #include "dateofunixformat.h"
+#include "organization.h"
 
 namespace Ui {
     class AdminWindow;
@@ -56,7 +57,7 @@ private:
 
 private slots:
     void Refresh_Settings();
-    void AddOrg();                                  // добавление организации
+    void sl_AddOrg();                                  // добавление организации
     void AddHome();                                 // добавление дома
     void AddUsluga_of_Apartament();                 // Добавить услуги в квартиру
     void Refresh(int);

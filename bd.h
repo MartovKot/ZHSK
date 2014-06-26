@@ -39,7 +39,6 @@ public:
     QStringList Sum_Service(int id_apartament);                 //Возвращает список услуг
 
 
-    QString is_Bank(int id);                                    //Возвращает информацию по банку  по ид организации
     QString is_INN(int id);                                     //Возвращает ИНН Организации
 
     int is_TypeUsluga(int id_usluga);                           //возвращает ид типа услуги
@@ -66,9 +65,6 @@ public:
     int is_IdOrg(QString Org_name);
     QString is_DatabaseVersoin();
 
-
-
-
     QList<int> is_ApartamentService(int id_app);                //Возвращает список ид услуг по квартире
     QList<int> is_ListIdServiceWithCounter(int id_apartament);
     QList<int> is_ListIdServiceOutCounter(int id_apartament);
@@ -76,9 +72,6 @@ public:
 
 
     QString is_NameService(int id_service);
-
-    int add(QString table, QStringList column,QStringList value);
-    int add(QString table, QString column,QString value);
 
     void UpdateApartament(QStringList column,QStringList value, int idapart);           //Обновление таблицы с квартирами
     void UpdateMenInApartament(QStringList column, QStringList value, int idapart, int year, int month);
@@ -96,7 +89,6 @@ public:
     QSqlQueryModel* ModelApartament(int id_home, int id_org);                           //модель квартир для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
     QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
-    QSqlQueryModel* ModelOrganiz();
     QSqlQueryModel* ModelHome();
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания
     QSqlQueryModel* ModelSettings();
@@ -123,8 +115,8 @@ public:
     //----new interface
     QVariant SelectFromTable (QString str);
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
-    int previous_month(int m);
-    int previous_year(int y, int m);
+    int add(QString table, QStringList column,QStringList value);
+    int add(QString table, QString column,QString value);
 
 
 private:
@@ -133,7 +125,6 @@ private:
     LogReport LogOut;
 
     bool RunScript(QString filename);
-
 
     int next_month (int m);
     int next_year(int m, int y);

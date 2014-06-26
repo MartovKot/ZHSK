@@ -23,19 +23,17 @@ AdminWindow::AdminWindow(QWidget *parent) :
     ui->tabWidget->setCurrentIndex(0);
 
     // настройка вкладки Организации
-    ui->tab_Organization->setLayout(ui->verticalLayout);                        //вкладка Организации
+    ui->tab_Organization->setLayout(ui->verticalLayout);                        // вкладка Организации
     ui->lEdAcc->setValidator(only_number);                                      // поле с лицевым счётом
     ui->lEdINN->setValidator(only_number);
-    connect(ui->pBtn_addOrg,SIGNAL(clicked()),SLOT(AddOrg()));
+    connect(ui->pBtn_addOrg,SIGNAL(clicked()),SLOT(sl_AddOrg()));
     connect(ui->tblView_Organization,SIGNAL(doubleClicked(QModelIndex)),SLOT(sl_OrgEdit(QModelIndex)));
     connect(ui->pBtn_SaveOrg,SIGNAL(clicked()),SLOT(sl_SaveOrg()));
     connect(ui->pBtn_DeleteOrg,SIGNAL(clicked()),SLOT(sl_DeleteOrg()));
     connect(ui->pBtn_CancelOrg,SIGNAL(clicked()),SLOT(sl_CancelOrg()));
 
     Mode("org_default");
-    qDebug()<<"test3";
     Refresh_Organization(); // Делаем обновление тк сюда мы приходим сразу
-    qDebug()<<"test4";
     // -------------------------------
 
     // настройка вкладки Дома
@@ -108,20 +106,20 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
 AdminWindow::~AdminWindow()
 {
+    delete ui->tblView_Organization->model();
     delete ui;
 }
 
-void AdminWindow::AddOrg()                                                  //Добавление организации
+void AdminWindow::sl_AddOrg()                                                  //Добавление организации
 {
-    QStringList column, value;
+    Organization organization;
 
-    column << "name" << "bank" << "sett_account" << "inn";
-    value << ui->lEdNameOrg->text() << ui->lEdBank->text() << ui->lEdAcc->text() << ui->lEdINN->text();
-    if (db.add("organiz",column,value) != 0){
+    if (!organization.New(ui->lEdNameOrg->text(), ui->lEdBank->text(), ui->lEdAcc->text(), ui->lEdINN->text())){
         QMessageBox::warning(this,trUtf8("Предупреждение"),
-                             trUtf8("Запись не создана"),QMessageBox::Ok);
+                             trUtf8("Организация не добавлена"),QMessageBox::Ok);
         return;
     }
+
     ui->lEdAcc->setText("");
     ui->lEdBank->setText("");
     ui->lEdNameOrg->setText("");
@@ -550,8 +548,9 @@ void AdminWindow::UslView()
 
 void AdminWindow::Refresh_Organization()
 {
+    Organization organization;
     delete ui->tblView_Organization->model();
-    ui->tblView_Organization->setModel(db.ModelOrganiz());
+    ui->tblView_Organization->setModel(organization.ModelAllOrganization());
     ui->tblView_Organization->horizontalHeader()->setStretchLastSection(false);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
