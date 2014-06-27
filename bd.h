@@ -5,7 +5,6 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QSqlQuery>
-#include <QDate>
 #include <QFile>
 #include <QSqlDatabase>
 #include <QSqlQueryModel>
@@ -25,11 +24,6 @@ public:
     ~BD();
     bool Create();
 
-    QString is_nameOrg(int id);                                 //Возвращает название организации  по ид
-    QStringList is_nameOrg();
-    QString is_SmallnameOrg(int id);                            //Возвращает название организации  по ид
-    QString is_nameHome(int id);                                //Возвращает название дома по ид
-    QStringList is_nameHome();
     QString is_FIO(int id_app);                                 //Возвращает полное имя платильщика
     QString is_NameCounter(int id_counter);
 
@@ -38,8 +32,6 @@ public:
     QStringList Sum_Schet(int id_apartament);                   //Возвращает список счётчиков
     QStringList Sum_Service(int id_apartament);                 //Возвращает список услуг
 
-
-    QString is_INN(int id);                                     //Возвращает ИНН Организации
 
     int is_TypeUsluga(int id_usluga);                           //возвращает ид типа услуги
     int is_idListAppUsluga(int id_apartament, int id_usluga);
@@ -62,7 +54,6 @@ public:
     double is_Lodjia(int id_app);
     int is_NumberAppartament(int id_app);
     int is_IdHome(QString Home_name);
-    int is_IdOrg(QString Org_name);
     QString is_DatabaseVersoin();
 
     QList<int> is_ApartamentService(int id_app);                //Возвращает список ид услуг по квартире
@@ -126,16 +117,12 @@ private:
 
     bool RunScript(QString filename);
 
-    int next_month (int m);
-    int next_year(int m, int y);
-
     QVariant CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date);
     void CreditedForApartament(int id_apart, DateOfUnixFormat date);
     void PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*/);                                       //расчёт долга
     double PaymentCounters(int id_list_app_usluga, DateOfUnixFormat date);
 
     void SumCount(int id_pokazanie, bool New = false);                                  //Расчёт показаний канализации
-    void DataProcessing(int id_org, int id_home, int month, int year);                  //начало оптимизированного расчёта
 
     bool isElectroUsluga(int id_usluga);
     bool is_pensioner_living_alone(int id_apartament);

@@ -84,11 +84,8 @@ void ViewBlank::setInfo(int id_home, int id_org)
 }
 void ViewBlank::generate()
 {
-    qDebug() << "TEST5";
     test_p.setDate(r_year,r_month,idHome,idOrg);
-    qDebug() << "TEST6";
     test_p.generating();
-    qDebug() << "TEST7";
     strL_page = test_p.OutStrL();
     PageView = 0;
     if(!strL_page.isEmpty()){

@@ -9,14 +9,19 @@ class Organization : public QObject
     Q_OBJECT
 
 public:
-    Organization();
-    Organization(int id_apartament);
+    explicit Organization();
+    explicit Organization(int id_apartament);
+
     bool New(QString name, QString bank, QString sett_account, QString inn);
     QSqlQueryModel* ModelAllOrganization();
     QString getName();
     QString getBank();
+    QString getINN();
+    int getId();
+    void setId(int id_organization);
+    void setName(QString NameOrganization);
 private:
-    int id;
+    int m_id;
     QString m_name;
     QString m_bank;
     QString m_sett_account;

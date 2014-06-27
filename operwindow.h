@@ -14,6 +14,9 @@
 #include "newcounter.h"
 #include "table_payment.h"
 
+#include "organization.h"
+#include "home.h"
+
 namespace Ui {
     class OperWindow;
 }

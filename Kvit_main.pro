@@ -37,7 +37,8 @@ HEADERS += adminwindow.h \
     transposeproxymodel.h \
     sqlquerymodelapartament.h \
     dateofunixformat.h \
-    organization.h
+    organization.h \
+    home.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -64,7 +65,8 @@ SOURCES += adminwindow.cpp \
     transposeproxymodel.cpp \
     sqlquerymodelapartament.cpp \
     dateofunixformat.cpp \
-    organization.cpp
+    organization.cpp \
+    home.cpp
 
 RESOURCES += \
     qrc.qrc

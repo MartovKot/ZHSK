@@ -2,7 +2,7 @@
 
 Organization::Organization()
 {
-    id = -1;
+    m_id = -1;
     m_name = "";
     m_bank = "";
     m_sett_account = "";
@@ -11,13 +11,7 @@ Organization::Organization()
 
 Organization::Organization(int id_apartament)
 {
-    id = db.SelectFromTable("SELECT id_organiz FROM apartament WHERE id_apartament = "+QString::number(id_apartament)).toInt();
-
-    m_name = db.SelectFromTable("SELECT name FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
-    m_bank = db.SelectFromTable("SELECT bank FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
-    m_sett_account = db.SelectFromTable("SELECT sett_account FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
-    m_inn = db.SelectFromTable("SELECT inn FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
-
+    setId( db.SelectFromTable("SELECT id_organiz FROM apartament WHERE id_apartament = "+QString::number(id_apartament)).toInt() );
 }
 
 bool Organization::New(QString name, QString bank, QString sett_account, QString inn)
@@ -48,10 +42,44 @@ QSqlQueryModel* Organization::ModelAllOrganization()
 
 QString Organization::getBank()
 {
-    return m_bank+" "+m_sett_account;
+    return m_bank + " " + m_sett_account;
 }
 
 QString Organization::getName()
 {
     return m_name;
+}
+
+QString Organization::getINN()
+{
+    return m_inn;
+}
+int Organization::getId()
+{
+    return m_id;
+}
+
+void Organization::setId(int id)
+{
+    m_name = db.SelectFromTable("SELECT name FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
+    m_bank = db.SelectFromTable("SELECT bank FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
+    m_sett_account = db.SelectFromTable("SELECT sett_account FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
+    m_inn = db.SelectFromTable("SELECT inn FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
+    m_id = id;
+}
+
+void Organization::setName(QString NameOrganization)
+{
+    QVariant anydata;
+    m_name = NameOrganization;
+    m_bank = db.SelectFromTable("SELECT bank FROM organiz WHERE name = '" + NameOrganization + "'").toString();
+    m_sett_account = db.SelectFromTable("SELECT sett_account FROM organiz WHERE name = '" + NameOrganization + "'").toString();
+    m_inn = db.SelectFromTable("SELECT inn FROM organiz WHERE name = '" + NameOrganization + "'").toString();
+
+    anydata = db.SelectFromTable("SELECT id_organiz FROM organiz WHERE name = '" + NameOrganization + "'");
+    if(!anydata.isValid()){
+        m_id = -1;
+    }else{
+        m_id = anydata.toInt();
+    }
 }

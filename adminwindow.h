@@ -43,11 +43,9 @@ private:
 
     void Refresh_Organization();
     void Refresh_Home();
-    void Refresh_Appartament(/*int id_apartament=-1*/);
+    void Refresh_Appartament();
     void Refresh_Uslugi();
     void Refresh_Pensioner();
-
-
 
     QList<QHBoxLayout> list;
     QDialog *dlg;
@@ -58,8 +56,8 @@ private:
 private slots:
     void Refresh_Settings();
     void sl_AddOrg();                                  // добавление организации
-    void AddHome();                                 // добавление дома
-    void AddUsluga_of_Apartament();                 // Добавить услуги в квартиру
+    void AddHome();                                    // добавление дома
+    void AddUsluga_of_Apartament();                    // Добавить услуги в квартиру
     void Refresh(int);
     void Refresh_cmbNumApp_onUslugi();
     void Refresh_cmBx_NumApp_onApartament();

@@ -210,7 +210,7 @@ void AdminWindow::AddHome()
 }
 
 
-void AdminWindow::Refresh_Appartament(/*int id_apartament = -1*/)
+void AdminWindow::Refresh_Appartament()
 {
     if (ui->lbl_HomeSelect->text() == ""){
         ui->lbl_HomeSelect->setText(trUtf8("<font color = red>Дом не выбран</font>"));
@@ -242,8 +242,10 @@ void AdminWindow::SaveApart()
     int id_org;
     int id_home;
     int NumApart;
+    Organization organization;
+    organization.setName(ui->lbl_OrgSelect->text());
 
-    id_org = db.is_IdOrg(ui->lbl_OrgSelect->text());
+    id_org = organization.getId();
     if(id_org == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Организация "),QMessageBox::Ok);
@@ -653,13 +655,15 @@ void AdminWindow::Refresh_cmbNumApp_onUslugi()
 
 void AdminWindow::Refresh_cmBx_NumApp_onApartament()
 {
-    int OrganiztionID = -1, HomeID = -1;
+    int HomeID = -1;
 
-    OrganiztionID = db.is_IdOrg(ui->lbl_OrgSelect->text());
+    Organization organization;
+    organization.setName(ui->lbl_OrgSelect->text());
+
     HomeID = db.is_IdHome(ui->lbl_HomeSelect->text());
 
     QSqlQueryModel *model = new QSqlQueryModel;
-    model = db.ModelApartament(HomeID,OrganiztionID);
+    model = db.ModelApartament(HomeID,organization.getId());
     ui->cmBx_NumAp_on_Apartament->setModel(model);
     Mode("app_def");
 }
@@ -831,8 +835,10 @@ void AdminWindow::on_pBtn_NewApartament_clicked()
 {
     int id_org;
     int id_home;
+    Organization organization;
+    organization.setName(ui->lbl_OrgSelect->text());
 
-    id_org = db.is_IdOrg(ui->lbl_OrgSelect->text());
+    id_org = organization.getId();
     if(id_org == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Организация "),QMessageBox::Ok);
@@ -932,7 +938,9 @@ void AdminWindow::sl_SelectHome(QString home_name)
 
 void AdminWindow::sl_SelectOrg(QString org_name)
 {
-    if (db.is_IdOrg(org_name) != -1){
+    Organization organization;
+    organization.setName(org_name);
+    if (organization.getId() != -1){
         ui->lbl_OrgSelect->setText(org_name);
     }else{
         ui->lbl_OrgSelect->setText(trUtf8("<font color = red>Организация не выбрана</font>"));

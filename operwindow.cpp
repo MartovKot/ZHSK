@@ -110,10 +110,16 @@ void OperWindow::Refresh_tblVCount()
 
 void OperWindow::set_parametr(int id_org, int id_home)
 {
+    Organization organization;
+    organization.setId(id_org);
+    Home home;
+    home.setId(id_home);
+
     HomeID = id_home;
     OrganizationID = id_org;
-    ui->lbl_home->setText("<font color=blue>"+db.is_nameHome(id_home)+"</font>");
-    ui->lbl_organization->setText(db.is_nameOrg(id_org));
+
+    ui->lbl_home->setText("<font color=blue>"+home.getName()+"</font>");
+    ui->lbl_organization->setText(organization.getName());
     ui->cmBx_NumApartanent->setModel(db.ModelApartament(id_home,id_org));
 }
 

@@ -127,7 +127,6 @@ QVariant BD::SelectFromTable(QString str)  //Функция возврящает
 {
     QSqlQuery query;
     QVariant out;
-
     if (query.exec(str)){
         if (query.next()){
             out = query.value(0);
@@ -139,6 +138,7 @@ QVariant BD::SelectFromTable(QString str)  //Функция возврящает
         qDebug() <<"ERROR \n"<< "d04157f41fd3c5c4dee3f0e0dd41baed" << query.lastError() << str;
         LogOut.logout(query.lastError().text());
     }
+    qDebug() << out.isValid() << out.isNull() <<out.isDetached();
     return out;
 }
 
@@ -251,74 +251,6 @@ void BD::UpdateMenInApartament(QStringList column, QStringList value, int idapar
     }
 }
 
-//======================================================================
-
-
-QString BD::is_INN(int id)
-{
-    QString str;
-    QSqlQuery query;
-    QString out = "";
-
-    str = "SELECT inn FROM organiz WHERE id_organiz = %1";
-    str = str.arg(id);
-
-    if (query.exec(str)){
-      if (query.next()){
-          out =  query.value(0).toString();
-          if (out != ""){
-            out = trUtf8("ИНН ") + out;
-          }
-      }else{
-          qDebug()<< "5d8798a23d763aa605102f3ff5d8a22a" << "not record" << str;
-          out = "";
-      }
-
-    } else{
-        qDebug()<< "499dc77144423b7969993e2accf16d49" <<query.lastError();
-        LogOut.logout(query.lastError().text());
-        out = "";
-    }
-    return out;
-}
-
-//-------------------------------------------------------------------------------------------------------
-QString BD::is_nameOrg(int id)
-{
-    QString str;
-    QSqlQuery query;
-
-    str = "SELECT name FROM organiz WHERE id_organiz = %1";
-    str = str.arg(id);
-
-    if (query.exec(str)){
-      if (query.next()){
-          return query.value(0).toString();
-      }else{
-          qDebug()<< "1852a27bb09e15790457d790779a659c" << "not record" << str;
-      }
-
-    } else{
-        qDebug()<< "5671923ec9394f969cc87643860bc3f9" <<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    return "";
-}
-
-QString BD::is_SmallnameOrg(int id)
-{
-    QString str;
-    QString out;
-
-    str = "SELECT name FROM organiz WHERE id_organiz = %1";
-    str = str.arg(id);
-
-    QVariant t = SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toString();
-    }
-    return out;
-}
 QString BD::is_FIO(int id_app)
 {
     QString str;
@@ -337,18 +269,7 @@ QString BD::is_FIO(int id_app)
         qDebug()<< "e13253d437b3561bd7e8a82e1e675c55" <<query.lastError();
         LogOut.logout(query.lastError().text());
     }
-return "";
-}
-QString BD::is_nameHome(int id)
-{
-    QString str, out="";
-    str = "SELECT name FROM homes WHERE id_homes = %1";
-    str = str.arg(id);
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        out = t.toString();
-    }
-    return out;
+    return "";
 }
 
 QStringList BD::sum_app(int id_org, int id_home)
@@ -360,43 +281,6 @@ QStringList BD::sum_app(int id_org, int id_home)
             .arg(id_org);
 
     return strL_from_query(str);
-}
-
-QStringList BD::strL_from_query(QString str)
-{
-    QSqlQuery query;
-    QStringList out;
-
-    if (!query.exec(str)){
-        qDebug() << "98c4ea14e87b9c76588b823d00e3d957" << query.lastError().text();
-        LogOut.logout(query.lastError().text());
-    } else {
-        while (query.next()){
-            out << query.value(0).toString();
-        }
-    }
-    return out;
-}
-
-QVariant BD::qVariant_from_query(QString str)
-{
-    QVariant out;
-    QSqlQuery query;
-
-    if (query.exec(str)){
-      if (query.next()){
-          out =  query.value(0);
-      }else{
-          qDebug() << "not record" << str;
-          out = -1;
-      }
-    } else{
-        qDebug() << "21a3cce63f41f666b02173c48ef61963" << query.lastError();
-        LogOut.logout(query.lastError().text());
-        out = -1;
-    }
-
-    return out;
 }
 
 QList<int> BD::is_ListIdApartament(int id_org, int id_home)
@@ -419,6 +303,69 @@ QList<int> BD::is_ListIdApartament(int id_org, int id_home)
 
     return out;
 }
+
+double BD::is_TotalArea(int id_app)
+{
+    QString str;
+
+    str = "SELECT total_area FROM apartament WHERE id_apartament=%1";
+    str = str.arg(id_app);
+
+    return qVariant_from_query(str).toDouble();
+}
+
+double BD::is_LivedArea(int id_app)
+{
+    QString str;
+
+    str = "SELECT inhabed_area FROM apartament WHERE id_apartament=%1";
+    str = str.arg(id_app);
+
+   return qVariant_from_query(str).toDouble();
+}
+
+double BD::is_Lodjia(int id_app)
+{
+    QString str;
+
+    str = "SELECT loggia FROM apartament WHERE id_apartament=%1";
+    str = str.arg(id_app);
+
+    return qVariant_from_query(str).toDouble();
+}
+
+double BD::is_Balkon(int id_app)
+{
+    QString str;
+
+    str = "SELECT balkon FROM apartament WHERE id_apartament=%1";
+    str = str.arg(id_app);
+
+    return qVariant_from_query(str).toDouble();
+}
+
+int BD::is_NumberAppartament(int id_app)
+{
+    QString str;
+
+    str = "SELECT number FROM apartament WHERE id_apartament=%1";
+    str = str.arg(id_app);
+
+    return qVariant_from_query(str).toDouble();
+}
+
+int BD::is_LSh(int id_app)
+{
+    QString str;
+
+    str = "SELECT personal_account FROM apartament WHERE id_apartament=%1";
+    str = str.arg(id_app);
+
+    return qVariant_from_query(str).toInt();
+}
+
+//=====================================================================
+
 
 QStringList BD::Sum_Schet(int id_apartament)
 {
@@ -485,16 +432,6 @@ QList<int> BD::is_ListIdServiceOutCounter(int id_apartament)
     return out;
 }
 
-int BD::is_LSh(int id_app)
-{
-    QString str;
-
-    str = "SELECT personal_account FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toInt();
-}
-
 int BD::is_RealMen(int id_app, DateOfUnixFormat date)
 {
     QString str;
@@ -535,55 +472,7 @@ int BD::is_ReservMen(int id_app, DateOfUnixFormat date)
     return qVariant_from_query(str).toInt();
 }
 
-double BD::is_TotalArea(int id_app)
-{
-    QString str;
 
-    str = "SELECT total_area FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toDouble();
-}
-
-double BD::is_LivedArea(int id_app)
-{
-    QString str;
-
-    str = "SELECT inhabed_area FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-   return qVariant_from_query(str).toDouble();
-}
-
-double BD::is_Lodjia(int id_app)
-{
-    QString str;
-
-    str = "SELECT loggia FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toDouble();
-}
-
-double BD::is_Balkon(int id_app)
-{
-    QString str;
-
-    str = "SELECT balkon FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toDouble();
-}
-
-int BD::is_NumberAppartament(int id_app)
-{
-    QString str;
-
-    str = "SELECT number FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toDouble();
-}
 
 QList<int> BD::is_ApartamentService(int id_app)
 {
@@ -632,36 +521,6 @@ QString BD::is_NameService(int id_service)
     return out;
 }
 
-QStringList BD::is_nameOrg()
-{
-    QStringList out;
-
-    QString str;
-    QSqlQuery query;
-
-
-    str = "SELECT name, bank, sett_account FROM organiz";
-
-    if (query.exec(str)){
-      while (query.next()){
-          out << (query.value(0).toString()+"  "+query.value(1).toString()+"  "+query.value(2).toString());
-      }
-    } else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    return out;
-}
-
-QStringList BD::is_nameHome()
-{
-    QString str;
-
-    str = "SELECT name FROM homes";
-
-    return strL_from_query(str);;
-}
 QSqlQueryModel* BD::Model(QString table)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
@@ -674,6 +533,7 @@ QSqlQueryModel* BD::Model(QString table)
     }
     return model;
 }
+
 
 QSqlQueryModel* BD::ModelHome(){
     QSqlQueryModel *model = new QSqlQueryModel;
@@ -859,7 +719,6 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
         qDebug()<<"e825d464c306efe892a28669bdcefb13"<<model->lastError();
     }
 
-//    qDebug() << "1";
     if(model->rowCount()==0){//  если строки не найдены, скорее всего нет тарифов - сделаем без них
         QString str2 = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end "
             "FROM list_app_usluga lau, usluga u, pokazanie p "
@@ -874,10 +733,8 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
     if(model->lastError().number() != -1){
         qDebug()<<"e825d464c306efe823628669bdcefb13"<<model->lastError();
     }
-//    qDebug() << "2";
 
     if(model->rowCount()==0){  //ООо всё равно пусто, то тогда добавим строчки
-//        qDebug() << "4";
         QString str2;
         QSqlQuery query2;
         QStringList column, values;
@@ -889,14 +746,10 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
         str2 = str2.arg(id_apartament);
 
         if (query2.exec(str2)){
-//            qDebug() << "7";
             if (query2.size() == -1){
                 return model;
             }
-
-//            qDebug() << "5";
             while (query2.next()){ // переберём все строчки
-//                qDebug() << "6";
                 values.clear();
                 values << query2.value(0).toString() << QString::number(date.Second())
                        << QString::number(0)         << QString::number(0);
@@ -912,7 +765,6 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
     if(model->lastError().number() != -1){
         qDebug()<<"e8237664c306efe892a28669bdcefb13"<<model->lastError();
     }
-//    qDebug() << "3";
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Счётчик"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Пок посл"));
     model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Пок тек"));
@@ -1083,46 +935,6 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
         return t.toInt();
     }
     return id_new;
-}
-
-int BD::next_month(int m)
-{
-    int out = -1;
-    if(m > 0 && m < 12){
-        out = m + 1;
-    }else if(m==12){
-        out = 1;
-    }
-    return out;
-}
-
-int BD::next_year(int m, int y)
-{
-    int out = -1;
-
-    if(y<0){
-        return -1;
-    }
-
-    if(next_month(m) == 1){
-        out = y+1;
-    }else if(next_month(m) != -1){
-        out = y;
-    }
-
-    return out;
-}
-
-void BD::DataProcessing(int id_org, int id_home, int month, int year)
-{
-//    QString str;
-    Q_UNUSED(id_org);
-    Q_UNUSED(id_home);
-    Q_UNUSED(month);
-    Q_UNUSED(year);
-
-
-//    str = "SELECT id_credited, "
 }
 
 void BD::CreditedOfService(int id_apartament, DateOfUnixFormat date)  //расчёт для квартиры
@@ -1831,17 +1643,40 @@ int BD::is_IdHome(QString Home_name)
     return out;
 }
 
-int BD::is_IdOrg(QString Org_name)
+
+
+QStringList BD::strL_from_query(QString str)
 {
-    int out = -1;
-    QString str;
+    QSqlQuery query;
+    QStringList out;
 
-    str = "SELECT id_organiz FROM organiz WHERE name = '%1'";
-    str = str.arg(Org_name);
+    if (!query.exec(str)){
+        qDebug() << "98c4ea14e87b9c76588b823d00e3d957" << query.lastError().text();
+        LogOut.logout(query.lastError().text());
+    } else {
+        while (query.next()){
+            out << query.value(0).toString();
+        }
+    }
+    return out;
+}
 
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        out = t.toInt();
+QVariant BD::qVariant_from_query(QString str)
+{
+    QVariant out;
+    QSqlQuery query;
+
+    if (query.exec(str)){
+      if (query.next()){
+          out =  query.value(0);
+      }else{
+          qDebug() << "not record" << str;
+          out = -1;
+      }
+    } else{
+        qDebug() << "21a3cce63f41f666b02173c48ef61963" << query.lastError();
+        LogOut.logout(query.lastError().text());
+        out = -1;
     }
 
     return out;
