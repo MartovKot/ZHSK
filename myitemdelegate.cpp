@@ -20,11 +20,16 @@ QWidget * MyItemDelegate :: createEditor( QWidget * parent,
     QRegExpValidator *only_number;
     only_number = new QRegExpValidator(QRegExp("[0-9]+"),parent);   //валидатор для цифр
 
+    QRegExpValidator *dv;
+    dv = new QRegExpValidator(QRegExp("[0-9]+[\\.|\\,]?[0-9]{,2}"),parent);       //валидатор для чисел
+
     QLineEdit *led = 0;
-//    if (index.column() == 2){
-        led = new QLineEdit(parent);
+    led = new QLineEdit(parent);
+    if (index.row() == 8){
         led->setValidator(only_number);
-//    }
+    } else if (index.row() != 1 && index.row() != 2 && index.row() != 3){
+        led->setValidator(dv);
+    }
 
     return led;
 }
@@ -32,7 +37,5 @@ QWidget * MyItemDelegate :: createEditor( QWidget * parent,
 void MyItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     QLineEdit *lEd_1 = static_cast<QLineEdit*>(editor);
-    int value = lEd_1->text().toInt();
-
-    model->setData(index, value, Qt::EditRole);
+    model->setData(index, lEd_1->text(), Qt::EditRole);
 }

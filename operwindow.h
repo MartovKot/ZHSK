@@ -16,6 +16,7 @@
 
 #include "organization.h"
 #include "home.h"
+#include "apartment.h"
 
 namespace Ui {
     class OperWindow;
@@ -36,10 +37,12 @@ private:
     void Refresh_tblVPayment(int ApartamentID);
     TableViewPokazanie *tbl;
     QDialog *dlg;
-    int HomeID, OrganizationID;
-    int p_id_pokazanie, p_pokazanie;
+    int HomeID;
+    int OrganizationID;
+    int p_id_pokazanie;
+    int p_pokazanie;
 
-    int isIdSelectApartament();
+//    int isIdSelectApartament();
 
 
 private slots:

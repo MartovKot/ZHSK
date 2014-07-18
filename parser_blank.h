@@ -15,6 +15,7 @@
 
 #include "organization.h"
 #include "home.h"
+#include "apartment.h"
 
 class parser_blank :public QWidget
 {

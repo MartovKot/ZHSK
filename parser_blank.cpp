@@ -196,8 +196,9 @@ void parser_blank::generating()
         if (progress.wasCanceled())
             break;
         str_NameFile_pach = QObject::trUtf8(" кв ") + str_L.at(i);
+        Apartment apartment(ConfData.Home_id,ConfData.Org_id,str_L.at(i).toInt());
         creat_blank(str_NameFile_base+str_NameFile_pach+".html",
-                    db.is_idappart(ConfData.Home_id,ConfData.Org_id,str_L.at(i).toInt()),
+                    apartment.getId(),
                     ConfData.date);
     }
     progress.setValue(str_L.size()-1);

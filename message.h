@@ -9,8 +9,6 @@ class Message : public QWidget
     Q_OBJECT
 public:
     explicit Message(QWidget *parent = 0);
-
-
 signals:
 
 public slots:

@@ -91,13 +91,15 @@ void OperWindow::sl_addPayment()
 //------------------------------------------------------------------------------------------------------------
 void OperWindow::Refresh_tblVCount()
 {
-    int id_apartament;
-    id_apartament = isIdSelectApartament();
+//    int id_apartament;
+//    id_apartament = isIdSelectApartament();
 
-    ui->tblV_Count->setModel(db.ModelPokazanie(id_apartament,
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+
+    ui->tblV_Count->setModel(db.ModelPokazanie(apartment.getId(),
                                  ui->dEd_Count->date().month(),
                                  ui->dEd_Count->date().year()));
-    db.new_pokazanie(id_apartament,                     //новое показание на след месяц
+    db.new_pokazanie(apartment.getId(),                     //новое показание на след месяц
                      ui->dEd_Count->date().month(),
                      ui->dEd_Count->date().year());
     ui->tblV_Count->hideColumn(0);
@@ -120,17 +122,13 @@ void OperWindow::set_parametr(int id_org, int id_home)
 
     ui->lbl_home->setText("<font color=blue>"+home.getName()+"</font>");
     ui->lbl_organization->setText(organization.getName());
-    ui->cmBx_NumApartanent->setModel(db.ModelApartament(id_home,id_org));
+    Apartment apartment;
+    ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(id_home,id_org));
 }
 
 void OperWindow::sl_EditPokazanie()
 {
-    int ApartamentID;// Получим id квартиры
-    ApartamentID = isIdSelectApartament();
-    if (ApartamentID == -1){
-        QMessageBox::warning(this,trUtf8("Ошибка"),
-                             trUtf8("Нет номера квартиры"),QMessageBox::Ok);
-    }
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
     //Новое окно редактирования
     dlg = new QDialog(this);
@@ -145,7 +143,7 @@ void OperWindow::sl_EditPokazanie()
     MyItemDelegate * dDeleg = new MyItemDelegate ();
     SqlQueryEditModel *edModel;
 
-    edModel = db.ModelEditPokazanie(ApartamentID,ui->dEd_Count->date().month(),ui->dEd_Count->date().year());
+    edModel = db.ModelEditPokazanie(apartment.getId(),ui->dEd_Count->date().month(),ui->dEd_Count->date().year());
 
     tbl->setModel(edModel);
     tbl->setItemDelegate(dDeleg);
@@ -213,15 +211,16 @@ void OperWindow::sl_DeletePayment()
                     QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
         QString err;
         Table_Payment t_payment;
+        Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
         err = t_payment.delete_Payment(
-                    db.is_idappart(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt()),
+                    apartment.getId(),
                     ui->tblV_Payment->model()->index(row,2).data().toInt(),
                     ui->tblV_Payment->model()->index(row,1).data().toInt(),
                     ui->tblV_Payment->model()->index(row,0).data().toInt());
         if (err == ""){
             QMessageBox::information(this,trUtf8("Успех"),
                                  trUtf8("Удаление прошло успешно \n")+err,QMessageBox::Ok);
-            Refresh_tblVPayment(db.is_idappart(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt()));
+            Refresh_tblVPayment(apartment.getId());
         }else{
             QMessageBox::critical(this,trUtf8("Ошибка"),
                                  trUtf8("Удаление не произошло \n")+err,QMessageBox::Ok);
@@ -244,23 +243,19 @@ void OperWindow::sl_Calendar()
 
 void OperWindow::sl_RefreshLabel() //обновление выводяшейся оплаты и долга
 {
-    int ApartamentID;
-    ApartamentID = isIdSelectApartament();
-    if (ApartamentID == -1){
-        QMessageBox::warning(this,trUtf8("Ошибка"),
-                             trUtf8("Нет номера квартиры"),QMessageBox::Ok);
-    }
+
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+
 
     int month = ui->dEd_Count->date().month();
     int year = ui->dEd_Count->date().year();
     DateOfUnixFormat date_calc(year,month,1);
-//    date_calc.setDate(year,month,1);
 
     if (ui->dEd_Count->date() == QDate::currentDate()){ //Расчёт производим только за текущий месяц
-        db.CreditedOfService(ApartamentID,date_calc);
+        db.CreditedOfService(apartment.getId(),date_calc);
     }
-    ui->lblInPayment->setText(QString::number(db.AmountToPay(ApartamentID,date_calc.Second())));
-    ui->lblDolg->setText(db.is_Debt(ApartamentID,date_calc));
+    ui->lblInPayment->setText(QString::number(db.AmountToPay(apartment.getId(),date_calc.Second())));
+    ui->lblDolg->setText(db.is_Debt(apartment.getId(),date_calc));
 }
 
 void OperWindow::sl_ApartFirst()
@@ -300,8 +295,9 @@ void OperWindow::sl_ApartPrevious()
 
 void OperWindow::sl_RefreshFull()
 {
-    int num = ui->cmBx_NumApartanent->model()->index(ui->cmBx_NumApartanent->currentIndex(), 1).data().toInt();
-    Refresh_tblVPayment(num);
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+
+    Refresh_tblVPayment(apartment.getId());
     Refresh_tblVCount();
     sl_RefreshLabel();
 }
@@ -322,27 +318,6 @@ void OperWindow::sl_NewCounter()//вызывается когда происхо
     dlg->set_IdPokazanie(id_counter);
     connect(dlg,SIGNAL(finished(int)),this,SLOT(sl_RefreshFull()));
     dlg->open();
-}
-
-int OperWindow::isIdSelectApartament()
-{
-    int ApartamentID;
-    int row = ui->cmBx_NumApartanent->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_NumApartanent->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                ApartamentID = index.data().toInt();
-            }else{
-                ApartamentID = -1;
-            }
-        }else{
-            ApartamentID = -1;
-        }
-    }else{
-        ApartamentID = -1;
-    }
-    return ApartamentID;
 }
 
 void OperWindow::on_pBtn_NewCounterNext_clicked()

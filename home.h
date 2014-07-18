@@ -10,12 +10,15 @@ class Home : public QObject
 public:
     explicit Home();
     void setId(int id);
+    void setName(QString name);
     QString getName();
+    int getId();
+    void deleteFromDB();
 private:
     QString m_name;
     int m_id;
     BD db;
-
+    void set_default();
 signals:
 
 public slots:

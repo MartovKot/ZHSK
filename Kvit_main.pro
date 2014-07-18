@@ -38,7 +38,9 @@ HEADERS += adminwindow.h \
     sqlquerymodelapartament.h \
     dateofunixformat.h \
     organization.h \
-    home.h
+    home.h \
+    apartment.h \
+    editapartmentmodel.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -66,7 +68,9 @@ SOURCES += adminwindow.cpp \
     sqlquerymodelapartament.cpp \
     dateofunixformat.cpp \
     organization.cpp \
-    home.cpp
+    home.cpp \
+    apartment.cpp \
+    editapartmentmodel.cpp
 
 RESOURCES += \
     qrc.qrc

@@ -20,6 +20,7 @@ public:
     int getId();
     void setId(int id_organization);
     void setName(QString NameOrganization);
+    void deleteFromDB();
 private:
     int m_id;
     QString m_name;

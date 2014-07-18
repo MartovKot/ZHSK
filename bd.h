@@ -36,8 +36,6 @@ public:
     int is_TypeUsluga(int id_usluga);                           //возвращает ид типа услуги
     int is_idListAppUsluga(int id_apartament, int id_usluga);
 
-    int is_idappart(int id_home, int id_org, int num);
-
     int is_LSh(int id_app);                                     //возвращает лицевой счёт квартиры
 
     int is_RealMen(int id_app, DateOfUnixFormat date);                     //возвращает количество проживающих.
@@ -53,7 +51,6 @@ public:
     double is_Balkon(int id_app);
     double is_Lodjia(int id_app);
     int is_NumberAppartament(int id_app);
-    int is_IdHome(QString Home_name);
     QString is_DatabaseVersoin();
 
     QList<int> is_ApartamentService(int id_app);                //Возвращает список ид услуг по квартире
@@ -64,7 +61,6 @@ public:
 
     QString is_NameService(int id_service);
 
-    void UpdateApartament(QStringList column,QStringList value, int idapart);           //Обновление таблицы с квартирами
     void UpdateMenInApartament(QStringList column, QStringList value, int idapart, int year, int month);
 
     void UpdateOrganization(QString name = "", QString bank="", QString acc="", QString inn="", int idorg = -1);
@@ -76,8 +72,6 @@ public:
 
 
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
-    QAbstractItemModel* ModelApartament(int id_apartament);                                 //модель для квартиры
-    QSqlQueryModel* ModelApartament(int id_home, int id_org);                           //модель квартир для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
     QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
     QSqlQueryModel* ModelHome();
@@ -86,14 +80,11 @@ public:
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
     QSqlQueryModel* ModelPensioner(int id_home, int id_org);
 
-    int NewApatament(int id_org, int id_home, int num_apart);                           //новая квартира
 
     double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
     QString is_Debt(int id_apart, DateOfUnixFormat date);
     double AmountForServices(int id_apart, qint64 u_date);
 
-    QString DeleteOrg(int id_org);
-    QString DeleteHome(int id_home);
     QSqlError DeletePension(int id_apart);
     QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
     QSqlError DeleteSetting(QString name_setting);
@@ -108,6 +99,7 @@ public:
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     int add(QString table, QStringList column,QStringList value);
     int add(QString table, QString column,QString value);
+    void DeleteLine(QString table, QString id_name ,int id_line);
 
 
 private:
@@ -133,8 +125,6 @@ private:
 private slots:
     void sl_EditPokazanie(int id_pok, QString value);
     void sl_ModelPokazanieHeaderData(QAbstractTableModel* t);
-    void sl_EditApartament(int,QString,int);
-    void sl_ModelApartamentHeaderData(QAbstractTableModel* t);
 signals:
     void SelectError(int error);
 

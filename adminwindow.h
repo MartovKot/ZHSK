@@ -16,6 +16,7 @@
 #include "myitemdelegate.h"
 #include "dateofunixformat.h"
 #include "organization.h"
+#include "apartment.h"
 
 namespace Ui {
     class AdminWindow;
@@ -52,6 +53,7 @@ private:
     QLineEdit *lEd_tarif;
     QLineEdit *lEd_tarif2;
     QLineEdit *lEd_norm;
+    Apartment *apartment_for_apartment;
 
 private slots:
     void Refresh_Settings();
@@ -62,7 +64,6 @@ private slots:
     void Refresh_cmbNumApp_onUslugi();
     void Refresh_cmBx_NumApp_onApartament();
     void Refresh_tblView_Apartament();
-    void SaveApart();
     void TarifRequest();
     void TarifEdit();
     void SaveTarif();
@@ -90,6 +91,9 @@ private slots:
     void on_pBtn_HomeSelect_clicked();
     void sl_SelectHome(QString home_name);
     void sl_SelectOrg(QString org_name);
+    void on_pBtn_Save_clicked();
+    void on_cmBx_NumAp_on_Apartament_activated(int index);
+    void on_pBtn_DeleteApartment_clicked();
 };
 
 #endif // ADMINWINDOW_H

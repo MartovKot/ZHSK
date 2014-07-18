@@ -83,3 +83,8 @@ void Organization::setName(QString NameOrganization)
         m_id = anydata.toInt();
     }
 }
+
+void Organization::deleteFromDB()
+{
+    db.DeleteLine("organiz","id_organiz", m_id);
+}
