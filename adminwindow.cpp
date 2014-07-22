@@ -491,8 +491,9 @@ void AdminWindow::Refresh_Organization()
 
 void AdminWindow::Refresh_Home()
 {
+    Home home;
     delete ui->tblView_Home->model();
-    ui->tblView_Home->setModel(db.ModelHome());
+    ui->tblView_Home->setModel(home.ModelAllHome());
     ui->tblView_Home->horizontalHeader()->setStretchLastSection(false);
     ui->tblView_Home->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Home->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
@@ -518,8 +519,10 @@ void AdminWindow::Refresh_Pensioner()
     ui->cmBx_PensApart->addItem("");
     ui->cmBx_Org_on_Pens->setModel(db.Model("organiz"));
     ui->cmBx_Home_on_Pens->setModel(db.Model("homes"));
-    ui->tblV_on_Pens->setModel(db.ModelPensioner(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
-                                                 ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
+    ui->tblV_on_Pens->setModel(db.ModelPensioner(ui->cmBx_Home_on_Pens->model()->index(
+                                                     ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
+                                                 ,ui->cmBx_Org_on_Pens->model()->index(
+                                                     ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
     ui->tblV_on_Pens->hideColumn(0);
     ui->tblV_on_Pens->horizontalHeader()->setStretchLastSection(false);
     ui->tblV_on_Pens->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -650,11 +653,13 @@ void AdminWindow::sl_HomeEdit(QModelIndex model)
 void AdminWindow::sl_SaveOrg()
 {
     //обновление записи
-    db.UpdateOrganization(ui->lEdNameOrg->text(),
-                          ui->lEdBank->text(),
-                          ui->lEdAcc->text(),
-                          ui->lEdINN->text(),
-                          ui->tblView_Organization->model()->index( ui->tblView_Organization->currentIndex().row(), 0 ).data().toInt());
+    Organization organization(ui->tblView_Organization->model()->index(
+                                  ui->tblView_Organization->currentIndex().row(), 0 ).data().toInt());
+
+    organization.Update(ui->lEdNameOrg->text(),
+                        ui->lEdBank->text(),
+                        ui->lEdAcc->text(),
+                        ui->lEdINN->text());
 
     Refresh_Organization(); //обновление таблицы
     Mode("org_default");
@@ -686,7 +691,8 @@ void AdminWindow::sl_DeleteUsluga()
                                QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
         return;
     }else{
-        db.DeleteUslugaApartament(ui->tblV_on_Uslugi->model()->index(ui->tblV_on_Uslugi->currentIndex().row(),0).data().toInt());
+        db.DeleteUslugaApartament(ui->tblV_on_Uslugi->model()->index(
+                                      ui->tblV_on_Uslugi->currentIndex().row(),0).data().toInt());
         UslView();
     }
 }
@@ -713,7 +719,8 @@ void AdminWindow::sl_DeleteHome()
 
 void AdminWindow::sl_SaveHome()
 {
-    db.UpdateHome(ui->tblView_Home->model()->index(ui->tblView_Home->currentIndex().row(),0).data().toInt(),ui->lEdHome->text());
+    db.UpdateHome(ui->tblView_Home->model()->index(
+                      ui->tblView_Home->currentIndex().row(),0).data().toInt(),ui->lEdHome->text());
     Refresh_Home();
     Mode("home_default");
 }

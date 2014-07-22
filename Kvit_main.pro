@@ -35,7 +35,6 @@ HEADERS += adminwindow.h \
     editsetting.h \
     selecter_with_combobox.h \
     transposeproxymodel.h \
-    sqlquerymodelapartament.h \
     dateofunixformat.h \
     organization.h \
     home.h \
@@ -65,7 +64,6 @@ SOURCES += adminwindow.cpp \
     editsetting.cpp \
     selecter_with_combobox.cpp \
     transposeproxymodel.cpp \
-    sqlquerymodelapartament.cpp \
     dateofunixformat.cpp \
     organization.cpp \
     home.cpp \

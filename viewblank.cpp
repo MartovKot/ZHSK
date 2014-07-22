@@ -221,4 +221,3 @@ void ViewBlank::First_Page()
     PageView = 0;
     web.setHtml(strL_page.at(PageView));
 }
-

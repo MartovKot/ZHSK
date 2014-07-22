@@ -23,7 +23,7 @@ Apartment::Apartment(int id_home, int id_org, int number)
     }
 }
 
-int Apartment::getId()
+int Apartment::getId() const
 {
     return m_id;
 }
@@ -154,3 +154,22 @@ void Apartment::DeleteApartment()
 {
     db.DeleteLine("apartament","id_apartament",m_id);
 }
+
+QString Apartment::is_FIO_payer() const
+{
+    QString str;
+    QString fio = "";
+
+    str = "SELECT  surname || ' ' || name || ' ' || patronymic   FROM apartament WHERE id_apartament = %1";
+    str = str.arg(m_id);
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        fio = t.toString();
+    }else{
+        fio = "";
+    }
+
+    return fio;
+}
+

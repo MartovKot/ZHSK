@@ -47,3 +47,15 @@ void Home::deleteFromDB()
 {
     db.DeleteLine("homes","id_homes",m_id);
 }
+
+QSqlQueryModel* Home::ModelAllHome()
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery(QSqlQuery("SELECT id_homes, name  FROM homes"));
+
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Адрес"));
+
+    return model;
+}
+

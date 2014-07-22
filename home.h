@@ -14,6 +14,7 @@ public:
     QString getName();
     int getId();
     void deleteFromDB();
+    QSqlQueryModel* ModelAllHome();
 private:
     QString m_name;
     int m_id;

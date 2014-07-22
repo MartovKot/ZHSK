@@ -21,6 +21,7 @@ public:
     void setId(int id_organization);
     void setName(QString NameOrganization);
     void deleteFromDB();
+    void Update(QString name = "", QString bank="", QString acc="", QString inn="");
 private:
     int m_id;
     QString m_name;

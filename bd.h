@@ -24,7 +24,6 @@ public:
     ~BD();
     bool Create();
 
-    QString is_FIO(int id_app);                                 //Возвращает полное имя платильщика
     QString is_NameCounter(int id_counter);
 
     QStringList sum_app(int id_org, int id_home);               //Возвращает список имён квартир в доме
@@ -61,9 +60,7 @@ public:
 
     QString is_NameService(int id_service);
 
-    void UpdateMenInApartament(QStringList column, QStringList value, int idapart, int year, int month);
-
-    void UpdateOrganization(QString name = "", QString bank="", QString acc="", QString inn="", int idorg = -1);
+//    void UpdateOrganization(QString name = "", QString bank="", QString acc="", QString inn="", int idorg = -1);
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
     void UpdateHome(int id_home, QString home);
 
@@ -74,7 +71,6 @@ public:
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
     QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
-    QSqlQueryModel* ModelHome();
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания
     QSqlQueryModel* ModelSettings();
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
@@ -95,7 +91,7 @@ public:
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
     //----new interface
-    QVariant SelectFromTable (QString str);
+    QVariant SelectFromTable (QString str) const;
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     int add(QString table, QStringList column,QStringList value);
     int add(QString table, QString column,QString value);

@@ -39,10 +39,10 @@ private:
     QString str_folder_arhiv;
     BD db;
     table_tariff tbl_tariff;
-    void creat_blank(QString name,int id_app,QDate date);
+    void creat_blank(QString name, const Apartment & apartment,QDate date);
     QString process_usluga(QString str_in_usl, int id_app, QDate date);
-    QString process_schet(QString str_in_sch, int id_app, QDate date);
-    QString process_main(QString str_in, int id_app);
+    QString process_schet(QString str_in_sch, const int id_app, QDate date);
+    QString process_main(QString str_in, const Apartment & apartment);
 
 };
 

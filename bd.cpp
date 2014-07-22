@@ -1,13 +1,12 @@
 #include "bd.h"
 #include "table_tariff.h"
-#include "sqlqueryeditmodel.h"
-#include "sqlquerymodelapartament.h"
 
 
 BD::BD()
 {
     LogOut.setFileName("out.log");
 }
+
 BD::~BD()
 {
     db.close();
@@ -123,7 +122,7 @@ void BD::UpdateDataBase()
 
 }
 
-QVariant BD::SelectFromTable(QString str)  //Функция возврящает только одно поле((
+QVariant BD::SelectFromTable(QString str) const //Функция возврящает только одно поле((
 {
     QSqlQuery query;
     QVariant out;
@@ -133,7 +132,6 @@ QVariant BD::SelectFromTable(QString str)  //Функция возврящает
         }
     } else{
         qDebug() <<"ERROR \n"<< "d04157f41fd3c5c4dee3f0e0dd41baed" << query.lastError() << str;
-        LogOut.logout(query.lastError().text());
     }
     return out;
 }
@@ -217,51 +215,6 @@ void BD::DeleteLine(QString table, QString id_name, int id_line)
 
 //======================================================================
 // Квартиры
-
-void BD::UpdateMenInApartament(QStringList column, QStringList value, int idapart, int year, int month)
-{
-    QString str;
-    int out = -1;
-    str = "SELECT COUNT(*) FROM men_in_apartament WHERE id_apartament = %1 AND year = %2 AND month = %3";
-    str = str.arg(idapart)
-            .arg(year)
-            .arg(month);
-    QVariant t = SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toInt();
-    }
-    qDebug() << "3163221858b740c726032cd15808cfdb" <<out;
-    if (out == 1){
-        for(int i=0; i<column.count();i++ ){
-            UpdateTable("men_in_apartament",column[i],value[i],"id_apartament", QString::number(idapart));
-        }
-    }else if(out == 0){
-        column << "id_apartament" << "year" << "month";
-        value << QString::number(idapart) << QString::number(year) << QString::number(month);
-        add("men_in_apartament",column,value);
-    }
-}
-
-QString BD::is_FIO(int id_app)
-{
-    QString str;
-    QSqlQuery query;
-
-    str = "SELECT surname, name,patronymic  FROM apartament WHERE id_apartament = %1";
-    str = str.arg(id_app);
-
-    if (query.exec(str)){
-        if (query.next()){
-            return query.value(0).toString()+"  "+query.value(1).toString()+"  "+query.value(2).toString();
-        }else{
-            qDebug()<< "5c338ca2e2cf8d0530fd61f407f2d214" <<"not record" << str;
-        }
-    } else{
-        qDebug()<< "e13253d437b3561bd7e8a82e1e675c55" <<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-    return "";
-}
 
 QStringList BD::sum_app(int id_org, int id_home)
 {
@@ -364,13 +317,8 @@ int BD::is_LSh(int id_app)
 //=====================================================================
 //дома
 
-QSqlQueryModel* BD::ModelHome(){
-    QSqlQueryModel *model = new QSqlQueryModel;
-    model->setQuery(QSqlQuery("SELECT id_homes, name  FROM homes"));
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
-    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Адрес"));
-    return model;
-}
+
+//=====================================================================
 
 //=====================================================================
 QStringList BD::Sum_Schet(int id_apartament)
@@ -539,9 +487,6 @@ QSqlQueryModel* BD::Model(QString table)
     }
     return model;
 }
-
-
-
 
 
 QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
@@ -1129,7 +1074,7 @@ void BD::PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*
         }else{
             QStringList column,value;
             column << "date_debt" << "id_apartament" << "debt";
-            value << QString::number(date.Second())
+            value << QString::number(date.Second_first_day())
                   << QString::number(id_apart) << QString::number(debt,'f',2);
             add("debt",column,value);
 
@@ -1375,13 +1320,7 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
     } 
 }
 
-void BD::UpdateOrganization(QString name, QString bank, QString acc, QString inn, int idorg)
-{
-    UpdateTable("organiz","name",name,"id_organiz",QString::number(idorg));
-    UpdateTable("organiz","bank",bank,"id_organiz",QString::number(idorg));
-    UpdateTable("organiz","sett_account",acc,"id_organiz",QString::number(idorg));
-    UpdateTable("organiz","inn",inn,"id_organiz",QString::number(idorg));
-}
+
 
 
 

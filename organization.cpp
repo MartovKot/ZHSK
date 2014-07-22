@@ -88,3 +88,11 @@ void Organization::deleteFromDB()
 {
     db.DeleteLine("organiz","id_organiz", m_id);
 }
+
+void Organization::Update(QString name, QString bank, QString acc, QString inn)
+{
+    db.UpdateTable("organiz", "name", name, "id_organiz", QString::number(m_id));
+    db.UpdateTable("organiz", "bank", bank, "id_organiz", QString::number(m_id));
+    db.UpdateTable("organiz", "sett_account", acc, "id_organiz", QString::number(m_id));
+    db.UpdateTable("organiz", "inn", inn, "id_organiz", QString::number(m_id));
+}
