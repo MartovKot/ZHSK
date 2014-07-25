@@ -61,13 +61,12 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
     //настройка Услуги
     ui->tab_Uslugi->setLayout(ui->verticalLayout_9);
-    AdminWindow::connect(ui->pBtn_Uslug_View,SIGNAL(clicked()),SLOT(UslView()));//кнопка показать услуги
-    AdminWindow::connect(ui->pBtn_AddUsluga,SIGNAL(clicked()),
-                         SLOT(AddUsluga_of_Apartament()));                      //добавление услуги в квартиру
-    AdminWindow::connect(ui->pBtn_DeleteUsluga,SIGNAL(clicked()),SLOT(sl_DeleteUsluga()));
-    AdminWindow::connect(ui->cmBx_NumAp_on_Uslugi,SIGNAL(activated(int)),SLOT(UslView()));
-    AdminWindow::connect(ui->cmBx_Home_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
-    AdminWindow::connect(ui->cmBx_Org_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
+//    AdminWindow::connect(ui->pBtn_Uslug_View,SIGNAL(clicked()),SLOT(UslView()));//кнопка показать услуги
+//    AdminWindow::connect(ui->pBtn_AddUsluga,SIGNAL(clicked()), SLOT(AddUsluga_of_Apartament()));                      //добавление услуги в квартиру
+//    AdminWindow::connect(ui->pBtn_DeleteUsluga,SIGNAL(clicked()),SLOT(sl_DeleteUsluga()));
+//    AdminWindow::connect(ui->cmBx_NumAp_on_Uslugi,SIGNAL(activated(int)),SLOT(UslView()));
+//    AdminWindow::connect(ui->cmBx_Home_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
+//    AdminWindow::connect(ui->cmBx_Org_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
     //------------------------------------
 
     //настройка тарифы
@@ -96,7 +95,6 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
 AdminWindow::~AdminWindow()
 {
-//    delete ui->tblView_Organization->model();
     delete apartment_for_apartment;
     delete ui;
 }
@@ -117,74 +115,74 @@ void AdminWindow::sl_AddOrg()                                                  /
     Refresh_Organization();
 }
 
-void AdminWindow::AddUsluga_of_Apartament()
-{
-    int ApartamentID,UslugaID;
-    int row;
-    row = ui->cmBx_NumAp_on_Uslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_NumAp_on_Uslugi->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                ApartamentID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Предупреждение"),
-                                     trUtf8("Не заполнены поля"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Предупреждение"),
-                                 trUtf8("Не заполнены поля"),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Предупреждение"),
-                             trUtf8("Не заполнены поля"),QMessageBox::Ok);
-        return;
-    }
+//void AdminWindow::AddUsluga_of_Apartament()
+//{
+//    int ApartamentID,UslugaID;
+//    int row;
+//    row = ui->cmBx_NumAp_on_Uslugi->currentIndex();
+//    if (row != -1){
+//        QModelIndex index = ui->cmBx_NumAp_on_Uslugi->model()->index(row, 1);
+//        if (index.isValid()){
+//            if (index.data().canConvert(QVariant::Int)){
+//                ApartamentID = index.data().toInt();
+//            }else{
+//                QMessageBox::warning(this,trUtf8("Предупреждение"),
+//                                     trUtf8("Не заполнены поля"),QMessageBox::Ok);
+//                return;
+//            }
+//        }else{
+//            QMessageBox::warning(this,trUtf8("Предупреждение"),
+//                                 trUtf8("Не заполнены поля"),QMessageBox::Ok);
+//            return;
+//        }
+//    }else{
+//        QMessageBox::warning(this,trUtf8("Предупреждение"),
+//                             trUtf8("Не заполнены поля"),QMessageBox::Ok);
+//        return;
+//    }
 
-    row = ui->cmBx_Uslugi_onUslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Uslugi_onUslugi->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                UslugaID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле "),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле "),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле "),QMessageBox::Ok);
-        return;
-    }
+//    row = ui->cmBx_Uslugi_onUslugi->currentIndex();
+//    if (row != -1){
+//        QModelIndex index = ui->cmBx_Uslugi_onUslugi->model()->index(row, 1);
+//        if (index.isValid()){
+//            if (index.data().canConvert(QVariant::Int)){
+//                UslugaID = index.data().toInt();
+//            }else{
+//                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+//                                     trUtf8("Ошибка в поле "),QMessageBox::Ok);
+//                return;
+//            }
+//        }else{
+//            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+//                                 trUtf8("Ошибка в поле "),QMessageBox::Ok);
+//            return;
+//        }
+//    }else{
+//        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+//                             trUtf8("Ошибка в поле "),QMessageBox::Ok);
+//        return;
+//    }
 
-    QStringList value,column;
-    column << "id_apartament" << "id_usluga";
-    value << QString::number(ApartamentID) << QString::number(UslugaID);
-    if(db.add("list_app_usluga",column,value)!=0){
-        return;
-    }
-    if(db.is_TypeUsluga(UslugaID)==1)
-    {
-        DateOfUnixFormat date(QDate::currentDate().year(),QDate::currentDate().month(),1);
-        column.clear();
-        value.clear();
-        column << "id_list_app_usluga" << "date_pokazanie" << "pokazanie_home" << "pokazanie_end";
-        value << QString::number(db.is_idListAppUsluga(ApartamentID,UslugaID))
-              << QString::number(date.Second())
-              << "0" <<"0";
-        db.add("pokazanie",column,value);
-    }
+//    QStringList value,column;
+//    column << "id_apartament" << "id_usluga";
+//    value << QString::number(ApartamentID) << QString::number(UslugaID);
+//    if(db.add("list_app_usluga",column,value)!=0){
+//        return;
+//    }
+//    if(db.is_TypeUsluga(UslugaID)==1)
+//    {
+//        DateOfUnixFormat date(QDate::currentDate().year(),QDate::currentDate().month(),1);
+//        column.clear();
+//        value.clear();
+//        column << "id_list_app_usluga" << "date_pokazanie" << "pokazanie_home" << "pokazanie_end";
+//        value << QString::number(db.is_idListAppUsluga(ApartamentID,UslugaID))
+//              << QString::number(date.Second())
+//              << "0" <<"0";
+//        db.add("pokazanie",column,value);
+//    }
 
-    UslView();
-}
+//    UslView();
+//}
 
 void AdminWindow::AddHome()
 {
@@ -292,13 +290,13 @@ void AdminWindow::Mode(QString m)
         break;
     case 4:
         ui->tblV_on_Uslugi->setEnabled(0);
-        ui->pBtn_AddUsluga->setEnabled(0);
-        ui->cmBx_Uslugi_onUslugi->setEnabled(0);
+//        ui->pBtn_AddUsluga->setEnabled(0);
+//        ui->cmBx_Uslugi_onUslugi->setEnabled(0);
         break;
     case 5:
         ui->tblV_on_Uslugi->setEnabled(1);
-        ui->pBtn_AddUsluga->setEnabled(1);
-        ui->cmBx_Uslugi_onUslugi->setEnabled(1);
+//        ui->pBtn_AddUsluga->setEnabled(1);
+//        ui->cmBx_Uslugi_onUslugi->setEnabled(1);
         break;
     case 6: //org_default
         ui->pBtn_SaveOrg->setHidden(true);                                          //скрытие кнопки
@@ -438,43 +436,43 @@ void AdminWindow::TarifEdit()
     dlg->show();
 }
 
-void AdminWindow::UslView()
-{
-    int ApartamentID;
-    int row;
+//void AdminWindow::UslView()
+//{
+//    int ApartamentID;
+//    int row;
 
-    row = ui->cmBx_NumAp_on_Uslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_NumAp_on_Uslugi->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                ApartamentID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле "),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле "),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле "),QMessageBox::Ok);
-        return;
-    }
+//    row = ui->cmBx_NumAp_on_Uslugi->currentIndex();
+//    if (row != -1){
+//        QModelIndex index = ui->cmBx_NumAp_on_Uslugi->model()->index(row, 1);
+//        if (index.isValid()){
+//            if (index.data().canConvert(QVariant::Int)){
+//                ApartamentID = index.data().toInt();
+//            }else{
+//                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+//                                     trUtf8("Ошибка в поле "),QMessageBox::Ok);
+//                return;
+//            }
+//        }else{
+//            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+//                                 trUtf8("Ошибка в поле "),QMessageBox::Ok);
+//            return;
+//        }
+//    }else{
+//        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
+//                             trUtf8("Ошибка в поле "),QMessageBox::Ok);
+//        return;
+//    }
 
-    QSqlQueryModel *model;
-    model = db.ModelUslugiTabl(ApartamentID);
+//    QSqlQueryModel *model;
+//    model = db.ModelUslugiTabl(ApartamentID);
 
-    ui->tblV_on_Uslugi->setModel(model);
-    ui->tblV_on_Uslugi->hideColumn(0);
+//    ui->tblV_on_Uslugi->setModel(model);
+//    ui->tblV_on_Uslugi->hideColumn(0);
 
-    ui->tblV_on_Uslugi->horizontalHeader()->setStretchLastSection(false);
-    ui->tblV_on_Uslugi->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    Mode("usl_add");
-}
+//    ui->tblV_on_Uslugi->horizontalHeader()->setStretchLastSection(false);
+//    ui->tblV_on_Uslugi->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+//    Mode("usl_add");
+//}
 
 void AdminWindow::Refresh_Organization()
 {
@@ -501,10 +499,13 @@ void AdminWindow::Refresh_Home()
 
 void AdminWindow::Refresh_Uslugi()
 {
+    Home home;
+    ui->cmBx_Home_on_Uslugi->setModel(home.ModelAllHome());
+    ui->cmBx_Home_on_Uslugi->setModelColumn(1);
 
-    ui->cmBx_Org_on_Uslugi->setModel(db.Model("organiz"));
-    ui->cmBx_Home_on_Uslugi->setModel(db.Model("homes"));
-    ui->cmBx_Uslugi_onUslugi->setModel(db.Model("usluga"));
+    Organization organization;
+//    ui->cmBx_Org_on_Uslugi->setModel(db.Model("organiz"));
+//    ui->cmBx_Home_on_Uslugi->setModel(db.Model("homes"));
     Refresh_cmbNumApp_onUslugi();
     Mode("usl_def");
 
@@ -684,18 +685,18 @@ void AdminWindow::sl_CancelOrg()
     Mode("org_default");
 }
 
-void AdminWindow::sl_DeleteUsluga()
-{
-    if ((QMessageBox::question(this,trUtf8("ВНИМАНИЕ УДАЛЕНИЕ"),
-                               trUtf8("Действительно хотете удалить?"),
-                               QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
-        return;
-    }else{
-        db.DeleteUslugaApartament(ui->tblV_on_Uslugi->model()->index(
-                                      ui->tblV_on_Uslugi->currentIndex().row(),0).data().toInt());
-        UslView();
-    }
-}
+//void AdminWindow::sl_DeleteUsluga()
+//{
+//    if ((QMessageBox::question(this,trUtf8("ВНИМАНИЕ УДАЛЕНИЕ"),
+//                               trUtf8("Действительно хотете удалить?"),
+//                               QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
+//        return;
+//    }else{
+//        db.DeleteUslugaApartament(ui->tblV_on_Uslugi->model()->index(
+//                                      ui->tblV_on_Uslugi->currentIndex().row(),0).data().toInt());
+//        UslView();
+//    }
+//}
 
 void AdminWindow::sl_CancelHome()
 {

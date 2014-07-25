@@ -122,7 +122,7 @@ void BD::UpdateDataBase()
 
 }
 
-QVariant BD::SelectFromTable(QString str) const //Функция возврящает только одно поле((
+QVariant BD::SelectFromTable(QString str) const //Функция возврящает только одно поле, но этого пока хватает
 {
     QSqlQuery query;
     QVariant out;
