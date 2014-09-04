@@ -75,6 +75,7 @@ public:
     QSqlQueryModel* ModelSettings();
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
     QSqlQueryModel* ModelPensioner(int id_home, int id_org);
+    QSqlQueryModel* ModelTypeUsluga();
 
 
     double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
@@ -95,7 +96,7 @@ public:
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     int add(QString table, QStringList column,QStringList value);
     int add(QString table, QString column,QString value);
-    void DeleteLine(QString table, QString id_name ,int id_line);
+    QSqlError DeleteLine(QString table, QString id_name ,int id_line);
 
 
 private:

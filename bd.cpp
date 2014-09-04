@@ -198,7 +198,7 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
     }
 }
 
-void BD::DeleteLine(QString table, QString id_name, int id_line)
+QSqlError BD::DeleteLine(QString table, QString id_name, int id_line)
 {
     QString str;
     QSqlQuery query;
@@ -211,6 +211,8 @@ void BD::DeleteLine(QString table, QString id_name, int id_line)
     if (!query.exec(str)){
         qDebug() << "eb1c9c25246c60d6db683a79c4e941ad " << str << query.lastError();
     }
+
+    return query.lastError();
 }
 
 //======================================================================
@@ -488,15 +490,36 @@ QSqlQueryModel* BD::Model(QString table)
     return model;
 }
 
-
-QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
+QSqlQueryModel* BD::ModelTypeUsluga()
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
-    str = "SELECT lau.id_list_app_usluga, u.name FROM list_app_usluga lau, usluga u "
+    str = "SELECT  name,id_type_usluga FROM type_usluga";
+    model->setQuery(QSqlQuery(str));
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Тип услуги"));
+
+    return model;
+}
+
+QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
+{
+//    QSqlQueryModel *model = new QSqlQueryModel;
+//    QString str;
+//    str = "SELECT lau.id_list_app_usluga, u.name FROM list_app_usluga lau, usluga u "
+//            " WHERE lau.id_apartament = "+QString::number(id_apartament)+" AND u.id_usluga=lau.id_usluga";
+//    model->setQuery(QSqlQuery(str));
+//    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Услуги"));
+
+//    return model;
+
+    QSqlQueryModel *model = new QSqlQueryModel;
+    QString str;
+    str = "SELECT  u.name FROM list_app_usluga lau, usluga u "
             " WHERE lau.id_apartament = "+QString::number(id_apartament)+" AND u.id_usluga=lau.id_usluga";
     model->setQuery(QSqlQuery(str));
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Услуги"));
+
+
 
     return model;
 }
@@ -548,6 +571,7 @@ QSqlError BD::DeleteUslugaApartament(int id_list_apart_usluga)
 
     str = "DELETE FROM list_app_usluga WHERE id_list_app_usluga=%1";
     str = str.arg(id_list_apart_usluga);
+    qDebug() << str;
     if (!query.exec(str)){
         out = query.lastError();
     }
