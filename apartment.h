@@ -6,8 +6,6 @@
 
 #include "editapartmentmodel.h"
 
-
-
 class Apartment: public QObject
 {
     Q_OBJECT

@@ -96,5 +96,6 @@ OTHER_FILES += \
     blank/blank_main.html \
     blank/blank_s.html \
     blank/blank_u.html \
-    update_db/01_07_001.sql
+    update_db/01_07_001.sql \
+    update_db/01_07_002.sql
 

@@ -9,7 +9,7 @@
 #include "logreport.h"
 #include "updater.h"
 
-#define VERSION "1.6.0"
+#define VERSION "1.7.0"
 
 static bool createConnection() //подключение к БД
 {
@@ -76,7 +76,6 @@ int main(int argc, char *argv[])
     upd.setVersion(VERSION);
     upd.RunUpdate();
 
-
     BD bd;
     QString str = "SELECT version FROM version";
     QSqlQuery query;
@@ -89,8 +88,6 @@ int main(int argc, char *argv[])
         }
     }
 
-
-
     query.finish();
     out.logout(QObject::trUtf8("Проверка обновлений ..."));
     bd.UpdateDataBase();
@@ -101,12 +98,9 @@ int main(int argc, char *argv[])
         out.logout(QObject::trUtf8("Успешно"));
     }
 
-
     MainWindow *w = new MainWindow;
     QObject::connect(&upd,SIGNAL(s_run_update()),w,SLOT(close()));
     w->setVersion(VERSION);
-
-
 
     out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
     splash.close();
