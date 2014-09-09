@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+//    delete VwBlank;
 }
 
 void MainWindow::Refresh_win()
@@ -112,9 +113,10 @@ void MainWindow::Print_mod()
 
 void MainWindow::sl_OpenArhiv()
 {
-    VwBlank = new ViewBlank(this);
+    VwBlank = new ViewBlank;
+//    qDebug() << "==2==" << VwBlank;
     VwBlank->open_blank(CurentDirArhiv);
-    VwBlank->show();
+    VwBlank->open();
 }
 
 void MainWindow::sl_ArhivKvit()
@@ -122,6 +124,7 @@ void MainWindow::sl_ArhivKvit()
     QStringList strL_dir;//список папок с квитанциями
 
     QDialog *dlg = new QDialog(this);
+    qDebug() << "==1==" << dlg;
     dlg->setWindowIcon(this->windowIcon());
     dlg->setWindowTitle(trUtf8("Архив"));
 
