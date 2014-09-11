@@ -22,7 +22,7 @@ class ViewBlank : public QDialog
 private:
     QVBoxLayout *layout;
     QHBoxLayout *btn_layout;
-    QWebView web;
+    QWebView *web;
     int r_year, r_month;
     int idOrg, idHome;
     parser_blank test_p;
@@ -30,6 +30,7 @@ private:
     int PageView;
 public:
     explicit ViewBlank(QWidget *parent = 0);
+    ~ViewBlank();
     void setDate(int year, int month);
     void setInfo(int id_home, int id_org);
     void generate();

@@ -112,9 +112,21 @@ void MainWindow::Print_mod()
 
 void MainWindow::sl_OpenArhiv()
 {
+    qDebug () << VwBlank;
     VwBlank = new ViewBlank(this);
+    connect(VwBlank,SIGNAL(rejected()),SLOT(sl_test()));
     VwBlank->open_blank(CurentDirArhiv);
-    VwBlank->show();
+
+    VwBlank->open();
+}
+
+void MainWindow::sl_test()
+{
+    qDebug() << "test" << VwBlank;
+    delete VwBlank;
+    VwBlank = nullptr;
+    qDebug() << "test2" << VwBlank;
+
 }
 
 void MainWindow::sl_ArhivKvit()
@@ -145,6 +157,7 @@ void MainWindow::sl_ArhivKvit()
     main_layout->addWidget(cmBx_Date);
     main_layout->addWidget(pBtn_Open);
     dlg->setLayout(main_layout);
+    qDebug() << "test==" << dlg;
     dlg->open();
 }
 

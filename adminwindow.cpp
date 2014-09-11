@@ -65,12 +65,6 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
     //настройка Услуги
     ui->tab_Uslugi->setLayout(ui->verticalLayout_9);
-//    AdminWindow::connect(ui->pBtn_Uslug_View,SIGNAL(clicked()),SLOT(UslView()));//кнопка показать услуги
-//    AdminWindow::connect(ui->pBtn_AddUsluga,SIGNAL(clicked()), SLOT(AddUsluga_of_Apartament()));                      //добавление услуги в квартиру
-//    AdminWindow::connect(ui->pBtn_DeleteUsluga,SIGNAL(clicked()),SLOT(sl_DeleteUsluga()));
-//    AdminWindow::connect(ui->cmBx_NumAp_on_Uslugi,SIGNAL(activated(int)),SLOT(UslView()));
-//    AdminWindow::connect(ui->cmBx_Home_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
-//    AdminWindow::connect(ui->cmBx_Org_on_Uslugi,SIGNAL(activated(int)),SLOT(Refresh_cmbNumApp_onUslugi()));
     //------------------------------------
 
     //настройка тарифы

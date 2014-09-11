@@ -8,7 +8,7 @@ ViewBlank::ViewBlank(QWidget *parent) :
     setWindowTitle(trUtf8("Печать"));
     layout = new QVBoxLayout;
     btn_layout = new QHBoxLayout;
-//    connect(&test_p,SIGNAL(sgn_FolderAlreadyPresent()),SLOT(sl_ReWriteDir())); //Повторное формирование квитанции
+    web = new QWebView(this);
 
     QToolButton *btn_print = new QToolButton;
     QToolButton *btn_pdf = new QToolButton;
@@ -22,7 +22,7 @@ ViewBlank::ViewBlank(QWidget *parent) :
     connect(btn_preview,SIGNAL(clicked()),this,SLOT(Preview()));
     connect(btn_home,SIGNAL(clicked()),this,SLOT(First_Page()));
     connect(btn_end,SIGNAL(clicked()),this,SLOT(Last_Page()));
-     connect(btn_pdf,SIGNAL(clicked()),this,SLOT(Pdf()));
+    connect(btn_pdf,SIGNAL(clicked()),this,SLOT(Pdf()));
 
     btn_next->setText(trUtf8("&Следуюущий"));
     QPixmap pixmap(":/ico/forward.ico");
@@ -67,11 +67,16 @@ ViewBlank::ViewBlank(QWidget *parent) :
     btn_layout->addWidget(btn_end);
     btn_layout->addStretch();
 
-    layout->addWidget(&web);
+    layout->addWidget(web);
     layout->addLayout(btn_layout);
 
     setLayout(layout);
 }
+ViewBlank::~ViewBlank()
+{
+
+}
+
 void ViewBlank::setDate(int year, int month)
 {
     r_year = year;
@@ -89,7 +94,7 @@ void ViewBlank::generate()
     strL_page = test_p.OutStrL();
     PageView = 0;
     if(!strL_page.isEmpty()){
-        web.setHtml(strL_page.first());
+        web->setHtml(strL_page.first());
     }
 }
 void ViewBlank::open_blank(QString dir)
@@ -97,10 +102,9 @@ void ViewBlank::open_blank(QString dir)
     test_p.setDir(dir);
 
     strL_page = test_p.OutStrL();
-//    qDebug()<<strL_page.count();
     PageView = 0;
     if(!strL_page.isEmpty()){
-        web.setHtml(strL_page.first());
+        web->setHtml(strL_page.first());
     }
 }
 
@@ -186,7 +190,7 @@ void ViewBlank::Next()
 
     if(PageView >= 0 && PageView<strL_page.size()-1){
         PageView++;
-        web.setHtml(strL_page.at(PageView));
+        web->setHtml(strL_page.at(PageView));
     }
 }
 
@@ -198,7 +202,7 @@ void ViewBlank::Preview()
 
     if(PageView > 0 && PageView<strL_page.size()){
         PageView--;
-        web.setHtml(strL_page.at(PageView));
+        web->setHtml(strL_page.at(PageView));
     }
 }
 
@@ -209,7 +213,7 @@ void ViewBlank::Last_Page()
     }
 
     PageView = strL_page.size()-1;
-    web.setHtml(strL_page.at(PageView));
+    web->setHtml(strL_page.at(PageView));
 
 }
 
@@ -219,5 +223,5 @@ void ViewBlank::First_Page()
         return;
     }
     PageView = 0;
-    web.setHtml(strL_page.at(PageView));
+    web->setHtml(strL_page.at(PageView));
 }
