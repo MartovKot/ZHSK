@@ -10,6 +10,9 @@ ViewBlank::ViewBlank(QWidget *parent) :
     btn_layout = new QHBoxLayout;
     web = new QWebView(this);
 
+    connect(this,SIGNAL(finished(int)),SLOT(sl_Test()));  ///!!!!!!!!!!!!!!!!!!!!!!
+
+
     QToolButton *btn_print = new QToolButton;
     QToolButton *btn_pdf = new QToolButton;
     QToolButton *btn_next = new QToolButton;
@@ -72,6 +75,7 @@ ViewBlank::ViewBlank(QWidget *parent) :
 
     setLayout(layout);
 }
+
 ViewBlank::~ViewBlank()
 {
 
@@ -123,7 +127,9 @@ void ViewBlank::Print()
         QWebView view;
         QWebPage *page;
         QWebFrame *frame;
-        if(printer.fromPage() <= 0 || printer.toPage() <= 0 || printer.toPage() > strL_page.count()){       //устанавливаем страницы печати с первой по последнюю.
+        if(     printer.fromPage() <= 0
+                || printer.toPage() <= 0
+                || printer.toPage() > strL_page.count()){       //устанавливаем страницы печати с первой по последнюю.
             printer.setFromTo(1,strL_page.count());
         }
 
@@ -137,6 +143,7 @@ void ViewBlank::Print()
             if (i <= strL_page.count() && i  < printer.toPage())
                printer.newPage();
             delete page;
+//            qDebug() << "==6==" << frame;
         }
 
     }else{
@@ -200,7 +207,7 @@ void ViewBlank::Preview()
         return;
     }
 
-    if(PageView > 0 && PageView<strL_page.size()){
+    if(PageView > 0 && PageView < strL_page.size()){
         PageView--;
         web->setHtml(strL_page.at(PageView));
     }
@@ -224,4 +231,9 @@ void ViewBlank::First_Page()
     }
     PageView = 0;
     web->setHtml(strL_page.at(PageView));
+}
+
+void ViewBlank::sl_Test()
+{
+    qDebug() << "TEST - TEST";
 }

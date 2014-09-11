@@ -23,13 +23,12 @@ Updater::Updater(QWidget *parent) :
 }
 Updater::~Updater()
 {
-
+    delete m_manager_json;
 }
 
 void Updater::RunUpdate()
 {
     QString m_url = "https://api.github.com/repos/MartovKot/ZHSK/releases";
-
     progressDialog = new QProgressDialog(this);
     m_manager_json = new QNetworkAccessManager(this);
 
@@ -94,10 +93,7 @@ void Updater::finished_json(QNetworkReply*)
         qDebug()<< m_reply->errorString();
         // handle errors here
     }
-
     delete m_reply;
-    delete m_manager_json;
-
 }
 
 void Updater::downloadFile(QUrl url)
@@ -196,7 +192,6 @@ void Updater::httpFinished()  //Завершение загрузки
     } else {
         QFileInfo fileInfo(m_url.path());
         QString fileName = fileInfo.fileName();
-//        qDebug() << "test" << fileName;
         if (QMessageBox::question(this, trUtf8("Обновление"),
                                           tr("Обновление готово к установке. \n Обновить?"),
                                           QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
@@ -262,7 +257,6 @@ void Updater::setVersion(QString ver)
 
 bool Updater::isNewVersion(QString realVersion, QString downloadVersion)
 {
-//    qDebug() << realVersion << downloadVersion;
     QList<int> realVersionArr;
     QList<int> downloadVersionArr;
     int pos;
@@ -285,26 +279,17 @@ bool Updater::isNewVersion(QString realVersion, QString downloadVersion)
     }
     downloadVersionArr << t_dVer.toInt();
 
-//    qDebug() << realVersionArr << downloadVersionArr;
-
-//    qDebug()<<"test" <<realVersionArr.count();
-
     if(downloadVersionArr.at(0) == realVersionArr.at(0)){
         if(downloadVersionArr.at(1) == realVersionArr.at(1)){
             if(downloadVersionArr.at(2) <= realVersionArr.at(2)){
-//                qDebug()<<"flase - 1";
                 return false;
             }
         }else if (downloadVersionArr.at(1) < realVersionArr.at(1)){
-//            qDebug()<<"flase - 2";
             return false;
         }
     }else if (downloadVersionArr.at(0) < realVersionArr.at(0)){
-
-//        qDebug()<<"flase - 3" << downloadVersionArr.at(1) << realVersionArr.at(1);
         return false;
     }
-//    qDebug()<<"true";
     //иначе есть новая версия
     return true;
 }

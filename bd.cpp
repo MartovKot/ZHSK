@@ -465,7 +465,7 @@ QString BD::is_NameService(int id_service)
       if (query.next()){
           out =  query.value(0).toString();
       }else{
-          qDebug()<<"not record" << str;
+          qDebug() << "not record" << "f7d877056cf6319e6142c1d9feb4f3b7" << str;
           out = "";
       }
     } else{
@@ -503,23 +503,12 @@ QSqlQueryModel* BD::ModelTypeUsluga()
 
 QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
 {
-//    QSqlQueryModel *model = new QSqlQueryModel;
-//    QString str;
-//    str = "SELECT lau.id_list_app_usluga, u.name FROM list_app_usluga lau, usluga u "
-//            " WHERE lau.id_apartament = "+QString::number(id_apartament)+" AND u.id_usluga=lau.id_usluga";
-//    model->setQuery(QSqlQuery(str));
-//    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Услуги"));
-
-//    return model;
-
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
     str = "SELECT  u.name FROM list_app_usluga lau, usluga u "
             " WHERE lau.id_apartament = "+QString::number(id_apartament)+" AND u.id_usluga=lau.id_usluga";
     model->setQuery(QSqlQuery(str));
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Услуги"));
-
-
 
     return model;
 }
@@ -544,7 +533,6 @@ QSqlQueryModel* BD::ModelPensioner(int id_home, int id_org)
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("ID"));
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("ФИО"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("№ Квартиры"));
-//    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Сумма"));
     return model;
 }
 QSqlError BD::DeletePension(int id_apart)
@@ -766,7 +754,7 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
             date_old =  query.value(0).toInt();
             id_ListApart = query.value(1).toInt();
         }else{
-            qDebug()<< "not record " << str;
+            qDebug() << "not record" << "575af8aa8da14fec062ce2bc5ef9e1e8 " << str;
         }
     } else{
             qDebug()<<query.lastError();
@@ -831,10 +819,11 @@ void BD::CreditedOfService(int id_apartament, DateOfUnixFormat date)  //расч
                 }
             }else{
                 QStringList column,value;
-                column<<"id_list_app_usluga"<<"date_credited"<<"credited_of_service";
-                value<<QString::number(id_list_ap_usl)<<
-                    QString::number(date.Second())<<
-                    CreditedOfApartament(id_list_ap_usl,date).toString();
+                column << "id_list_app_usluga" << "date_credited" << "credited_of_service";
+                value << QString::number(id_list_ap_usl) <<
+                    QString::number(date.Second()) <<
+                       cred.toString();
+//                    CreditedOfApartament(id_list_ap_usl,date).toString();
                 add("credited",column,value);
             }
         } else{
@@ -889,17 +878,17 @@ QVariant BD::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date)
     str = str.arg(id_list_app_usluga);
 
     if (query.exec(str)){
-      if (query.next()){
-          type_usluga = query.value(0).toInt();
-          id_usluga = query.value(1).toInt();
-          table_tariff tbl_tariff;
-          tarif = tbl_tariff.is_Tariff(id_usluga,date);// Получаем тариф
-      }else{
-          qDebug()<<"not record" << str;
-          return -1;
-      }
+        if (query.next()){
+            type_usluga = query.value(0).toInt();
+            id_usluga = query.value(1).toInt();
+            table_tariff tbl_tariff;
+            tarif = tbl_tariff.is_Tariff(id_usluga,date);// Получаем тариф
+        }else{
+            qDebug() << "not record" << "af43d615b46af5a458e710e8e8f5b61e" << str;
+            return -1;
+        }
     } else{
-        qDebug()<<"CreditedOfApartament"<<query.lastError();
+        qDebug() << "CreditedOfApartament" << query.lastError();
         LogOut.logout(query.lastError().text());
         return -1;
     }
@@ -914,14 +903,14 @@ QVariant BD::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date)
                 "WHERE lau.id_apartament=a.id_apartament AND lau.id_list_app_usluga=%1";
         str2 = str2.arg(id_list_app_usluga);
         if (query2.exec(str2)){
-          if (query2.next()){
-              out = (QVariant)(tarif * query2.value(0).toDouble());
-          }else{
-              qDebug()<<"not record" << str;
-              return -1;
-          }
+            if (query2.next()){
+                out = (QVariant)(tarif * query2.value(0).toDouble());
+            }else{
+                qDebug() << "not record" << str;
+                return -1;
+            }
         } else{
-            qDebug()<<"CreditedOfApartament"<<query.lastError();
+            qDebug() << "CreditedOfApartament" << query.lastError();
             LogOut.logout(query.lastError().text());
             return -1;
         }
@@ -936,11 +925,11 @@ QVariant BD::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date)
           if (query2.next()){
               out = tarif * query2.value(0).toDouble();
           }else{
-              qDebug()<<"not record" << str;
+              qDebug() << "not record" << str;
               return -1;
           }
         } else{
-            qDebug()<<"CreditedOfApartament on men"<<query.lastError();
+            qDebug() << "CreditedOfApartament on men" << query.lastError();
             LogOut.logout(query.lastError().text());
             return -1;
         }

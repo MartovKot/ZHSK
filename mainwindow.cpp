@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+//    delete VwBlank;
 }
 
 void MainWindow::Refresh_win()
@@ -113,10 +114,9 @@ void MainWindow::Print_mod()
 void MainWindow::sl_OpenArhiv()
 {
     qDebug () << VwBlank;
-    VwBlank = new ViewBlank(this);
+    VwBlank = new ViewBlank;
     connect(VwBlank,SIGNAL(rejected()),SLOT(sl_test()));
     VwBlank->open_blank(CurentDirArhiv);
-
     VwBlank->open();
 }
 
@@ -126,7 +126,6 @@ void MainWindow::sl_test()
     delete VwBlank;
     VwBlank = nullptr;
     qDebug() << "test2" << VwBlank;
-
 }
 
 void MainWindow::sl_ArhivKvit()
@@ -134,6 +133,7 @@ void MainWindow::sl_ArhivKvit()
     QStringList strL_dir;//список папок с квитанциями
 
     QDialog *dlg = new QDialog(this);
+    qDebug() << "==1==" << dlg;
     dlg->setWindowIcon(this->windowIcon());
     dlg->setWindowTitle(trUtf8("Архив"));
 

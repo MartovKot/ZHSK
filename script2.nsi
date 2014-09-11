@@ -3,9 +3,9 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "ZHSK"
-!define PRODUCT_VERSION "1.6.0"
+!define PRODUCT_VERSION "1.7.0"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kvit.exe"
-!define QT_INSTALL "E:\Qt\Qt5.3.0\5.3\mingw482_32"
+!define QT_INSTALL "E:\Qt\Qt5.3.1\5.3\mingw482_32"
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
@@ -86,7 +86,7 @@ Section "zhsk" SEC01
   SetOverwrite ifnewer
 ;  File ".\release\kvit.exe"
 ;File "D:\Qt-project\build-Kvit_main-Desktop_Qt_5_2_1_MinGW_32bit-Release\release\kvit.exe"
-  File "E:\QT-sourse\build-Kvit_main-Desktop_Qt_5_3_0_MinGW_32bit-Release\release\kvit.exe"
+  File "E:\QT-sourse\build-Kvit_main-5_3_1-Release\release\kvit.exe"
   CreateDirectory "$SMPROGRAMS\ZHSK"
   CreateShortCut "$SMPROGRAMS\ZHSK\ZHSK.lnk" "$INSTDIR\kvit.exe"
   CreateShortCut "$DESKTOP\ZHSK.lnk" "$INSTDIR\kvit.exe"
@@ -113,49 +113,8 @@ Section "zhsk" SEC01
   File "ico\right_end.ico"
   
   SetOutPath "$INSTDIR\update_db"
-  File "update_db\01_06_001.sql"
-  File "update_db\01_06_002.sql"
-  File "update_db\01_06_003.sql"
-  File "update_db\01_06_004.sql"
-  File "update_db\01_06_005.sql"
-  File "update_db\01_06_006.sql"
-  File "update_db\01_06_007.sql"
-  File "update_db\01_06_008.sql"
-  File "update_db\01_07_001.sql"
-  File "update_db\Baseline.sql"
-  
-;  SetOutPath "$INSTDIR\images"
- ; File "images\checkbox_checked.png"
-;  File "images\checkbox_checked_hover.png"
-;  File "images\checkbox_checked_pressed.png"
-;  File "images\checkbox_unchecked.png"
-;  File "images\checkbox_unchecked_hover.png"
-;  File "images\checkbox_unchecked_pressed.png"
-;  File "images\down_arrow.png"
-;  File "images\down_arrow_disabled.png"
-;  File "images\frame.png"
-;  File "images\main.png"
-;  File "images\pagefold.png"
-;  File "images\pushbutton.png"
-;  File "images\pushbutton_hover.png"
-;  File "images\pushbutton_pressed.png"
-;;  File "images\radiobutton_checked.png"
-;  File "images\radiobutton_checked_hover.png"
-;  File "images\radiobutton_checked_pressed.png"
-;  File "images\radiobutton_unchecked.png"
-;  File "images\radiobutton_unchecked_hover.png"
-;  File "images\radiobutton_unchecked_pressed.png"
-;  File "images\sizegrip.png"
-;  File "images\spindown.png"
-;  File "images\spindown_hover.png"
-;  File "images\spindown_off.png"
-;  File "images\spindown_pressed.png"
-;  File "images\spinup.png"
-;  File "images\spinup_hover.png"
-;  File "images\spinup_off.png"
-;  File "images\spinup_pressed.png"
-;  File "images\up_arrow.png"
-;  File "images\up_arrow_disabled.png"
+  File "update_db\*.sql"
+
 SectionEnd
 
 Section "libs" SEC02
