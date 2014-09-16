@@ -10,7 +10,7 @@ ViewBlank::ViewBlank(QWidget *parent) :
     btn_layout = new QHBoxLayout;
     web = new QWebView(this);
 
-    connect(this,SIGNAL(finished(int)),SLOT(sl_Test()));  ///!!!!!!!!!!!!!!!!!!!!!!
+//    connect(this,SIGNAL(finished(int)),SLOT(sl_Test()));  ///!!!!!!!!!!!!!!!!!!!!!!
 
 
     QToolButton *btn_print = new QToolButton;
@@ -233,7 +233,7 @@ void ViewBlank::First_Page()
     web->setHtml(strL_page.at(PageView));
 }
 
-void ViewBlank::sl_Test()
-{
-    qDebug() << "TEST - TEST";
-}
+//void ViewBlank::sl_Test()
+//{
+//    qDebug() << "TEST - TEST";
+//}

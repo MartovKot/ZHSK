@@ -46,7 +46,7 @@ private slots:
     void Preview();
     void First_Page();
     void Last_Page();
-    void sl_Test();
+//    void sl_Test();
     
 };
 
