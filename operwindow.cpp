@@ -37,7 +37,9 @@ OperWindow::OperWindow(QWidget *parent) :
     ui->tBtn_Calendar->setIcon(QIcon(pixmap));
     ui->tBtn_Calendar->setMask(pixmap.mask());
 
-//    sl_RefreshFull();
+    ui->groupBox->setLayout(ui->horizontalLayout_10);
+    ui->groupBox_2->setLayout(ui->horizontalLayout_5);
+
 
 }
 
