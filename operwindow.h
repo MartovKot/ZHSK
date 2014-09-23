@@ -41,9 +41,7 @@ private:
     int OrganizationID;
     int p_id_pokazanie;
     int p_pokazanie;
-
-//    int isIdSelectApartament();
-
+    void Refresh_lbl_Payer();
 
 private slots:
     void sl_addPayment();
@@ -60,6 +58,8 @@ private slots:
     void sl_NewCounter();               //вызывается когда происходит смена счётчика
 
     void on_pBtn_NewCounterNext_clicked();
+
+    void on_pBtn_AddPayment_clicked();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

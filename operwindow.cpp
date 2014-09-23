@@ -41,6 +41,7 @@ OperWindow::OperWindow(QWidget *parent) :
     ui->groupBox_2->setLayout(ui->horizontalLayout_5);
 
 
+
 }
 
 OperWindow::~OperWindow()
@@ -61,9 +62,10 @@ void OperWindow::Refresh_tblVPayment(int ApartamenID)
 void OperWindow::sl_addPayment()
 {
     QString Payment;
-    int day, month,year,num;
+    int day, month,year;
 
-    num = ui->cmBx_NumApartanent->model()->index(ui->cmBx_NumApartanent->currentIndex(), 1).data().toInt(); //ID квартиры
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+
 
     Payment = ui->lEd_Sum->text();
     if (Payment == ""){
@@ -85,17 +87,14 @@ void OperWindow::sl_addPayment()
         return;
     }
     Table_Payment t_payment;
-    t_payment.add_line(QString::number(num),QString::number(year),QString::number(month),QString::number(day),Payment);
+    t_payment.add_line(QString::number(apartment.getId()),QString::number(year),QString::number(month),QString::number(day),Payment);
 
-    Refresh_tblVPayment(num);
+    Refresh_tblVPayment(apartment.getId());
 }
 
 //------------------------------------------------------------------------------------------------------------
 void OperWindow::Refresh_tblVCount()
 {
-//    int id_apartament;
-//    id_apartament = isIdSelectApartament();
-
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
     ui->tblV_Count->setModel(db.ModelPokazanie(apartment.getId(),
@@ -126,6 +125,7 @@ void OperWindow::set_parametr(int id_org, int id_home)
     ui->lbl_organization->setText(organization.getName());
     Apartment apartment;
     ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(id_home,id_org));
+
 }
 
 void OperWindow::sl_EditPokazanie()
@@ -302,6 +302,8 @@ void OperWindow::sl_RefreshFull()
     Refresh_tblVPayment(apartment.getId());
     Refresh_tblVCount();
     sl_RefreshLabel();
+    Refresh_lbl_Payer();
+
 }
 
 void OperWindow::sl_NewCounter()//вызывается когда происходит смена счётчика
@@ -337,4 +339,17 @@ void OperWindow::on_pBtn_NewCounterNext_clicked()
     NewCounter *dlg = new NewCounter(this);
     dlg->set_IdPokazanie(db.new_pokazanie(id_counter,"0"));
     dlg->open();
+}
+
+void OperWindow::Refresh_lbl_Payer()
+{
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+
+
+    ui->lbl_Payer->setText(apartment.is_FIO_payer());
+}
+
+void OperWindow::on_pBtn_AddPayment_clicked()
+{
+
 }
