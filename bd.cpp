@@ -1333,10 +1333,6 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
     } 
 }
 
-
-
-
-
 QString BD::is_DatabaseVersoin()
 {
     QString str;

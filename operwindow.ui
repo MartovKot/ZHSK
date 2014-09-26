@@ -502,6 +502,12 @@
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="dateTime">
                    <datetime>
                     <hour>0</hour>
@@ -580,7 +586,7 @@
                    <string>Сумма</string>
                   </property>
                   <property name="alignment">
-                   <set>Qt::AlignCenter</set>
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                   </property>
                  </widget>
                 </item>
