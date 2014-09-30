@@ -47,5 +47,6 @@
         <file>images/up_arrow_disabled.png</file>
         <file>ico/splash.png</file>
         <file>ico/pdf.ico</file>
+        <file>theme/fon.png</file>
     </qresource>
 </RCC>

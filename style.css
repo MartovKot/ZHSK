@@ -1,5 +1,9 @@
 QWidget, QDialog {
-   background-color: beige;
+   background-color: white;
+   background-image: url(":/theme/fon.png");
+   background-position: top left;
+   background-origin: content;
+
 }
 QWebView {
    background-color: white;
