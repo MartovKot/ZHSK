@@ -61,7 +61,10 @@ void OperWindow::sl_addPayment()
     QString Payment;
     int day, month,year,num;
 
-    num = ui->cmBx_NumApartanent->model()->index(ui->cmBx_NumApartanent->currentIndex(), 1).data().toInt(); //ID квартиры
+    num = ui->cmBx_NumApartanent->currentText().toInt();
+
+    Apartment apartment(HomeID, OrganizationID, num);
+
 
     Payment = ui->lEd_Sum->text();
     if (Payment == ""){
@@ -83,9 +86,9 @@ void OperWindow::sl_addPayment()
         return;
     }
     Table_Payment t_payment;
-    t_payment.add_line(QString::number(num),QString::number(year),QString::number(month),QString::number(day),Payment);
+    t_payment.add_line(QString::number(apartment.getId()),QString::number(year),QString::number(month),QString::number(day),Payment);
 
-    Refresh_tblVPayment(num);
+    Refresh_tblVPayment(apartment.getId());
 }
 
 //------------------------------------------------------------------------------------------------------------
