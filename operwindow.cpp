@@ -66,7 +66,6 @@ void OperWindow::sl_addPayment()
 
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
-
     Payment = ui->lEd_Sum->text();
     if (Payment == ""){
         return;

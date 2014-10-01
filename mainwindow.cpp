@@ -130,7 +130,6 @@ void MainWindow::sl_ArhivKvit()
     QStringList strL_dir;//список папок с квитанциями
 
     QDialog *dlg = new QDialog(this);
-
     dlg->setWindowIcon(this->windowIcon());
     dlg->setWindowTitle(trUtf8("Архив"));
 

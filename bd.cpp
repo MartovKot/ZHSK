@@ -1047,11 +1047,13 @@ void BD::PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*
 //    qDebug() <<"debt1 " << debt;
     //---------- Долг за счётчики в этом месяце
     str="SELECT credited_with_counter FROM credited_of_apartament WHERE  date_credited_of_apartament=%1 AND id_apartament=%2";
-    str = str.arg(date.Second())
+    str = str.arg(date.Second_first_day())
             .arg(id_apart);
     QVariant t = SelectFromTable(str);
+//    qDebug() << str;
     if(!t.isNull()){
         debt = debt + t.toDouble();
+//        qDebug() << "counter" << t.toDouble();
     }
 //    qDebug() << "t4" << payment << debt;
     //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
