@@ -4,7 +4,8 @@
 QT       += webkit\
             core gui\
             sql\
-            network
+            network\
+            qml quick widgets
 
 TEMPLATE = app
 TARGET = kvit
