@@ -1,7 +1,5 @@
 #include "operwindow.h"
 #include "ui_operwindow.h"
-#include "myitemdelegate.h"
-
 
 OperWindow::OperWindow(QWidget *parent) :
     QDialog(parent),
@@ -39,6 +37,8 @@ OperWindow::OperWindow(QWidget *parent) :
 
     ui->groupBox->setLayout(ui->horizontalLayout_10);
     ui->groupBox_2->setLayout(ui->horizontalLayout_5);
+
+//    setWindowFlags(Qt::FramelessWindowHint);
 
 
 

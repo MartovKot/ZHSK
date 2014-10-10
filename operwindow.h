@@ -17,6 +17,7 @@
 #include "organization.h"
 #include "home.h"
 #include "apartment.h"
+#include "myitemdelegate.h"
 
 namespace Ui {
     class OperWindow;

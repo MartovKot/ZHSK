@@ -1,10 +1,53 @@
-QWidget, QDialog {
-   background-color: white;
-   background-image: url(":/theme/fon.png");
-   background-position: top left;
-   background-origin: content;
-
+QMainWindow {
+    background-image: url(":/theme/fon.png");
+    background-position: bottom left ;
+    background-color: black;
+    background-repeat:  no-repeat;
 }
+
+QFrame {
+    background-color: rgba(157,210,152,102) ;
+    border-width: 4px;
+    padding: -1px;
+    border-style: solid;
+    border-color: #447326;
+}
+
+QPushButton {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(150, 150, 150, 255));
+    border-style: solid;
+    border-width: 3px;
+    border-top-color: rgba(200, 200, 200, 150);
+    border-right-color: rgba(0, 0, 0, 255);
+    border-bottom-color: rgba(50, 50, 50, 255);
+    border-left-color: rgba(200, 200, 200, 150);
+
+    color: white;
+    padding: 5px;
+    min-width: 9ex;
+    min-height: 15ex;
+}
+
+QPushButton:hover {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(51, 102, 0, 255));
+    border-style: inset;
+    border-width: 3px;
+    border-top-color: rgba(230, 230, 230, 200);
+    border-right-color: rgba(51, 102, 0, 255);
+    border-bottom-color: rgba(101, 152, 50, 255);
+    border-left-color: rgba(230, 230, 230, 200);
+}
+
+QPushButton:pressed {
+    border-style: outset;
+    border-bottom-color: rgba(230, 230, 230, 200);
+    border-left-color: rgba(51, 102, 0, 255);
+    border-top-color: rgba(101, 152, 50, 255);
+    border-right-color: rgba(230, 230, 230, 200);
+}
+
+
+
 QWebView {
    background-color: white;
 }
@@ -17,28 +60,13 @@ QLineEdit[echoMode="2"] {
 
 /* We provide a min-width and min-height for push buttons
    so that they look elegant regardless of the width of the text. */
-QPushButton {
-    background-color: palegoldenrod;
-    border-width: 2px;
-    border-color: darkkhaki;
-    border-style: solid;
-    border-radius: 5;
-    padding: 3px;
-    min-width: 9ex;
-    min-height: 2.5ex;
-}
 
-QPushButton:hover {
-   background-color: khaki;
-}
+
+
 
 /* Increase the padding, so the text is shifted when the button is
    pressed. */
-QPushButton:pressed {
-    padding-left: 5px;
-    padding-top: 5px;
-    background-color: #d0d67c;
-}
+
 
 QLabel, QAbstractButton {
     font: bold;
@@ -90,13 +118,7 @@ QLineEdit{
 
 }*/
 
-QFrame {
-    border-width: 2px;
-    padding: -1px;
-    border-style: solid;
-    border-color: darkkhaki;
-    border-radius: 5px;
-}
+
 
 /* As mentioned above, eliminate the padding and increase the border. */
 QLineEdit:focus, QFrame:focus {

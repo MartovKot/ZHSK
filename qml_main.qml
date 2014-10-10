@@ -96,6 +96,7 @@ ApplicationWindow {
         width: 360
         height: 80
 
+
         Text {
             id: text1
             x: 8
@@ -108,7 +109,7 @@ ApplicationWindow {
         }
 
         Button {
-            id: button1
+            id: button1 
             x: 102
             y: 112
             text: qsTr("Button")

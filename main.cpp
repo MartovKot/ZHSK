@@ -1,6 +1,6 @@
 #include <QApplication>
 //#include <QMessageBox>
-//#include <QSplashScreen>
+#include <QSplashScreen>
 //#include <QTextCodec>
 //#include <QtNetwork>
 
@@ -37,61 +37,62 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QPixmap pixmap(":/ico/splash.png");
-//    QSplashScreen splash(pixmap);
-//    splash.show();
-
-
-    QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/qml/qml_main.qml")));
+    QSplashScreen splash(pixmap);
+    splash.show();
 
 
 
-//    QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
-//    LogReport out;
-//    out.setFileName("out.log");
+//    QQmlApplicationEngine engine;
+//    engine.load(QUrl(QStringLiteral("qrc:/qml/qml_main.qml")));
 
-//    if (!createConnection()){
-//        out.logout(QObject::trUtf8("Нет соединения с БД"));
-//        QMessageBox::critical(new QWidget(),QObject::trUtf8("Ошибка"),
-//                             QObject::trUtf8("Нет соединения с БД"),QMessageBox::Ok);
-//        return -1;
-//    }
-//    out.logout(QObject::trUtf8("Соединение с базой установленно"));
 
-//    Updater upd;   //Обновление ПО
-//    upd.setVersion(VERSION);
-//    upd.RunUpdate();
 
-//    BD bd;
-//    QString str = "SELECT version FROM version";
-//    QSqlQuery query;
-//    if (!query.exec(str)){
-//        qDebug()<<"Creat db";
-//        if (!bd.Create()){//Создаём структу
-//            QMessageBox::critical(new QWidget(),QObject::trUtf8("Ошибка"),
-//                                 QObject::trUtf8("Не создана структура БД"),QMessageBox::Ok);
-//            return a.exec();
-//        }
-//    }
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
+    LogReport out;
+    out.setFileName("out.log");
 
-//    query.finish();
-//    out.logout(QObject::trUtf8("Проверка обновлений ..."));
-//    bd.UpdateDataBase();
+    if (!createConnection()){
+        out.logout(QObject::trUtf8("Нет соединения с БД"));
+        QMessageBox::critical(new QWidget(),QObject::trUtf8("Ошибка"),
+                             QObject::trUtf8("Нет соединения с БД"),QMessageBox::Ok);
+        return -1;
+    }
+    out.logout(QObject::trUtf8("Соединение с базой установленно"));
 
-//    out.logout(QObject::trUtf8("Производятся установки"));
-//    str = "PRAGMA foreign_keys = true;";
-//    if (query.exec(str)){
-//        out.logout(QObject::trUtf8("Успешно"));
-//    }
+    Updater upd;   //Обновление ПО
+    upd.setVersion(VERSION);
+    upd.RunUpdate();
 
-//    MainWindow *w = new MainWindow;
-//    QObject::connect(&upd,SIGNAL(s_run_update()),w,SLOT(close()));
-//    w->setVersion(VERSION);
+    BD bd;
+    QString str = "SELECT version FROM version";
+    QSqlQuery query;
+    if (!query.exec(str)){
+        qDebug()<<"Creat db";
+        if (!bd.Create()){//Создаём структу
+            QMessageBox::critical(new QWidget(),QObject::trUtf8("Ошибка"),
+                                 QObject::trUtf8("Не создана структура БД"),QMessageBox::Ok);
+            return app.exec();
+        }
+    }
 
-//    out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
-//    splash.close();
-//    w->show();
-//    splash.finish(w);
+    query.finish();
+    out.logout(QObject::trUtf8("Проверка обновлений ..."));
+    bd.UpdateDataBase();
+
+    out.logout(QObject::trUtf8("Производятся установки"));
+    str = "PRAGMA foreign_keys = true;";
+    if (query.exec(str)){
+        out.logout(QObject::trUtf8("Успешно"));
+    }
+
+    MainWindow *w = new MainWindow;
+    QObject::connect(&upd,SIGNAL(s_run_update()),w,SLOT(close()));
+    w->setVersion(VERSION);
+
+    out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
+    splash.close();
+    w->show();
+    splash.finish(w);
 
 
     return app.exec();

@@ -28,6 +28,17 @@ MainWindow::MainWindow(QWidget *parent) :
     MainWindow::connect(ui->pBtnPrint,SIGNAL(clicked()),this,SLOT(Print_mod()));
     MainWindow::connect(ui->pBtn_ArhivBlank,SIGNAL(clicked()),this,SLOT(sl_ArhivKvit()));
 
+//    ui->horizontalLayout_3->set
+
+
+    ui->frame_2->setLayout(ui->verticalLayout_2);
+//    ui->verticalLayout_2->setParent(ui->horizontalLayout_2);
+    ui->horizontalLayout_2->addWidget(ui->frame_2);
+    this->adjustSize();
+    ui->frame->setHidden(true);
+    ui->frame_2->setHidden(true);
+//    setWindowFlags(Qt::FramelessWindowHint);
+
 }
 
 MainWindow::~MainWindow()
@@ -49,11 +60,19 @@ void MainWindow::Admin_mod()
         AdmWin->setPalette(this->palette());
         connect(AdmWin,SIGNAL(finished(int)),SLOT(sl_AdminWinClose()));
     }
-    AdmWin->show();
+//    AdmWin->show();
+    ui->frame->setHidden(true);
+    ui->frame_2->setHidden(false);
+//
+
+//    ui->horizontalLayout_2->addLayout(ui->verticalLayout_3);
+//    adjustSize();
 }
 
 void MainWindow::Oper_mod()
 {
+    ui->frame->setHidden(false);
+
     if (OperWin == nullptr){
         OperWin = new OperWindow(this);
         OperWin->setPalette(this->palette());
@@ -74,7 +93,10 @@ void MainWindow::Oper_mod()
 
     OperWin->set_parametr(isIdSelectOrganiztion(),isIdSelectHome());
     OperWin->setWindowTitle(ui->pBtnOper->text());
-    OperWin->show();
+//    OperWin->show();
+    ui->horizontalLayout_2->addWidget(ui->frame);
+//    ui->frame_2->setLayout(ui->verticalLayout_2);
+//    adjustSize();
 }
 
 void MainWindow::Print_mod()
@@ -117,12 +139,6 @@ void MainWindow::sl_OpenArhiv()
     connect(VwBlank,SIGNAL(rejected()),SLOT(sl_test()));
     VwBlank->open_blank(CurentDirArhiv);
     VwBlank->open();
-}
-
-void MainWindow::sl_test()
-{
-//    delete VwBlank;
-//    VwBlank = nullptr;
 }
 
 void MainWindow::sl_ArhivKvit()
