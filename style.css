@@ -5,72 +5,117 @@ QMainWindow {
     background-repeat:  no-repeat;
 }
 
-QFrame {
-    background-color: rgba(157,210,152,102) ;
-    border-width: 4px;
+QFrame,QTabWidget {
+    /*background-color: rgba(157,210,152,102) ;
+    border-width: 4px;*/
+    background-color: rgba(157,210,152,0) ;
+    border-width: 0px;
     padding: -1px;
     border-style: solid;
     border-color: #447326;
 }
 
-QPushButton {
+QPushButton, QTabBar::tab {
     background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(150, 150, 150, 255));
-    border-style: solid;
-    border-width: 3px;
+/*    border-style: solid;*/
+    border-width: 4px;
     border-top-color: rgba(200, 200, 200, 150);
     border-right-color: rgba(0, 0, 0, 255);
     border-bottom-color: rgba(50, 50, 50, 255);
     border-left-color: rgba(200, 200, 200, 150);
+    border-radius: 2;
+    border-style: groove;
 
     color: white;
     padding: 5px;
-    min-width: 9ex;
-    min-height: 15ex;
+    min-width: 30ex;
+    min-height: 11ex;
 }
 
-QPushButton:hover {
+QPushButton:hover, QTabBar::tab:hover {
     background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(51, 102, 0, 255));
-    border-style: inset;
     border-width: 3px;
+    border-style: inset;
     border-top-color: rgba(230, 230, 230, 200);
     border-right-color: rgba(51, 102, 0, 255);
     border-bottom-color: rgba(101, 152, 50, 255);
     border-left-color: rgba(230, 230, 230, 200);
 }
 
-QPushButton:pressed {
+QPushButton:pressed,QTabBar::tab:pressed, QTabBar::tab:selected {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(51, 102, 0, 255));
+    border-width: 3px;
     border-style: outset;
     border-bottom-color: rgba(230, 230, 230, 200);
-    border-left-color: rgba(51, 102, 0, 255);
-    border-top-color: rgba(101, 152, 50, 255);
+    border-left-color: rgba(0, 0, 0, 150);
+    border-top-color: rgba(0, 0, 0, 150);
     border-right-color: rgba(230, 230, 230, 200);
 }
 
+QTabWidget::pane {
+    background-color: rgba(157,210,152,102) ;
+    border-width: 4px;
+    /*background-color: rgba(157,210,152,0) ;
+    border-width: 0px;*/
+    padding: -1px;
+    border-style: solid;
+    border-color: #447326;
+}
+
+QLabel{
+    color: white;
+    font-size: 12pt;
+    font-family: Arial;
+}
+
+QLineEdit{
+    min-height: 15ex;
+    background-color: white;
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+}
+
+QTableView {
+    background: white;
+    border-style: solid;
+    border-width: 1px;
+
+    border-top: 1px solid black;
+}
+
+QTableView QHeaderView::section:horizontal {
+    padding: 5px;
+    font-size: 12px;
+    background:  #447326;
+
+    border-style: 2px solid black;
+/*    border-left: 2px solid black;*/
+/*    border-right: 2px solid black;*/
+    border-top: 3px solid black;
+}
+
+QTableView QHeaderView::section::vertical{
+    /*padding: 5px;
+    border-style: none;
+    border-top: 3px solid black;
+    border-bottom: 2px solid black;*/
+/*    border-right: 2px solid black;*/
+}
 
 
-QWebView {
+/*QWebView {
    background-color: white;
-}
+}*/
 
 
-/* Nice Windows-XP-style password character. */
-QLineEdit[echoMode="2"] {
+/*QLineEdit[echoMode="2"] {
     lineedit-password-character: 9679;
-}
+}*/
 
-/* We provide a min-width and min-height for push buttons
-   so that they look elegant regardless of the width of the text. */
-
-
-
-
-/* Increase the padding, so the text is shifted when the button is
-   pressed. */
-
-
-QLabel, QAbstractButton {
+/*QLabel, QAbstractButton {
     font: bold;
-}
+}*/
 
 /* Mark mandatory fields with a brownish color. */
 /*.mandatory {
@@ -78,41 +123,41 @@ QLabel, QAbstractButton {
 }*/
 
 /* Bold text on status bar looks awful. */
-QStatusBar QLabel {
+/*QStatusBar QLabel {
    font: normal;
-}
+}*/
 
-QStatusBar::item {
+/*QStatusBar::item {
     border-width: 1;
     border-color: darkkhaki;
     border-style: solid;
     border-radius: 2;
-}
+}*/
 
-QComboBox, QLineEdit, QSpinBox, QTextEdit, QListView {
+/*QComboBox, QLineEdit, QSpinBox, QTextEdit, QListView {
     background-color: cornsilk;
     selection-color: #0a214c;
     selection-background-color: #C19A6B;
-}
+}*/
 
-QListView {
+/*QListView {
     show-decoration-selected: 1;
-}
+}*/
 
-QListView::item:hover {
+/*QListView::item:hover {
     background-color: wheat;
-}
+}*/
 
 /* We reserve 1 pixel space in padding. When we get the focus,
    we kill the padding and enlarge the border. This makes the items
    glow. */
-QLineEdit{
+/*QLineEdit{
     border-width: 2px;
     padding: 1px;
     border-style: solid;
     border-color: darkkhaki;
     border-radius: 5px;
-}
+}*/
 /*QLineEdit:disabled{
     background-color: #ffe1c2;
 
@@ -121,40 +166,38 @@ QLineEdit{
 
 
 /* As mentioned above, eliminate the padding and increase the border. */
-QLineEdit:focus, QFrame:focus {
+/*QLineEdit:focus, QFrame:focus {
     border-width: 3px;
     padding: 0px;
-}
+}*/
 
 /* A QLabel is a QFrame ... */
-QLabel {
+/*QLabel {
     border: none;
     padding: 0;
     background: none;
-}
+}*/
 
 /* A QToolTip is a QLabel ... */
-QToolTip {
+/*QToolTip {
     border: 2px solid darkkhaki;
     padding: 5px;
     border-radius: 3px;
     opacity: 200;
-}
+}*/
 
 /* Nice to have the background color change when hovered. */
-QRadioButton:hover, QCheckBox:hover {
+/*QRadioButton:hover, QCheckBox:hover {
     background-color: wheat;
-}
+}*/
 
 /* Force the dialog's buttons to follow the Windows guidelines. */
-QDialogButtonBox {
+/*QDialogButtonBox {
     button-layout: 0;
-}
+}*/
 
 
-QTableView QHeaderView::section:horizontal {
-/* for each section draw ONLY left & right lines */
-/*    height: 30px;*/
+/*QTableView QHeaderView::section:horizontal {
     padding: 5px;
     border-style: none;
 
@@ -162,26 +205,22 @@ QTableView QHeaderView::section:horizontal {
     border-radius: 2;
     border-right: 1px solid darkkhaki;
     border-width: 1px;
-
-/*    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f4f4f6, stop:1 #ceced6);*/
-}
-QTableView QHeaderView::section::vertical{
+}*/
+/*QTableView QHeaderView::section::vertical{
     padding: 5px;
     border-style: none;
-/*    border-width: 2px;*/
     border-radius: 2;
-/*    min-width: 3ex;*/
     border-top: 1px solid darkkhaki;
     border-bottom: 1px solid darkkhaki;
 
-}
+}*/
 
-QTableViaew {
+/*QTableViaew {
     border-radius: 20;
     border-width: 5px;
-}
+}*/
 
-QComboBox, QDateEdit {
+/*QComboBox, QDateEdit {
     background-color: wheat;
     border-width: 2px;
     border-color: darkkhaki;
@@ -190,9 +229,4 @@ QComboBox, QDateEdit {
     padding: 3px;
     min-width: 9ex;
     min-height: 2.5ex;
-/*    font: bold;*/
-}
-
-QCalendarWidget{
-
-}
+}*/
