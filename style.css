@@ -1,3 +1,6 @@
+QObject{
+    font-family: Calibri;
+}
 QMainWindow {
     background-image: url(":/theme/fon.png");
     background-position: bottom left ;
@@ -6,8 +9,6 @@ QMainWindow {
 }
 
 QFrame,QTabWidget {
-    /*background-color: rgba(157,210,152,102) ;
-    border-width: 4px;*/
     background-color: rgba(157,210,152,0) ;
     border-width: 0px;
     padding: -1px;
@@ -15,9 +16,10 @@ QFrame,QTabWidget {
     border-color: #447326;
 }
 
-QPushButton, QTabBar::tab {
+QPushButton, QToolButton, QTabBar::tab {
+    font-size: 12pt;
+
     background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(150, 150, 150, 255));
-/*    border-style: solid;*/
     border-width: 4px;
     border-top-color: rgba(200, 200, 200, 150);
     border-right-color: rgba(0, 0, 0, 255);
@@ -27,12 +29,12 @@ QPushButton, QTabBar::tab {
     border-style: groove;
 
     color: white;
-    padding: 5px;
-    min-width: 30ex;
-    min-height: 11ex;
+    padding: 2px;
+    min-width: 25ex;
+    min-height: 9ex;
 }
 
-QPushButton:hover, QTabBar::tab:hover {
+QPushButton:hover, QToolButton:hover, QTabBar::tab:hover {
     background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(51, 102, 0, 255));
     border-width: 3px;
     border-style: inset;
@@ -42,7 +44,7 @@ QPushButton:hover, QTabBar::tab:hover {
     border-left-color: rgba(230, 230, 230, 200);
 }
 
-QPushButton:pressed,QTabBar::tab:pressed, QTabBar::tab:selected {
+QPushButton:pressed, QToolButton:pressed, QTabBar::tab:pressed, QTabBar::tab:selected {
     background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(51, 102, 0, 255));
     border-width: 3px;
     border-style: outset;
@@ -52,56 +54,82 @@ QPushButton:pressed,QTabBar::tab:pressed, QTabBar::tab:selected {
     border-right-color: rgba(230, 230, 230, 200);
 }
 
+QToolButton{
+    min-width: 5ex;
+    min-height: 5ex;
+}
+
 QTabWidget::pane {
     background-color: rgba(157,210,152,102) ;
     border-width: 4px;
-    /*background-color: rgba(157,210,152,0) ;
-    border-width: 0px;*/
     padding: -1px;
     border-style: solid;
     border-color: #447326;
 }
 
 QLabel{
-    color: white;
+    min-height: 9ex;
+    color: rgba(255,255,255,255) ;
     font-size: 12pt;
-    font-family: Arial;
+    background-color: qradialgradient(cx: 0, cy: 0.5, fx: 0.2, fy: 0.5, radius: 1,
+                                        stop: 0 rgba(51, 102, 0,255), stop: 1 rgba(157,210,152,0));
 }
 
 QLineEdit{
-    min-height: 15ex;
+    min-height: 9ex;
     background-color: white;
     border-width: 2px;
     border-color: black;
     border-style: solid;
+    font-size: 16px;
+}
+
+
+
+QTableView QHeaderView::section {
+    padding: 5px;
+    font-size: 14px;
+    min-height: 5ex;
+    min-width: 45ex;
+
+    background:  rgba(157,210,152,255);
+/*    margin-left: 50px;*/
 }
 
 QTableView {
     background: white;
+    font-size: 14px;
+    gridline-color: black;
+    border-color: black;
     border-style: solid;
-    border-width: 1px;
+    border-width: 2px;
 
-    border-top: 1px solid black;
 }
 
-QTableView QHeaderView::section:horizontal {
+/*QTableView QHeaderView::section:horizontal {
     padding: 5px;
-    font-size: 12px;
-    background:  #447326;
-
-    border-style: 2px solid black;
-/*    border-left: 2px solid black;*/
-/*    border-right: 2px solid black;*/
-    border-top: 3px solid black;
-}
-
-QTableView QHeaderView::section::vertical{
-    /*padding: 5px;
     border-style: none;
-    border-top: 3px solid black;
-    border-bottom: 2px solid black;*/
-/*    border-right: 2px solid black;*/
+
+    border-left: 1px solid darkkhaki;
+    border-radius: 2;
+    border-right: 1px solid darkkhaki;
+    border-width: 1px;
 }
+QTableView QHeaderView::section::vertical{
+    padding: 5px;
+    border-style: none;
+    border-radius: 2;
+    border-top: 1px solid darkkhaki;
+    border-bottom: 1px solid darkkhaki;
+
+}
+
+QTableViaew {
+    border-radius: 20;
+    border-width: 5px;
+}*/
+
+
 
 
 /*QWebView {

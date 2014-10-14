@@ -578,12 +578,13 @@ void MainWindow::Refresh_Organization()
     Organization organization;
     delete ui->tblView_Organization->model();
     ui->tblView_Organization->setModel(organization.ModelAllOrganization());
-    ui->tblView_Organization->horizontalHeader()->setStretchLastSection(false);
-    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Interactive);
-    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
-    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(3,QHeaderView::ResizeToContents);
+//    ui->tblView_Organization->horizontalHeader()->setStretchLastSection(true);
+//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
+//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Interactive);
+//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+//    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(3,QHeaderView::ResizeToContents);
 }
 
 void MainWindow::Refresh_Home()
