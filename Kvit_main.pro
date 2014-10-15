@@ -17,11 +17,10 @@ greaterThan(QT_MAJOR_VERSION, 4){
 }
 CONFIG += c++11
 # Input
-HEADERS += adminwindow.h \
+HEADERS += \
            bd.h \
            mainwindow.h \
            message.h \
-           operwindow.h \
            parser_blank.h \
            sqlqueryeditmodel.h \
     myitemdelegate.h \
@@ -43,17 +42,16 @@ HEADERS += adminwindow.h \
     editapartmentmodel.h \
     modelusliga.h \
     dialog_with_lineedit.h
-FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
+FORMS += mainwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
     editsetting.ui \
     selecter_with_combobox.ui \
     dialog_with_lineedit.ui
-SOURCES += adminwindow.cpp \
+SOURCES += \
            bd.cpp \
            main.cpp \
            mainwindow.cpp \
-           operwindow.cpp \
            parser_blank.cpp \
            sqlqueryeditmodel.cpp \
     myitemdelegate.cpp \

@@ -1,7 +1,7 @@
 QObject{
     font-family: Calibri;
 }
-QMainWindow {
+QMainWindow, QDialog {
     background-image: url(":/theme/fon.png");
     background-position: bottom left ;
     background-color: black;
@@ -90,10 +90,8 @@ QTableView QHeaderView::section {
     padding: 5px;
     font-size: 14px;
     min-height: 5ex;
-    min-width: 45ex;
-
+    min-width: 20ex;
     background:  rgba(157,210,152,255);
-/*    margin-left: 50px;*/
 }
 
 QTableView {
@@ -103,7 +101,18 @@ QTableView {
     border-color: black;
     border-style: solid;
     border-width: 2px;
+}
 
+QComboBox, QLineEdit, QSpinBox, QTextEdit, QListView {
+    background-color: rgba(157,210,152,255);
+    selection-background-color: rgba(51, 102, 0, 255);
+    font-size: 14px;
+    min-height: 9ex;
+}
+
+QGroupBox{
+    color:  rgba(51, 102, 0, 255);
+    font-size: 12px;
 }
 
 /*QTableView QHeaderView::section:horizontal {

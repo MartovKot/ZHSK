@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1405</width>
-    <height>1253</height>
+    <height>1608</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -190,7 +190,7 @@
       <x>400</x>
       <y>20</y>
       <width>751</width>
-      <height>511</height>
+      <height>911</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -211,7 +211,7 @@
        <x>30</x>
        <y>0</y>
        <width>701</width>
-       <height>491</height>
+       <height>721</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="mainLayObr">
@@ -229,14 +229,14 @@
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_9">
-        <property name="leftMargin">
-         <number>5</number>
-        </property>
-        <property name="rightMargin">
-         <number>5</number>
-        </property>
         <item>
          <widget class="QLabel" name="lbl_organization">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Организация</string>
           </property>
@@ -244,6 +244,12 @@
         </item>
         <item>
          <widget class="QLabel" name="lbl_home">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>ДОМ</string>
           </property>
@@ -260,14 +266,14 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
-        <property name="leftMargin">
-         <number>5</number>
-        </property>
-        <property name="rightMargin">
-         <number>5</number>
-        </property>
         <item>
          <widget class="QLabel" name="label_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Расчётный месяц</string>
           </property>
@@ -307,14 +313,14 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
-        <property name="leftMargin">
-         <number>10</number>
-        </property>
-        <property name="rightMargin">
-         <number>10</number>
-        </property>
         <item>
          <widget class="QLabel" name="label_5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Номер квартиры</string>
           </property>
@@ -534,8 +540,14 @@
         </item>
         <item>
          <widget class="QLabel" name="lbl_Payer">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string/>
+           <string>ФИО</string>
           </property>
          </widget>
         </item>
@@ -581,6 +593,12 @@
           </property>
           <item>
            <widget class="QGroupBox" name="groupBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -602,10 +620,10 @@
             <widget class="QWidget" name="layoutWidget">
              <property name="geometry">
               <rect>
-               <x>20</x>
+               <x>10</x>
                <y>20</y>
-               <width>611</width>
-               <height>190</height>
+               <width>621</width>
+               <height>271</height>
               </rect>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_10">
@@ -820,22 +838,6 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Minimum</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>5</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
                  <widget class="QPushButton" name="pBtn_DeletePayment">
                   <property name="text">
                    <string>Удалить оплату</string>
@@ -926,6 +928,12 @@
           </property>
           <item>
            <widget class="QGroupBox" name="groupBox_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -1050,8 +1058,8 @@
    <widget class="QFrame" name="frame_admin">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>560</y>
+      <x>50</x>
+      <y>950</y>
       <width>1151</width>
       <height>601</height>
      </rect>
@@ -1087,7 +1095,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>6</number>
         </property>
         <property name="tabsClosable">
          <bool>false</bool>
@@ -1359,7 +1367,7 @@
             <number>20</number>
            </property>
            <property name="topMargin">
-            <number>20</number>
+            <number>10</number>
            </property>
            <property name="rightMargin">
             <number>20</number>
@@ -1480,18 +1488,24 @@
             <height>369</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_11">
+          <layout class="QVBoxLayout" name="vLay_apartment">
+           <property name="spacing">
+            <number>10</number>
+           </property>
            <property name="sizeConstraint">
             <enum>QLayout::SetMaximumSize</enum>
            </property>
            <property name="leftMargin">
-            <number>5</number>
+            <number>20</number>
            </property>
            <property name="topMargin">
             <number>10</number>
            </property>
            <property name="rightMargin">
-            <number>5</number>
+            <number>20</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
            </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_24">
@@ -1691,15 +1705,15 @@
             <height>401</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_12">
+          <layout class="QVBoxLayout" name="vLay_usluga">
            <property name="leftMargin">
-            <number>5</number>
+            <number>20</number>
            </property>
            <property name="topMargin">
-            <number>5</number>
+            <number>10</number>
            </property>
            <property name="rightMargin">
-            <number>5</number>
+            <number>20</number>
            </property>
            <property name="bottomMargin">
             <number>10</number>
@@ -1715,15 +1729,6 @@
                 <layout class="QHBoxLayout" name="horizontalLayout_16">
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_17">
-                   <property name="leftMargin">
-                    <number>5</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>5</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>5</number>
-                   </property>
                    <item>
                     <widget class="QLabel" name="label_24">
                      <property name="text">
@@ -1830,41 +1835,21 @@
             <height>271</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_19">
-           <item>
-            <spacer name="verticalSpacer_7">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>5</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
+          <layout class="QVBoxLayout" name="vLay_tarif">
+           <property name="leftMargin">
+            <number>20</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>20</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_18">
-             <item>
-              <spacer name="horizontalSpacer_19">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
              <item>
               <widget class="QLabel" name="label_21">
                <property name="text">
@@ -1906,42 +1891,10 @@
                </property>
               </widget>
              </item>
-             <item>
-              <spacer name="horizontalSpacer_20">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
             </layout>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_20">
-             <item>
-              <spacer name="horizontalSpacer_37">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
              <item>
               <widget class="QTableView" name="tblV_on_Tarif">
                <property name="sizePolicy">
@@ -2025,39 +1978,7 @@
                </item>
               </layout>
              </item>
-             <item>
-              <spacer name="horizontalSpacer_38">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
             </layout>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>15</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>
@@ -2077,32 +1998,19 @@
           </property>
           <layout class="QVBoxLayout" name="mainLay_Pens">
            <property name="leftMargin">
-            <number>5</number>
+            <number>20</number>
            </property>
            <property name="topMargin">
-            <number>5</number>
+            <number>10</number>
            </property>
            <property name="rightMargin">
-            <number>5</number>
+            <number>20</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
            </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_21">
-             <item>
-              <spacer name="horizontalSpacer_24">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
              <item>
               <widget class="QLabel" name="label_28">
                <property name="text">
@@ -2113,42 +2021,10 @@
              <item>
               <widget class="QComboBox" name="cmBx_Org_on_Pens"/>
              </item>
-             <item>
-              <spacer name="horizontalSpacer_25">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
             </layout>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_22">
-             <item>
-              <spacer name="horizontalSpacer_22">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
              <item>
               <widget class="QLabel" name="label_27">
                <property name="text">
@@ -2158,22 +2034,6 @@
              </item>
              <item>
               <widget class="QComboBox" name="cmBx_Home_on_Pens"/>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_23">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
              </item>
             </layout>
            </item>
@@ -2259,13 +2119,13 @@
           </property>
           <layout class="QVBoxLayout" name="vLay_Settings">
            <property name="leftMargin">
-            <number>5</number>
+            <number>20</number>
            </property>
            <property name="topMargin">
-            <number>5</number>
+            <number>10</number>
            </property>
            <property name="rightMargin">
-            <number>5</number>
+            <number>20</number>
            </property>
            <property name="bottomMargin">
             <number>10</number>
