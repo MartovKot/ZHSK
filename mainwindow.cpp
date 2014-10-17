@@ -151,6 +151,7 @@ void MainWindow::Oper_mod()
 {
     ui->frame_admin->setHidden(true);
     ui->frame_obrabotka->setHidden(false);
+    this->adjustSize();
 }
 
 void MainWindow::Print_mod()
@@ -1369,6 +1370,11 @@ void MainWindow::Refresh_lbl_Payer()
 {
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
-
     ui->lbl_Payer->setText(apartment.is_FIO_payer());
+}
+
+void MainWindow::on_tBtn_org_pressed()
+{
+    QComboBox *cmBx_test = new QComboBox(this);
+    cmBx_test->show();
 }

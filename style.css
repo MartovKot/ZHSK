@@ -8,13 +8,23 @@ QMainWindow, QDialog {
     background-repeat:  no-repeat;
 }
 
-QFrame,QTabWidget {
-    background-color: rgba(157,210,152,0) ;
+QFrame {
+/*    background-color: rgba(157,210,152,102) ;*/
     border-width: 0px;
     padding: -1px;
     border-style: solid;
     border-color: #447326;
 }
+
+QTabWidget {
+/*    background-color: rgba(157,210,152,102) ;*/
+/*    background-color: rgba(0,0,0,0);*/
+    border-width: 3px;
+    padding: -1px;
+    border-style: solid;
+    border-color: #447326;
+}
+
 
 QPushButton, QToolButton, QTabBar::tab {
     font-size: 12pt;
@@ -33,6 +43,12 @@ QPushButton, QToolButton, QTabBar::tab {
     min-width: 25ex;
     min-height: 9ex;
 }
+
+
+QToolButton[inputMethodHints="1"]{
+    background-color: white;
+}
+
 
 QPushButton:hover, QToolButton:hover, QTabBar::tab:hover {
     background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(51, 102, 0, 255));
@@ -103,7 +119,7 @@ QTableView {
     border-width: 2px;
 }
 
-QComboBox, QLineEdit, QSpinBox, QTextEdit, QListView {
+QComboBox, QLineEdit, QSpinBox, QTextEdit, QListView, QDateEdit {
     background-color: rgba(157,210,152,255);
     selection-background-color: rgba(51, 102, 0, 255);
     font-size: 14px;
@@ -113,6 +129,33 @@ QComboBox, QLineEdit, QSpinBox, QTextEdit, QListView {
 QGroupBox{
     color:  rgba(51, 102, 0, 255);
     font-size: 12px;
+}
+
+
+/* Customize arrows. */
+
+*::down-arrow, *::menu-indicator {
+    image: url(:/images/down_arrow.png);
+    color:  rgba(0, 0, 0, 255);
+    width: 7px;
+    height: 7px;
+}
+
+*::down-arrow:disabled, *::down-arrow:off {
+   image: url(:/images/down_arrow_disabled.png);
+   color:  rgba(0, 0, 0, 255);
+}
+
+*::up-arrow {
+    image: url(:/images/up_arrow.png);
+    color:  rgba(0, 0, 0, 255);
+    width: 7px;
+    height: 7px;
+}
+
+*::up-arrow:disabled, *::up-arrow:off {
+   image: url(:/images/up_arrow_disabled.png);
+   color:  rgba(0, 0, 0, 255);
 }
 
 /*QTableView QHeaderView::section:horizontal {

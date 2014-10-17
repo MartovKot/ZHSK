@@ -147,6 +147,8 @@ private slots:
 
     void on_pBtn_NewCounterNext_clicked();
 
+    void on_tBtn_org_pressed();
+
 protected:
     void keyPressEvent(QKeyEvent *event);
 };
