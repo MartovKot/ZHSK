@@ -9,7 +9,6 @@ Selecter_with_ComboBox::Selecter_with_ComboBox(QWidget *parent) :
     this->adjustSize();
     setLayout(ui->verticalLayout);
     connect(ui->comboBox,SIGNAL(activated(QString)),SIGNAL(CurrentValue(QString)));
-//    connect(ui->comboBox,SIGNAL(activated(int)),SLOT(close()));
 }
 
 Selecter_with_ComboBox::~Selecter_with_ComboBox()
@@ -27,6 +26,7 @@ void Selecter_with_ComboBox::setContentsComboBox(QStringList strL)
 
 void Selecter_with_ComboBox::setContentsComboBox(QSqlQueryModel* model)
 {
+    ui->comboBox->clear();
     ui->comboBox->addItem(trUtf8("Сделайте выбор"));
 
     for (int i=0;i<model->rowCount();i++){

@@ -4,8 +4,7 @@
 QT       += webkit\
             core gui\
             sql\
-            network\
-            qml quick widgets
+            network
 
 TEMPLATE = app
 TARGET = kvit
@@ -47,7 +46,8 @@ FORMS += mainwindow.ui \
     authenticationdialog.ui \
     editsetting.ui \
     selecter_with_combobox.ui \
-    dialog_with_lineedit.ui
+    dialog_with_lineedit.ui \
+    dialogt.ui
 SOURCES += \
            bd.cpp \
            main.cpp \

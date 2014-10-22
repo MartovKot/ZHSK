@@ -40,6 +40,16 @@ QSqlQueryModel* Organization::ModelAllOrganization()
     return model;
 }
 
+QSqlQueryModel* Organization::ModelAllOrganizationOnlyName()
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery(QSqlQuery("SELECT name FROM organiz"));
+
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Организация"));
+
+    return model;
+}
+
 QString Organization::getBank()
 {
     return m_bank + " " + m_sett_account;

@@ -6,7 +6,7 @@
 #include <QDebug>
 
 namespace Ui {
-class Selecter_with_ComboBox;
+    class Selecter_with_ComboBox;
 }
 
 class Selecter_with_ComboBox : public QDialog

@@ -59,3 +59,12 @@ QSqlQueryModel* Home::ModelAllHome()
     return model;
 }
 
+QSqlQueryModel* Home::ModelAllHomeOnlyName()
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery(QSqlQuery("SELECT name  FROM homes"));
+
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Адрес"));
+
+    return model;
+}

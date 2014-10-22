@@ -82,7 +82,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lbl_OrgSelect->setText("");
     ui->tab_Appartament->setLayout(ui->vLay_apartment);                       //Вкладка квартиры
     ui->lEd_NumApart_onApart->setValidator(only_number);
-
     Mode("app_deff");
     //------------------------------------
 
@@ -633,6 +632,19 @@ void MainWindow::Refresh_cmBx_NumApp_onApartament()
     Mode("app_def");
 }
 
+void MainWindow::sl_Refresh_cmBx_NumApartanent()
+{
+    Organization organization;
+    organization.setName(ui->lbl_organization->text());
+    Home home;
+    home.setName(ui->lbl_home->text());
+
+    if(home.getId() != -1 && organization.getId() != -1){
+        Apartment apartment;
+        ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(home.getId(),organization.getId()));
+    }
+}
+
 void MainWindow::Refresh(int num_tab)
 {
     switch (num_tab) {
@@ -1136,22 +1148,22 @@ void MainWindow::Refresh_tblVCount()
 }
 //-----------------------------------------------------------------------------------------------------------
 
-void MainWindow::set_parametr(int id_org, int id_home)
-{
-    Organization organization;
-    organization.setId(id_org);
-    Home home;
-    home.setId(id_home);
+//void MainWindow::set_parametr(int id_org, int id_home)
+//{
+//    Organization organization;
+//    organization.setId(id_org);
+//    Home home;
+//    home.setId(id_home);
 
-    HomeID = id_home;
-    OrganizationID = id_org;
+//    HomeID = id_home;
+//    OrganizationID = id_org;
 
-    ui->lbl_home->setText("<font color=blue>"+home.getName()+"</font>");
-    ui->lbl_organization->setText(organization.getName());
-    Apartment apartment;
-    ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(id_home,id_org));
+//    ui->lbl_home->setText("<font color=blue>"+home.getName()+"</font>");
+//    ui->lbl_organization->setText(organization.getName());
+//    Apartment apartment;
+//    ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(id_home,id_org));
 
-}
+//}
 
 void MainWindow::sl_EditPokazanie()
 {
@@ -1373,8 +1385,26 @@ void MainWindow::Refresh_lbl_Payer()
     ui->lbl_Payer->setText(apartment.is_FIO_payer());
 }
 
-void MainWindow::on_tBtn_org_pressed()
+
+void MainWindow::on_tBtn_org_clicked()
 {
-    QComboBox *cmBx_test = new QComboBox(this);
-    cmBx_test->show();
+    static Selecter_with_ComboBox *dlg_swc = new Selecter_with_ComboBox(this);
+    connect(dlg_swc,SIGNAL(CurrentValue(QString)),ui->lbl_organization,SLOT(setText(QString)));
+    connect(dlg_swc,SIGNAL(CurrentValue(QString)),dlg_swc,SLOT(close()));
+    connect(dlg_swc,SIGNAL(CurrentValue(QString)),SLOT(sl_Refresh_cmBx_NumApartanent()));
+    Organization organization;
+    dlg_swc->setContentsComboBox(organization.ModelAllOrganizationOnlyName());
+    dlg_swc->show();
+}
+
+void MainWindow::on_tBtn_Home_clicked()
+{
+    static Selecter_with_ComboBox *dlg_home = new Selecter_with_ComboBox(this);
+
+    connect(dlg_home,SIGNAL(CurrentValue(QString)),ui->lbl_home,SLOT(setText(QString)));
+    connect(dlg_home,SIGNAL(CurrentValue(QString)),dlg_home,SLOT(close()));
+    connect(dlg_home,SIGNAL(CurrentValue(QString)),SLOT(sl_Refresh_cmBx_NumApartanent()));
+    Home home;
+    dlg_home->setContentsComboBox(home.ModelAllHomeOnlyName());
+    dlg_home->show();
 }

@@ -1,13 +1,6 @@
 #include <QApplication>
-//#include <QMessageBox>
 #include <QSplashScreen>
-//#include <QTextCodec>
-//#include <QtNetwork>
-
-#include <QtQml>
-
-#include <QQmlApplicationEngine>
-
+#include <QTextCodec>
 
 #include "mainwindow.h"
 #include "bd.h"
@@ -39,13 +32,6 @@ int main(int argc, char *argv[])
     QPixmap pixmap(":/ico/splash.png");
     QSplashScreen splash(pixmap);
     splash.show();
-
-
-
-//    QQmlApplicationEngine engine;
-//    engine.load(QUrl(QStringLiteral("qrc:/qml/qml_main.qml")));
-
-
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("Utf-8"));
     LogReport out;
@@ -85,14 +71,14 @@ int main(int argc, char *argv[])
         out.logout(QObject::trUtf8("Успешно"));
     }
 
-    MainWindow *w = new MainWindow;
-    QObject::connect(&upd,SIGNAL(s_run_update()),w,SLOT(close()));
-    w->setVersion(VERSION);
+    MainWindow w;
+    QObject::connect(&upd,SIGNAL(s_run_update()),&w,SLOT(close()));
+    w.setVersion(VERSION);
 
     out.logout(QObject::trUtf8("!!!! Начинаем работать !!!!!"));
     splash.close();
-    w->show();
-    splash.finish(w);
+    w.show();
+    splash.finish(&w);
 
 
     return app.exec();

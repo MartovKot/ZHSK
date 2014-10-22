@@ -49,7 +49,4 @@
         <file>ico/pdf.ico</file>
         <file>theme/fon.png</file>
     </qresource>
-    <qresource prefix="/qml">
-        <file>qml_main.qml</file>
-    </qresource>
 </RCC>

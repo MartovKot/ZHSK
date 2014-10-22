@@ -14,6 +14,7 @@ public:
 
     bool New(QString name, QString bank, QString sett_account, QString inn);
     QSqlQueryModel* ModelAllOrganization();
+    QSqlQueryModel* ModelAllOrganizationOnlyName();
     QString getName();
     QString getBank();
     QString getINN();

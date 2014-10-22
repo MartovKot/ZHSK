@@ -38,8 +38,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void setVersion(QString ver);
-    void set_parametr(int id_org, int id_home);
-
 
 private:
     Ui::MainWindow *ui;
@@ -73,7 +71,6 @@ private:
     Apartment *apartment_for_apartment;
     void Refresh_tblVPayment(int ApartamentID);
     TableViewPokazanie *tbl;
-//    QDialog *dlg;
     int HomeID;
     int OrganizationID;
     int p_id_pokazanie;
@@ -91,7 +88,6 @@ private slots:
     void Refresh_Settings();
     void sl_AddOrg();                                  // добавление организации
     void AddHome();                                    // добавление дома
-//    void AddUsluga_of_Apartament();                    // Добавить услуги в квартиру
     void sl_AddUsluga(const QString &usluga, const int &id_type_usluga);
     void Refresh(int);
     void Refresh_cmbNumApp_onUslugi();
@@ -101,14 +97,12 @@ private slots:
     void TarifEdit();
     void SaveTarif();
     void FillTarif();
-//    void UslView();
     void sl_OrgEdit(QModelIndex model);
     void sl_HomeEdit(QModelIndex model);
     void sl_SaveOrg();
     void sl_SaveHome();
     void sl_DeleteOrg();
     void sl_DeleteHome();
-//    void sl_DeleteUsluga();
     void sl_CancelOrg();
     void sl_CancelHome();
     void on_pBtn_addPens_clicked();
@@ -144,10 +138,13 @@ private slots:
     void sl_ApartNext();
     void sl_ApartPrevious();
     void sl_NewCounter();               //вызывается когда происходит смена счётчика
+    void sl_Refresh_cmBx_NumApartanent();
 
     void on_pBtn_NewCounterNext_clicked();
 
-    void on_tBtn_org_pressed();
+    void on_tBtn_org_clicked();
+
+    void on_tBtn_Home_clicked();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
