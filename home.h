@@ -15,7 +15,7 @@ public:
     int getId();
     void deleteFromDB();
     QSqlQueryModel* ModelAllHome();
-    QSqlQueryModel* ModelAllHomeOnlyName();
+    static QSqlQueryModel* ModelAllHomeOnlyName();
 private:
     QString m_name;
     int m_id;

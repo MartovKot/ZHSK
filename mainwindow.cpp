@@ -15,6 +15,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->statusBar->showMessage(db.is_DatabaseVersoin());
 
+    ////////////////////////////////////////////////////
+    dlgSelCmBx_org = new Selecter_with_ComboBox(this);
+    connect(dlgSelCmBx_org,SIGNAL(CurrentValue(QString)),ui->lbl_organization,SLOT(setText(QString)));
+    connect(dlgSelCmBx_org,SIGNAL(CurrentValue(QString)),dlgSelCmBx_org,SLOT(close()));
+    connect(dlgSelCmBx_org,SIGNAL(CurrentValue(QString)),SLOT(sl_Refresh_cmBx_NumApartanent()));
+    dlgSelCmBx_org->setContentsComboBox(Organization::ModelAllOrganizationOnlyName());
+
+    dlgSelCmBx_home = new Selecter_with_ComboBox(this);
+
+    connect(dlgSelCmBx_home,SIGNAL(CurrentValue(QString)),ui->lbl_home,SLOT(setText(QString)));
+    connect(dlgSelCmBx_home,SIGNAL(CurrentValue(QString)),dlgSelCmBx_home,SLOT(close()));
+    connect(dlgSelCmBx_home,SIGNAL(CurrentValue(QString)),SLOT(sl_Refresh_cmBx_NumApartanent()));
+    dlgSelCmBx_home->setContentsComboBox(Home::ModelAllHomeOnlyName());
+    /////////////////////////////////////////////////////
+
+
+
     QFile styleFile(":/style.css");
     if( styleFile.open(QFile::ReadOnly) ) {
         QString styleSheet = QLatin1String(styleFile.readAll());
@@ -30,19 +47,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->tabWidget,SIGNAL(tabBarClicked(int)),SLOT(Refresh(int)));
     connect(this,SIGNAL(destroyed(QObject*)),this,SLOT(deleteLater()));
     connect(ui->pBtn_AddPayment,SIGNAL(clicked()),SLOT(sl_addPayment()));
-    connect(ui->pBtn_AddPayment,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
     connect(ui->pBtn_EditPokazanie,SIGNAL(clicked()),SLOT(sl_EditPokazanie()));
-    connect(ui->pBtn_EditPokazanie,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
     connect(ui->pBtn_DeletePayment,SIGNAL(clicked()),SLOT(sl_DeletePayment()));
-    connect(ui->pBtn_DeletePayment,SIGNAL(clicked()),SLOT(sl_RefreshLabel()));
     connect(ui->tBtn_Calendar,SIGNAL(clicked()),SLOT(sl_Calendar()));
     connect(ui->tBtn_ApartLeftEnd,SIGNAL(clicked()),SLOT(sl_ApartFirst()));
     connect(ui->tBtn_ApartLeft,SIGNAL(clicked()),SLOT(sl_ApartPrevious()));
     connect(ui->tBtn_ApartRight,SIGNAL(clicked()),SLOT(sl_ApartNext()));
     connect(ui->tBtn_ApartRightEnd,SIGNAL(clicked()),SLOT(sl_ApartLast()));
-    connect(ui->dEd_Count,SIGNAL(editingFinished()),SLOT(sl_RefreshFull()));
-    connect(ui->dEd_Count,SIGNAL(customContextMenuRequested(QPoint)),SLOT(sl_RefreshFull()));
-    connect(ui->cmBx_NumApartanent,SIGNAL(activated(int)),SLOT(sl_RefreshFull()));
     connect(ui->pBtn_NewCounter,SIGNAL(clicked()),SLOT(sl_NewCounter()));
 
 
@@ -137,7 +148,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete apartment_for_apartment;
 }
 
 void MainWindow::Admin_mod()
@@ -1090,22 +1100,25 @@ void MainWindow::on_pBtnDeleteUsluga_clicked()
 
 void MainWindow::Refresh_tblVPayment(int ApartamenID)
 {
-    Table_Payment t_payment;
-    ui->tblV_Payment->setModel(t_payment.ModelPayment(ApartamenID));
+    delete ui->tblV_Payment->model();
+    ui->tblV_Payment->setModel(Table_Payment::ModelPayment(ApartamenID));
     ui->tblV_Payment->horizontalHeader()->setStretchLastSection(false);
-    ui->tblV_Payment->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tblV_Payment->horizontalHeader()->setSectionResizeMode( 3, QHeaderView::Interactive);
+    ui->tblV_Payment->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 void MainWindow::sl_addPayment()
 {
-    QString Payment;
+    QString payment;
     int day, month,year;
 
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+    Home home;
+    home.setName(ui->lbl_home->text());
+    Organization organization;
+    organization.setName(ui->lbl_organization->text());
+    Apartment apartment(home.getId(), organization.getId(), ui->cmBx_NumApartanent->currentText().toInt());
 
-    Payment = ui->lEd_Sum->text();
-    if (Payment == ""){
+    payment = ui->lEd_Sum->text();
+    if (payment == ""){
         return;
     }
     day = ui->dEd_Payment->date().day();
@@ -1124,20 +1137,23 @@ void MainWindow::sl_addPayment()
         return;
     }
     Table_Payment t_payment;
-    t_payment.add_line(QString::number(apartment.getId()),QString::number(year),QString::number(month),QString::number(day),Payment);
+    t_payment.add_line(QString::number(apartment.getId()),
+                       QString::number(year),
+                       QString::number(month),
+                       QString::number(day),payment);
 
     Refresh_tblVPayment(apartment.getId());
+    Refresh_LabelPayAndDebt(apartment.getId());
+
 }
 
-//------------------------------------------------------------------------------------------------------------
-void MainWindow::Refresh_tblVCount()
+void MainWindow::Refresh_tblVCount(int id_apartment)
 {
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
-
-    ui->tblV_Count->setModel(db.ModelPokazanie(apartment.getId(),
+    qDebug() << id_apartment;
+    ui->tblV_Count->setModel(db.ModelPokazanie(id_apartment,
                                  ui->dEd_Count->date().month(),
                                  ui->dEd_Count->date().year()));
-    db.new_pokazanie(apartment.getId(),                     //новое показание на след месяц
+    db.new_pokazanie(id_apartment,                     //новое показание на след месяц
                      ui->dEd_Count->date().month(),
                      ui->dEd_Count->date().year());
     ui->tblV_Count->hideColumn(0);
@@ -1146,24 +1162,6 @@ void MainWindow::Refresh_tblVCount()
     ui->tblV_Count->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
 
 }
-//-----------------------------------------------------------------------------------------------------------
-
-//void MainWindow::set_parametr(int id_org, int id_home)
-//{
-//    Organization organization;
-//    organization.setId(id_org);
-//    Home home;
-//    home.setId(id_home);
-
-//    HomeID = id_home;
-//    OrganizationID = id_org;
-
-//    ui->lbl_home->setText("<font color=blue>"+home.getName()+"</font>");
-//    ui->lbl_organization->setText(organization.getName());
-//    Apartment apartment;
-//    ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(id_home,id_org));
-
-//}
 
 void MainWindow::sl_EditPokazanie()
 {
@@ -1189,7 +1187,7 @@ void MainWindow::sl_EditPokazanie()
 
     connect(tbl,SIGNAL(closing()),dlg,SLOT(close()));
     connect(dlg,SIGNAL(finished(int)),SLOT(Refresh_tblVCount()));
-    connect(dlg,SIGNAL(finished(int)),SLOT(sl_RefreshLabel()));
+//    connect(dlg,SIGNAL(finished(int)),SLOT(sl_RefreshLabel()));
 
     tbl->horizontalHeader()->setStretchLastSection(false);
 
@@ -1240,9 +1238,14 @@ void MainWindow::sl_DeletePayment()
         return;
     }
 
-    day = ui->tblV_Payment->model()->index(row,0).data().toInt();
-    month = ui->tblV_Payment->model()->index(row,1).data().toInt();
-    year = ui->tblV_Payment->model()->index(row,2).data().toInt();
+    if (ui->tblV_Payment->model()->index(row,0).data().toString().count() != 10){
+        qDebug() << "wrong format";
+        return;
+    }
+
+    day = ui->tblV_Payment->model()->index(row,0).data().toString().left(2).toInt();
+    month = ui->tblV_Payment->model()->index(row,0).data().toString().mid(3,2).toInt();
+    year = ui->tblV_Payment->model()->index(row,0).data().toString().right(4).toInt();
 
     if(QMessageBox::question(this,trUtf8("Удаление"),
                          trUtf8("Удалить эту запись?\n")+QString::number(day)+" "+
@@ -1250,16 +1253,19 @@ void MainWindow::sl_DeletePayment()
                     QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
         QString err;
         Table_Payment t_payment;
-        Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
-        err = t_payment.delete_Payment(
-                    apartment.getId(),
-                    ui->tblV_Payment->model()->index(row,2).data().toInt(),
-                    ui->tblV_Payment->model()->index(row,1).data().toInt(),
-                    ui->tblV_Payment->model()->index(row,0).data().toInt());
+
+        Home home;
+        home.setName(ui->lbl_home->text());
+        Organization organization;
+        organization.setName(ui->lbl_organization->text());
+        Apartment apartment(home.getId(), organization.getId(), ui->cmBx_NumApartanent->currentText().toInt());
+
+        err = t_payment.delete_Payment(apartment.getId(), year,month,day);
         if (err == ""){
             QMessageBox::information(this,trUtf8("Успех"),
                                  trUtf8("Удаление прошло успешно \n")+err,QMessageBox::Ok);
             Refresh_tblVPayment(apartment.getId());
+            Refresh_LabelPayAndDebt(apartment.getId());
         }else{
             QMessageBox::critical(this,trUtf8("Ошибка"),
                                  trUtf8("Удаление не произошло \n")+err,QMessageBox::Ok);
@@ -1280,33 +1286,27 @@ void MainWindow::sl_Calendar()
     w->open();
 }
 
-void MainWindow::sl_RefreshLabel() //обновление выводяшейся оплаты и долга
+void MainWindow::Refresh_LabelPayAndDebt(int id_apartment) //обновление выводяшейся оплаты и долга
 {
-
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
-
-
     int month = ui->dEd_Count->date().month();
     int year = ui->dEd_Count->date().year();
     DateOfUnixFormat date_calc(year,month,1);
 
     if (ui->dEd_Count->date() == QDate::currentDate()){ //Расчёт производим только за текущий месяц
-        db.CreditedOfService(apartment.getId(),date_calc);
+        db.CreditedOfService(id_apartment,date_calc);
     }
-    ui->lblInPayment->setText(QString::number(db.AmountToPay(apartment.getId(),date_calc.Second())));
-    ui->lblDolg->setText(db.is_Debt(apartment.getId(),date_calc));
+    ui->lblInPayment->setText(QString::number(db.AmountToPay(id_apartment,date_calc.Second())));
+    ui->lblDolg->setText(db.is_Debt(id_apartment,date_calc));
 }
 
 void MainWindow::sl_ApartFirst()
 {
     ui->cmBx_NumApartanent->setCurrentIndex(0);
-    sl_RefreshFull();
 }
 
 void MainWindow::sl_ApartLast()
 {
     ui->cmBx_NumApartanent->setCurrentIndex(ui->cmBx_NumApartanent->count()-1);
-    sl_RefreshFull();
 }
 
 void MainWindow::sl_ApartNext()
@@ -1317,7 +1317,6 @@ void MainWindow::sl_ApartNext()
         index++;
     }
     ui->cmBx_NumApartanent->setCurrentIndex(index);
-    sl_RefreshFull();
 }
 
 void MainWindow::sl_ApartPrevious()
@@ -1329,18 +1328,6 @@ void MainWindow::sl_ApartPrevious()
         index--;
     }
     ui->cmBx_NumApartanent->setCurrentIndex(index);
-    sl_RefreshFull();
-}
-
-void MainWindow::sl_RefreshFull()
-{
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
-
-    Refresh_tblVPayment(apartment.getId());
-    Refresh_tblVCount();
-    sl_RefreshLabel();
-    Refresh_lbl_Payer();
-
 }
 
 void MainWindow::sl_NewCounter()//вызывается когда происходит смена счётчика
@@ -1357,7 +1344,6 @@ void MainWindow::sl_NewCounter()//вызывается когда происхо
 
     NewCounter *dlg = new NewCounter(this);
     dlg->set_IdPokazanie(id_counter);
-    connect(dlg,SIGNAL(finished(int)),this,SLOT(sl_RefreshFull()));
     dlg->open();
 }
 
@@ -1388,23 +1374,24 @@ void MainWindow::Refresh_lbl_Payer()
 
 void MainWindow::on_tBtn_org_clicked()
 {
-    static Selecter_with_ComboBox *dlg_swc = new Selecter_with_ComboBox(this);
-    connect(dlg_swc,SIGNAL(CurrentValue(QString)),ui->lbl_organization,SLOT(setText(QString)));
-    connect(dlg_swc,SIGNAL(CurrentValue(QString)),dlg_swc,SLOT(close()));
-    connect(dlg_swc,SIGNAL(CurrentValue(QString)),SLOT(sl_Refresh_cmBx_NumApartanent()));
-    Organization organization;
-    dlg_swc->setContentsComboBox(organization.ModelAllOrganizationOnlyName());
-    dlg_swc->show();
+    dlgSelCmBx_org->show();
 }
 
 void MainWindow::on_tBtn_Home_clicked()
 {
-    static Selecter_with_ComboBox *dlg_home = new Selecter_with_ComboBox(this);
+    dlgSelCmBx_home->show();
+}
 
-    connect(dlg_home,SIGNAL(CurrentValue(QString)),ui->lbl_home,SLOT(setText(QString)));
-    connect(dlg_home,SIGNAL(CurrentValue(QString)),dlg_home,SLOT(close()));
-    connect(dlg_home,SIGNAL(CurrentValue(QString)),SLOT(sl_Refresh_cmBx_NumApartanent()));
+
+void MainWindow::on_cmBx_NumApartanent_currentIndexChanged(const QString &arg1)
+{
     Home home;
-    dlg_home->setContentsComboBox(home.ModelAllHomeOnlyName());
-    dlg_home->show();
+    home.setName(ui->lbl_home->text());
+    Organization organization;
+    organization.setName(ui->lbl_organization->text());
+    Apartment apartment(home.getId(), organization.getId(), arg1.toInt());
+
+    Refresh_tblVPayment(apartment.getId());
+    Refresh_tblVCount(apartment.getId());
+    Refresh_LabelPayAndDebt(apartment.getId());
 }

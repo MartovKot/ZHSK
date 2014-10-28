@@ -1,6 +1,7 @@
 QObject{
     font-family: Calibri;
 }
+
 QMainWindow, QDialog {
     background-image: url(":/theme/fon.png");
     background-position: bottom left ;
@@ -9,16 +10,13 @@ QMainWindow, QDialog {
 }
 
 QFrame {
-/*    background-color: rgba(157,210,152,102) ;*/
     border-width: 0px;
-    padding: -1px;
+    padding: 0px;
     border-style: solid;
     border-color: #447326;
 }
 
 QTabWidget {
-/*    background-color: rgba(157,210,152,102) ;*/
-/*    background-color: rgba(0,0,0,0);*/
     border-width: 3px;
     padding: -1px;
     border-style: solid;
@@ -157,6 +155,10 @@ QGroupBox{
    image: url(:/images/up_arrow_disabled.png);
    color:  rgba(0, 0, 0, 255);
 }
+
+
+
+/*111111111111111111111111111111111111111111111111111111111111111*/
 
 /*QTableView QHeaderView::section:horizontal {
     padding: 5px;

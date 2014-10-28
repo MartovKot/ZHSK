@@ -46,8 +46,7 @@ FORMS += mainwindow.ui \
     authenticationdialog.ui \
     editsetting.ui \
     selecter_with_combobox.ui \
-    dialog_with_lineedit.ui \
-    dialogt.ui
+    dialog_with_lineedit.ui
 SOURCES += \
            bd.cpp \
            main.cpp \

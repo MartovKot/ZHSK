@@ -27,15 +27,18 @@ QSqlQueryModel* Table_Payment::ModelPayment(int id_apartament)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
-    str = "SELECT  strftime('%d',payment_date,'unixepoch'), "
-            " strftime('%m',payment_date,'unixepoch'), "
-            " strftime('%Y',payment_date,'unixepoch'), payment "
+    str = "SELECT  strftime('%d %m %Y',payment_date,'unixepoch'), "
+//            " strftime('%m',payment_date,'unixepoch'), "
+//            " strftime('%Y',payment_date,'unixepoch'), "
+            " payment "
             " FROM payment WHERE id_apartament = "+QString::number(id_apartament);
     model->setQuery(QSqlQuery(str));
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("День"));
-    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Месяц"));
-    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Год"));
-    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Сумма"));
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Дата"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Сумма"));
+//    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("День"));
+//    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Месяц"));
+//    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Год"));
+//    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Сумма"));
 
     return model;
 }

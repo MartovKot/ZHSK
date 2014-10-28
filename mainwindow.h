@@ -42,6 +42,8 @@ public:
 private:
     Ui::MainWindow *ui;
     ViewBlank *VwBlank;
+    Selecter_with_ComboBox *dlgSelCmBx_org;
+    Selecter_with_ComboBox *dlgSelCmBx_home;
     BD db;
     QString CurentDirArhiv;
     QString Version;
@@ -69,7 +71,11 @@ private:
     QLineEdit *lEd_tarif2;
     QLineEdit *lEd_norm;
     Apartment *apartment_for_apartment;
-    void Refresh_tblVPayment(int ApartamentID);
+
+    void Refresh_tblVPayment(int id_apartment);
+    void Refresh_tblVCount(int id_apartment);
+    void Refresh_LabelPayAndDebt(int id_apartment);
+
     TableViewPokazanie *tbl;
     int HomeID;
     int OrganizationID;
@@ -127,12 +133,12 @@ private slots:
     void on_pBtnAddUsluga_clicked();
     void on_pBtnDeleteUsluga_clicked();
     void sl_addPayment();
-    void Refresh_tblVCount();
-    void sl_RefreshFull();
+
+
     void sl_EditPokazanie();
     void sl_DeletePayment();
     void sl_Calendar();
-    void sl_RefreshLabel();
+
     void sl_ApartFirst();
     void sl_ApartLast();
     void sl_ApartNext();
@@ -146,6 +152,7 @@ private slots:
 
     void on_tBtn_Home_clicked();
 
+    void on_cmBx_NumApartanent_currentIndexChanged(const QString &arg1);
 protected:
     void keyPressEvent(QKeyEvent *event);
 };
