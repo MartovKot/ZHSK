@@ -232,8 +232,3 @@ void ViewBlank::First_Page()
     PageView = 0;
     web->setHtml(strL_page.at(PageView));
 }
-
-//void ViewBlank::sl_Test()
-//{
-//    qDebug() << "TEST - TEST";
-//}
