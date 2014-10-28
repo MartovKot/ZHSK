@@ -563,14 +563,16 @@
            <item>
             <widget class="QPushButton" name="pBtn_NewApartament">
              <property name="text">
-              <string>Добавить новую</string>
+              <string>Добавить новую 
+ квартиру</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pBtn_DeleteApartment">
              <property name="text">
-              <string>Удалить</string>
+              <string>Удалить 
+квартиру</string>
              </property>
             </widget>
            </item>
