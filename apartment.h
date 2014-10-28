@@ -25,7 +25,10 @@ private:
     BD db;
     int m_id;
     int m_number;
-    void UpdateApartament(QStringList column,QStringList value, int idapart);           //Обновление таблицы с квартирами
+    void UpdateApartament(QStringList column,QStringList value, int idapart);   //Обновление таблицы с квартирами
+    void UpdateApartament(QString column,QString value, int idapart);           //Обновление таблицы с квартирами
+    void UpdateMenInApartment(QString column,QString value, int idapart);
+    void AddLineMenInApartment(int id_apartment);
 
 private slots:
     void sl_ModelApartamentHeaderData(QAbstractTableModel* t);

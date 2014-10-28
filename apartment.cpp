@@ -56,15 +56,22 @@ QSqlQueryModel* Apartment::ModelAllApartment(int id_home, int id_org)
 QAbstractItemModel* Apartment::ModelOneApartment(int id)
 {
     EditApartmentModel *model = new EditApartmentModel;
+    DateOfUnixFormat date(QDate::currentDate());
 
     model->setQuery(" SELECT "
-                          " number, surname, name, patronymic, "
-                          " total_area, inhabed_area,balkon, loggia,  personal_account  "
-                          " FROM apartament "
-                          " WHERE id_apartament = "+QString::number(id));
-
+                        " max(mia.date_men_in_apartament),"
+                        " number, surname, name, patronymic, "
+                        " total_area, inhabed_area,balkon, loggia, personal_account, "
+                        " mia.real_men, mia.rent_men, mia.reserv_men"
+                        " FROM apartament a, men_in_apartament mia "
+                        " WHERE a.id_apartament = " + QString::number(id) + " AND "
+                        " mia.id_apartament = a.id_apartament "
+                        " AND mia.date_men_in_apartament <= " + QString::number(date.Second_first_day()) + " "
+                        " ORDER BY mia.date_men_in_apartament"
+                    );
+    model->removeColumn(0);
+    qDebug() << model->lastError();
     sl_ModelApartamentHeaderData(model);
-//    connect(model,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(sl_test()));
     connect(model,SIGNAL(sgn_EditApartament(int,QString)),this,SLOT(sl_EditApartament(int,QString)));
 
     return model;
@@ -84,45 +91,53 @@ void Apartment::sl_ModelApartamentHeaderData(QAbstractTableModel *model)
     model->setHeaderData(6,Qt::Horizontal,QObject::trUtf8("Балкон"));
     model->setHeaderData(7,Qt::Horizontal,QObject::trUtf8("Лоджия"));
     model->setHeaderData(8,Qt::Horizontal,QObject::trUtf8("Личн. счёт"));
+    model->setHeaderData(9,Qt::Horizontal,QObject::trUtf8("Проживает"));
+    model->setHeaderData(10,Qt::Horizontal,QObject::trUtf8("Снимает"));
+    model->setHeaderData(11,Qt::Horizontal,QObject::trUtf8("Бронь"));
+
 }
 
 void Apartment::sl_EditApartament(int col,QString val)
 {
-    QStringList lst_col;
-    QStringList lst_val;
-
     switch(col){
-        case 0:
-        lst_col << "number";
+    case 0:
+        UpdateApartament("number",val,m_id);
         break;
-        case 1:
-        lst_col << "surname";
+    case 1:
+        UpdateApartament("surname",val,m_id);
         break;
-        case 2:
-        lst_col << "name";
+    case 2:
+        UpdateApartament("name",val,m_id);
         break;
-        case 3:
-        lst_col << "patronymic";
+    case 3:
+        UpdateApartament("patronymic",val,m_id);
         break;
-        case 4:
-        lst_col << "total_area";
+    case 4:
+        UpdateApartament("total_area",val,m_id);
         break;
-        case 5:
-        lst_col << "inhabed_area";
+    case 5:
+        UpdateApartament("inhabed_area",val,m_id);
         break;
-        case 6:
-        lst_col << "balkon";
+    case 6:
+        UpdateApartament("balkon",val,m_id);
         break;
-        case 7:
-        lst_col << "loggia";
+    case 7:
+        UpdateApartament("loggia",val,m_id);
         break;
-        case 8:
-        lst_col << "personal_account";
+    case 8:
+        UpdateApartament("personal_account",val,m_id);
+        break;
+    case 9:
+        UpdateMenInApartment("real_men",val,m_id);
+        break;
+    case 10:
+        UpdateMenInApartment("rent_men",val,m_id);
+        break;
+    case 11:
+        UpdateMenInApartment("reserv_men",val,m_id);
         break;
     }
 
-    lst_val << val;
-    UpdateApartament(lst_col,lst_val,m_id);
     emit sgn_EditModel();
 }
 
@@ -130,6 +145,58 @@ void Apartment::UpdateApartament(QStringList column, QStringList value, int idap
 {
     for(int i=0; i<column.count();i++ ){
         db.UpdateTable("apartament",column[i],value[i],"id_apartament", QString::number(idapart));
+    }
+}
+
+void Apartment::UpdateApartament(QString column, QString value, int idapart)
+{
+    db.UpdateTable("apartament",column,value,"id_apartament", QString::number(idapart));
+}
+
+void Apartment::UpdateMenInApartment(QString column, QString value, int idapart)
+{
+    QString str;
+    DateOfUnixFormat date(QDate::currentDate());
+
+
+    str = "SELECT COUNT(*) FROM men_in_apartament WHERE id_apartament = %1 AND date_men_in_apartament = %2";
+    str = str.arg(idapart)
+            .arg(date.Second_first_day());
+
+    QVariant t =  db.SelectFromTable(str);
+    if(!t.isNull()){
+        if (t.toInt() == 0){//если записей за текущий месяц нету
+            AddLineMenInApartment(idapart); //добавим запись
+        }
+        db.UpdateTable("men_in_apartament",column,value,
+                       "date_men_in_apartament",QString::number(date.Second_first_day()),
+                       "id_apartament", QString::number(idapart));
+    }else{
+        qDebug() << "is NULL";
+    }
+}
+void Apartment::AddLineMenInApartment(int id_apartment)
+{
+    QString str;
+    DateOfUnixFormat date_now(QDate::currentDate());
+
+    str = "SELECT max(date_men_in_apartament) FROM men_in_apartament WHERE id_apartament = %1";
+    str = str.arg(id_apartment);
+    QVariant t =  db.SelectFromTable(str);
+    if(!t.isNull()){
+        QString str2;
+
+        str2 = " INSERT INTO men_in_apartament (id_apartament, real_men, rent_men, reserv_men, date_men_in_apartament ) "
+                " SELECT id_apartament, real_men, rent_men, reserv_men, %1 "
+                " FROM men_in_apartament"
+                " WHERE date_men_in_apartament = %2 AND id_apartament = %3";
+
+        str2 = str2.arg(QString::number(date_now.Second_first_day()))
+                .arg(t.toString())
+                .arg(id_apartment);
+        db.QueryExecute(str2);
+    }else{
+        qDebug() << "need add code";
     }
 }
 

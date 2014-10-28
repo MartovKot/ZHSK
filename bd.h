@@ -94,8 +94,11 @@ public:
     //----new interface
     QVariant SelectFromTable (QString str) const;
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
+    void UpdateTable(QString table, QString column, QString value, QString where_column1, QString where_value1, QString where_column2, QString where_value2);
     int add(QString table, QStringList column,QStringList value);
     int add(QString table, QString column,QString value);
+//    int addcopy(QString table, QString column, QString old_value, QString new_value);
+    QSqlError QueryExecute(QString str);
     QSqlError DeleteLine(QString table, QString id_name ,int id_line);
 
 

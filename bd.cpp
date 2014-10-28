@@ -136,6 +136,16 @@ QVariant BD::SelectFromTable(QString str) const //Функция возврящ�
     return out;
 }
 
+QSqlError BD::QueryExecute(QString str)
+{
+    QSqlQuery query;
+    if (!query.exec(str)){
+        qDebug() << "1098339a5e20736b5ba8f1eb1839f4ea" << query.lastError() << str;
+        LogOut.logout(query.lastError().text());
+    }
+    return query.lastError();
+}
+
 int BD::add(QString table, QString column, QString value)
 {
     QStringList C_sl, V_sl;
@@ -178,7 +188,6 @@ int BD::add(QString table,QStringList column,QStringList value)
 
 void BD::UpdateTable(QString table, QString column, QString value, QString where1, QString where2  )
 {
-//    qDebug() << "UpdateTable";
     QString str;
     QSqlQuery query;
     QVariant t;
@@ -190,6 +199,30 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
                     .arg(value)
                     .arg(where1)
                     .arg(where2);
+        if (!query.exec(str))
+        {
+            qDebug()<<"bf206b5a653a24ca32249bfd24515d4e" <<"Eror  "<<query.lastError()<<"\n"<<str;
+            LogOut.logout(query.lastError().text());
+        }
+    }
+}
+
+void BD::UpdateTable(QString table, QString column, QString value, QString where_column1, QString where_value1, QString where_column2, QString where_value2)
+{
+    QString str;
+    QSqlQuery query;
+    QVariant t;
+    t = SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where_column1+" = '"+where_value1+"'" +
+                        " AND "+where_column2+" = '"+where_value2+"'");
+    if (t.toString() != value ){
+        str = "UPDATE %1 SET %2 = '%3' WHERE %4 = '%5' AND %6 = '%7'";
+        str = str.arg(table)
+                    .arg(column)
+                    .arg(value)
+                    .arg(where_column1)
+                    .arg(where_value1)
+                    .arg(where_column2)
+                    .arg(where_value2);
         if (!query.exec(str))
         {
             qDebug()<<"bf206b5a653a24ca32249bfd24515d4e" <<"Eror  "<<query.lastError()<<"\n"<<str;
@@ -392,12 +425,11 @@ int BD::is_RealMen(int id_app, DateOfUnixFormat date)
 {
     QString str;
 
-    str = "SELECT real_men FROM men_in_apartament "
+    str = "SELECT real_men, max(date_men_in_apartament) FROM men_in_apartament "
             " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
             " ORDER BY date_men_in_apartament";
     str = str.arg(id_app)
             .arg(date.Second());
-
     return qVariant_from_query(str).toInt();
 }
 
@@ -414,6 +446,7 @@ int BD::is_RentMen(int id_app, DateOfUnixFormat date)
 
     return qVariant_from_query(str).toInt();
 }
+
 int BD::is_ReservMen(int id_app, DateOfUnixFormat date)
 {
     QString str;
@@ -869,11 +902,12 @@ QVariant BD::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date)
     QString str;
     QSqlQuery query;
     int type_usluga, id_usluga;
+    int id_apartment;
     double tarif = 0;
     QVariant out;
 
     //получим тип услуги ид услуги и тариф
-    str = "SELECT u.type_usluga, u.id_usluga FROM usluga u, list_app_usluga lau "
+    str = "SELECT u.type_usluga, u.id_usluga, lau.id_apartament FROM usluga u, list_app_usluga lau "
             "WHERE u.id_usluga=lau.id_usluga AND lau.id_list_app_usluga=%1";
     str = str.arg(id_list_app_usluga);
 
@@ -881,6 +915,8 @@ QVariant BD::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date)
         if (query.next()){
             type_usluga = query.value(0).toInt();
             id_usluga = query.value(1).toInt();
+            id_apartment = query.value(2).toInt();
+
             table_tariff tbl_tariff;
             tarif = tbl_tariff.is_Tariff(id_usluga,date);// Получаем тариф
         }else{
@@ -916,23 +952,7 @@ QVariant BD::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date)
         }
     }
     if(type_usluga == 3){ //на человека
-        QString str2;
-        QSqlQuery query2;
-        str2 = "SELECT real_men FROM men_in_apartament a, list_app_usluga lau "
-                "WHERE lau.id_apartament=a.id_apartament AND lau.id_list_app_usluga=%1";
-        str2 = str2.arg(id_list_app_usluga);
-        if (query2.exec(str2)){
-          if (query2.next()){
-              out = tarif * query2.value(0).toDouble();
-          }else{
-              qDebug() << "not record" << str;
-              return -1;
-          }
-        } else{
-            qDebug() << "CreditedOfApartament on men" << query.lastError();
-            LogOut.logout(query.lastError().text());
-            return -1;
-        }
+        out = tarif * is_RealMen(id_apartment, date);
     }
     if(type_usluga == 4){ //на квартиру
         out = tarif;
