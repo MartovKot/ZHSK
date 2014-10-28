@@ -574,7 +574,7 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
     if (query3.exec(str4)){
         qDebug() << "test" << query3.size();
     }
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! продолжить тут не работает запрос
+//    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! продолжить тут не работает запрос
 
 
     QSqlQueryModel *model = new QSqlQueryModel;
