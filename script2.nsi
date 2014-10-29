@@ -23,7 +23,8 @@
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
-;!define MUI_FINISHPAGE_RUN "$INSTDIR\kvit.exe"
+
+!define MUI_FINISHPAGE_RUN "$INSTDIR\kvit.exe"
 !insertmacro MUI_PAGE_FINISH
 
 ; Language files
@@ -45,9 +46,6 @@
  IfFileExists "${BUP_DIR}" 0 +2
   CopyFiles "${BUP_DIR}\*.*" "${RESTORE_TO}"
   RMDir /r ${BUP_DIR}
-  
-  
-  
 !macroend
 
 !macro BackupFile FILE_DIR FILE BACKUP_TO
@@ -159,6 +157,8 @@ Section "libs" SEC02
   SetOutPath "$INSTDIR\imageformats"
   
   File "${QT_INSTALL}\plugins\imageformats\qico.dll"
+  
+  SetOutPath "$INSTDIR"
   
 SectionEnd
 
