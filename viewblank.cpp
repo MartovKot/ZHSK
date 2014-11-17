@@ -88,12 +88,14 @@ void ViewBlank::setDate(int year, int month)
 }
 void ViewBlank::setInfo(int id_home, int id_org)
 {
+    qDebug () << "VB" << id_home << id_org ;
     idHome = id_home;
     idOrg = id_org;
 }
 void ViewBlank::generate()
 {
     test_p.setDate(r_year,r_month,idHome,idOrg);
+    qDebug () << "VB" << idHome << idOrg ;
     test_p.generating();
     strL_page = test_p.OutStrL();
     PageView = 0;

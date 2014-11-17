@@ -77,19 +77,18 @@ private:
     void Refresh_LabelPayAndDebt(int id_apartment);
 
     TableViewPokazanie *tbl;
-    int HomeID;
-    int OrganizationID;
     int p_id_pokazanie;
     int p_pokazanie;
     void Refresh_lbl_Payer();
 
 private slots:
-    void Admin_mod();
-    void Oper_mod();
-    void Print_mod();
+    void sl_Admin_mod();
+    void sl_Oper_mod();
+    void sl_Print_mod();
     void sl_ArhivKvit();  //Архив квитанций
     void sl_setCurDirArh(QString CurDir);
     void sl_OpenArhiv();
+    void sl_Refresh_tblVCount();
 
     void Refresh_Settings();
     void sl_AddOrg();                                  // добавление организации
@@ -153,6 +152,7 @@ private slots:
     void on_tBtn_Home_clicked();
 
     void on_cmBx_NumApartanent_currentIndexChanged(const QString &arg1);
+
 protected:
     void keyPressEvent(QKeyEvent *event);
 };

@@ -81,7 +81,6 @@ void BD::UpdateDataBase()
         UpdateDataBase();
         return;
     }
-//    qDebug() << res;
 
     QDir dir_with_sql("./update_db");
     QStringList filters;
@@ -250,17 +249,6 @@ QSqlError BD::DeleteLine(QString table, QString id_name, int id_line)
 
 //======================================================================
 // Квартиры
-
-QStringList BD::sum_app(int id_org, int id_home)
-{
-    QString str;
-
-    str = "SELECT number FROM apartament WHERE id_homes=%1 AND id_organiz=%2";
-    str = str.arg(id_home)
-            .arg(id_org);
-
-    return strL_from_query(str);
-}
 
 QList<int> BD::is_ListIdApartament(int id_org, int id_home)
 {
@@ -601,15 +589,6 @@ QSqlError BD::DeleteUslugaApartament(int id_list_apart_usluga)
 
 QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
 {
-    QString str4;
-    QSqlQuery query3;
-     str4 = "SELECT * FROM list_app_usluga";
-    if (query3.exec(str4)){
-        qDebug() << "test" << query3.size();
-    }
-//    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! продолжить тут не работает запрос
-
-
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
     DateOfUnixFormat date(year,month,1);
@@ -630,7 +609,6 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
     }
 
     if(model->rowCount()==0){//  если строки не найдены, скорее всего нет тарифов - сделаем без них
-        qDebug() << "not string";
         QString str2 = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end "
             "FROM list_app_usluga lau, usluga u, pokazanie p "
             "WHERE "
@@ -653,28 +631,20 @@ QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
         column << "id_list_app_usluga" << "date_pokazanie"
                << "pokazanie_home"     << "pokazanie_end";
 
-//        str2 = "SELECT id_list_app_usluga FROM list_app_usluga WHERE id_apartament=%1"; //все Услуги квартиры
-//        str2 = str2.arg(id_apartament);
-        str3 = "SELECT * FROM list_app_usluga";
-        qDebug() << "not string 2" << str3;
+        str3 = "SELECT id_list_app_usluga FROM list_app_usluga WHERE id_apartament=%1"; //все Услуги квартиры
+        str3 = str3.arg(id_apartament);
         if (query.exec(str3)){
-            qDebug() << query.size() << query.lastError() << query.isSelect() << query.isActive();
-            if (query.size() == -1){
-                return model;
-            }
             while (query.next()){ // переберём все строчки
                 values.clear();
                 values << query.value(0).toString() << QString::number(date.Second())
                        << QString::number(0)         << QString::number(0);
-                qDebug() << add("pokazanie",column,values);
+                add("pokazanie",column,values);
             }
         } else{
             qDebug()<<query.lastError();
             LogOut.logout(query.lastError().text());
         }
-
         model = ModelPokazanie(id_apartament, month, year); // И теперь попробуем ещё раз получить не пустую модель
-        qDebug() << model->rowCount();
     }
     if(model->lastError().number() != -1){
         qDebug()<<"e8237664c306efe892a28669bdcefb13"<<model->lastError();
@@ -752,7 +722,7 @@ void BD::sl_EditPokazanie(int id_pok, QString value)
     query.addBindValue(id_pok);
     if (!query.exec())
     {
-        qDebug()<<query.lastError()<<"\n";
+        qDebug()<<query.lastError();
         LogOut.logout(query.lastError().text());
     }
     SumCount(id_pok); //канализация

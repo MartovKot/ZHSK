@@ -26,7 +26,7 @@ public:
 
     QString is_NameCounter(int id_counter);
 
-    QStringList sum_app(int id_org, int id_home);               //Возвращает список имён квартир в доме
+//    QStringList sum_app(int id_org, int id_home);               //Возвращает список имён квартир в доме
 
     QStringList Sum_Schet(int id_apartament);                   //Возвращает список счётчиков
     QStringList Sum_Service(int id_apartament);                 //Возвращает список услуг

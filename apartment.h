@@ -16,10 +16,11 @@ public:
     int getId() const;
     bool New(int id_home, int id_org, int number);
     void setIdAndNum(int id_home, int id_org, int number);
-    QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
+    static QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
     QAbstractItemModel* ModelOneApartment(int id);     //модель для квартиры
     void DeleteApartment();
     QString is_FIO_payer() const;
+//    static QStringList AllApartmentNumber(int id_org, int id_home);
 
 private:
     BD db;

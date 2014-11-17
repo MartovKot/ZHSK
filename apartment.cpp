@@ -49,7 +49,6 @@ QSqlQueryModel* Apartment::ModelAllApartment(int id_home, int id_org)
             " WHERE id_homes = " + QString::number(id_home) +
             " AND id_organiz = " + QString::number(id_org);
     model->setQuery(QSqlQuery(str));
-
     return model;
 }
 
@@ -70,18 +69,14 @@ QAbstractItemModel* Apartment::ModelOneApartment(int id)
                         " ORDER BY mia.date_men_in_apartament"
                     );
     model->removeColumn(0);
-    qDebug() << model->lastError();
     sl_ModelApartamentHeaderData(model);
     connect(model,SIGNAL(sgn_EditApartament(int,QString)),this,SLOT(sl_EditApartament(int,QString)));
-
     return model;
-
 }
 
 
 void Apartment::sl_ModelApartamentHeaderData(QAbstractTableModel *model)
 {
-//    qDebug() << "sl_ModelApartamentHeaderData";
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Фамилия"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Имя"));
@@ -94,7 +89,6 @@ void Apartment::sl_ModelApartamentHeaderData(QAbstractTableModel *model)
     model->setHeaderData(9,Qt::Horizontal,QObject::trUtf8("Проживает"));
     model->setHeaderData(10,Qt::Horizontal,QObject::trUtf8("Снимает"));
     model->setHeaderData(11,Qt::Horizontal,QObject::trUtf8("Бронь"));
-
 }
 
 void Apartment::sl_EditApartament(int col,QString val)
@@ -239,4 +233,3 @@ QString Apartment::is_FIO_payer() const
 
     return fio;
 }
-

@@ -179,29 +179,34 @@ void parser_blank::generating()
     QString str_NameFile_base; //общая часть названия файлов
     QString str_NameFile_pach; //отличительная часть файлов
 
-    QStringList str_L = db.sum_app(ConfData.Org_id,ConfData.Home_id);
 
+    QSqlQueryModel *apartmodel;
+    apartmodel = Apartment::ModelAllApartment(ConfData.Home_id,ConfData.Org_id);
+
+    qDebug() << "TW" <<  ConfData.Home_id << ConfData.Org_id;
     Organization organization;
     organization.setId(ConfData.Org_id);
     Home home;
     home.setId(ConfData.Home_id);
     str_NameFile_base = organization.getName() + " " + home.getName();
 
-    QProgressDialog progress(trUtf8("Создание файлов..."), trUtf8("Отмена"), 0, str_L.size()-1, this);
+    QProgressDialog progress(trUtf8("Создание файлов..."), trUtf8("Отмена"), 0, apartmodel->rowCount()-1, this);
     progress.setWindowModality(Qt::WindowModal);
     progress.setWindowTitle(trUtf8("Расчёт"));
 
-    for(int i=0;i<str_L.size();i++){
+    qDebug() << "TW" <<  apartmodel->rowCount();
+
+    for(int i=0;i<apartmodel->rowCount();i++){
         progress.setValue(i);
         if (progress.wasCanceled())
             break;
-        str_NameFile_pach = QObject::trUtf8(" кв ") + str_L.at(i);
-        Apartment apartment(ConfData.Home_id,ConfData.Org_id,str_L.at(i).toInt());
+        str_NameFile_pach = QObject::trUtf8(" кв ") + apartmodel->index(i,0).data().toString();
+        Apartment apartment(ConfData.Home_id,ConfData.Org_id, apartmodel->index(i,0).data().toInt());
         creat_blank(str_NameFile_base+str_NameFile_pach+".html",
                     apartment,
                     ConfData.date);
     }
-    progress.setValue(str_L.size()-1);
+    progress.setValue(apartmodel->rowCount()-1);
 }
 void parser_blank::setDir(QString str_dirFolder)
 {
@@ -248,6 +253,7 @@ void parser_blank::setDate( int year,int month, int id_home, int id_org)
     //-----------
     ConfData.Home_id = id_home;
     ConfData.Org_id = id_org;
+    qDebug() << "TW" <<  id_home << id_org;
     //-----------
 }
 

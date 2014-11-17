@@ -48,5 +48,7 @@
         <file>ico/splash.png</file>
         <file>ico/pdf.ico</file>
         <file>theme/fon.png</file>
+        <file>theme/emblem.png</file>
+        <file>theme/button.png</file>
     </qresource>
 </RCC>

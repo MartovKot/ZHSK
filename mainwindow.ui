@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1405</width>
-    <height>1608</height>
+    <width>1398</width>
+    <height>1700</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -69,20 +69,14 @@
           <number>0</number>
          </property>
          <item>
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
+          <widget class="QLabel" name="label_emblem">
+           <property name="text">
+            <string/>
            </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Minimum</enum>
+           <property name="pixmap">
+            <pixmap resource="qrc.qrc">:/theme/emblem.png</pixmap>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>60</height>
-            </size>
-           </property>
-          </spacer>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pBtnOper">
@@ -951,6 +945,9 @@
                 <property name="selectionBehavior">
                  <enum>QAbstractItemView::SelectRows</enum>
                 </property>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
                </widget>
               </item>
               <item>
@@ -1035,9 +1032,9 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>1060</y>
-      <width>1151</width>
-      <height>601</height>
+      <y>1110</y>
+      <width>711</width>
+      <height>561</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -1071,7 +1068,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="tabsClosable">
          <bool>false</bool>
@@ -1109,147 +1106,17 @@
             <number>10</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <layout class="QHBoxLayout" name="hLay_org1">
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_14">
-               <property name="topMargin">
-                <number>5</number>
+              <widget class="QGroupBox" name="grpBx_3">
+               <property name="title">
+                <string/>
                </property>
-               <item>
-                <widget class="QLabel" name="label_2">
-                 <property name="autoFillBackground">
-                  <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>Имя организации</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>Название Банка</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_6">
-                 <property name="text">
-                  <string>Лицевой счёт</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_30">
-                 <property name="autoFillBackground">
-                  <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>ИНН</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>10</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_15">
-               <property name="leftMargin">
-                <number>5</number>
-               </property>
-               <property name="topMargin">
-                <number>5</number>
-               </property>
-               <property name="rightMargin">
-                <number>5</number>
-               </property>
-               <item>
-                <widget class="QLineEdit" name="lEdNameOrg">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="sizeIncrement">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <family>Arial</family>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="lEdBank">
-                 <property name="font">
-                  <font>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="lEdAcc">
-                 <property name="font">
-                  <font>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="inputMask">
-                  <string/>
-                 </property>
-                 <property name="maxLength">
-                  <number>32767</number>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="lEdINN"/>
-               </item>
-              </layout>
+               <zorder>verticalLayoutWidget_10</zorder>
+               <zorder>verticalLayoutWidget_10</zorder>
+              </widget>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pBtn_addOrg">
-             <property name="font">
-              <font>
-               <family>Arial</family>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Добавить новую запись</string>
-             </property>
-            </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="hLay_ButtonOrg">
@@ -2166,6 +2033,163 @@
      </layout>
     </widget>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_10">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>1110</y>
+      <width>571</width>
+      <height>137</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="vLay_org2">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_14">
+         <property name="leftMargin">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="autoFillBackground">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Имя организации</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Название банка</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Лицевой счёт</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_30">
+           <property name="autoFillBackground">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>ИНН</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>10</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_15">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="lEdNameOrg">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Arial</family>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lEdBank">
+           <property name="font">
+            <font>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lEdAcc">
+           <property name="font">
+            <font>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="inputMask">
+            <string/>
+           </property>
+           <property name="maxLength">
+            <number>32767</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lEdINN"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pBtn_addOrg">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Добавить новую запись</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <zorder>verticalLayoutWidget</zorder>
+   <zorder>frame_obrabotka</zorder>
+   <zorder>frame_admin</zorder>
+   <zorder></zorder>
+   <zorder>verticalLayoutWidget_10</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="enabled">
