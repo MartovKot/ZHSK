@@ -1162,13 +1162,28 @@ double BD::AmountForServices(int id_apart, qint64 u_date)
 }
 bool BD::isElectroUsluga(int id_usluga)
 {
-    if(id_usluga == 4 || id_usluga == 6 || id_usluga == 7){
+    if(id_usluga == 4 ){
+        return true;
+    }
+
+    return false;
+}
+bool BD::isElectroUslugaDay(int id_usluga)
+{
+    if(id_usluga == 6){
         return true;
     }
 
     return false;
 }
 
+bool BD::isElectroUslugaNight(int id_usluga){
+    if(id_usluga == 7){
+        return true;
+    }
+
+return false;
+}
 bool BD::is_pensioner_living_alone(int id_apartament)
 {
     QString str;
@@ -1235,6 +1250,17 @@ double BD::PaymentCounters(int id_list_app_usluga, DateOfUnixFormat date)  //р�
         return -1;
     }
 
+    //пенсионеры
+    if (is_pensioner_living_alone(id_apartament)){
+        if (isElectroUsluga(id_usluga)){
+            norma = 75;
+        }else if(isElectroUslugaDay(id_usluga)){
+            norma = 50;
+        }else if(isElectroUslugaNight(id_usluga)){
+            norma = 25;
+        }
+    }
+
     if(is_TypeUsluga(id_usluga)==1){
         str = "SELECT pokazanie_end, pokazanie_home FROM pokazanie "
                 "WHERE id_list_app_usluga=%1 "
@@ -1244,14 +1270,10 @@ double BD::PaymentCounters(int id_list_app_usluga, DateOfUnixFormat date)  //р�
         if (query.exec(str)){
             if (query.next()){
                 int count = query.value(0).toDouble() - query.value(1).toDouble();
-                if(isElectroUsluga(id_usluga)){// Электричество
-                    if(count <= norma*is_RealMen(id_apartament,date)|| norma==0 || is_pensioner_living_alone(id_apartament)){
-                        out = tarif * count;
-                    }else if (count > norma*is_RealMen(id_apartament,date)&& norma!=0){
-                        out = norma * is_RealMen(id_apartament,date) * (tarif - tarif2) + count * tarif2;
-                    }
-                }else{
+                if (count <= norma * is_RealMen(id_apartament,date) || norma==0){
                     out = tarif * count;
+                }else{
+                    out = norma * is_RealMen(id_apartament,date) * (tarif - tarif2) + count * tarif2;
                 }
 
             }else{

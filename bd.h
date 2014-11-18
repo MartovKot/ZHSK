@@ -117,6 +117,9 @@ private:
     void SumCount(int id_pokazanie, bool New = false);                                  //Расчёт показаний канализации
 
     bool isElectroUsluga(int id_usluga);
+    bool isElectroUslugaDay (int id_usluga);
+    bool isElectroUslugaNight (int id_usluga);
+
     bool is_pensioner_living_alone(int id_apartament);
 
     //delete dublicate
