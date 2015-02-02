@@ -1255,9 +1255,9 @@ double BD::PaymentCounters(int id_list_app_usluga, DateOfUnixFormat date)  //Ñ€Ð
         if (isElectroUsluga(id_usluga)){
             norma = 75;
         }else if(isElectroUslugaDay(id_usluga)){
-            norma = 50;
+            norma = 55;
         }else if(isElectroUslugaNight(id_usluga)){
-            norma = 25;
+            norma = 20;
         }
     }
 
