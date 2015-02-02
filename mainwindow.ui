@@ -1112,8 +1112,6 @@
                <property name="title">
                 <string/>
                </property>
-               <zorder>verticalLayoutWidget_10</zorder>
-               <zorder>verticalLayoutWidget_10</zorder>
               </widget>
              </item>
             </layout>
@@ -2185,11 +2183,6 @@
      </item>
     </layout>
    </widget>
-   <zorder>verticalLayoutWidget</zorder>
-   <zorder>frame_obrabotka</zorder>
-   <zorder>frame_admin</zorder>
-   <zorder></zorder>
-   <zorder>verticalLayoutWidget_10</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="enabled">

@@ -26,7 +26,9 @@ QTabWidget {
 
 QPushButton, QToolButton, QTabBar::tab {
 
-    background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(150, 150, 150, 255));
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9,
+                                    stop:0 rgba(0, 0, 0, 255),
+                                    stop:1 rgba(150, 150, 150, 255));
     border-width: 5px;
     border-top-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                     stop: 0 rgba(154, 154, 154, 255),
@@ -74,16 +76,51 @@ QToolButton[inputMethodHints="1"]{
 }
 
 
-/*QPushButton:hover, QToolButton:hover, QTabBar::tab:hover {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(51, 102, 0, 255));
-    border-width: 3px;
-    border-style: inset;
-    border-top-color: rgba(230, 230, 230, 200);
-    border-right-color: rgba(51, 102, 0, 255);
-    border-bottom-color: rgba(101, 152, 50, 255);
-    border-left-color: rgba(230, 230, 230, 200);
-}
+QPushButton:hover, QToolButton:hover, QTabBar::tab:hover {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9,
+                                        stop:0 rgba(230, 230, 230, 255),
+                                        stop:1 rgba(51, 102, 0, 255));
 
+    border-width: 5px;
+    border-top-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                    stop: 0 rgba(154, 154, 154, 255),
+                                    stop: 0.2 rgba(152, 152, 152, 255),
+                                    stop: 0.4 rgba(141, 141, 142, 255),
+                                    stop: 0.6 rgba(113, 113, 113, 255),
+                                    stop: 0.8 rgba(55, 55, 55, 255),
+                                    stop: 1 rgba(15, 15, 15, 255));
+    border-left-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                    stop: 0 rgba(200, 200, 200, 70),
+                                    stop: 0.2 rgba(210, 210, 210, 70),
+                                    stop: 0.4 rgba(220, 220, 220, 70),
+                                    stop: 0.6 rgba(210, 210, 210, 70),
+                                    stop: 0.8 rgba(195, 195, 195, 70),
+                                    stop: 1 rgba(150, 150, 150, 10));
+
+    border-bottom-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                    stop: 0 rgba(134, 134, 134, 255),
+                                    stop: 0.2 rgba(111, 111, 111, 255),
+                                    stop: 0.4 rgba(59, 59, 59, 255),
+                                    stop: 0.6 rgba(36, 36, 36, 255),
+                                    stop: 0.8 rgba(37, 37, 37, 255),
+                                    stop: 1 rgba(38, 38, 38, 255));
+    border-right-color: qlineargradient(x1: 1, y1: 0, x2: 0, y2: 0,
+                                    stop: 0 rgba(0, 0, 0, 200),
+                                    stop: 0.2 rgba(0, 0, 0, 190),
+                                    stop: 0.4 rgba(0, 0, 0, 170),
+                                    stop: 0.6 rgba(0, 0, 0, 100),
+                                    stop: 0.8 rgba(0, 0, 0, 50),
+                                    stop: 1 rgba(0, 0, 0, 10));
+
+
+    border-style: solid;
+/*    border-top-color: rgba(230, 230, 230, 200);*/
+/*    border-right-color: rgba(51, 102, 0, 255);*/
+/*    border-bottom-color: rgba(101, 152, 50, 255);*/
+/*    border-left-color: rgba(230, 230, 230, 200);*/
+
+}
+/*
 QPushButton:pressed, QToolButton:pressed, QTabBar::tab:pressed, QTabBar::tab:selected {
     background-color: qlineargradient(spread:pad, x1:0, y1:0.1, x2:0, y2:0.9, stop:0 rgba(230, 230, 230, 255), stop:1 rgba(51, 102, 0, 255));
     border-width: 3px;
