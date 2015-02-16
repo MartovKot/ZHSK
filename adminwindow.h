@@ -104,6 +104,7 @@ private slots:
     void on_cmBx_NumAp_on_Uslugi_activated(const QString &arg1);
     void on_pBtnAddUsluga_clicked();
     void on_pBtnDeleteUsluga_clicked();
+    void on_pBtnMassOperation_clicked();
 };
 
 #endif // ADMINWINDOW_H

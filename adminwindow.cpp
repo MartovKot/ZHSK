@@ -1,6 +1,7 @@
 #include "adminwindow.h"
 #include "ui_adminwindow.h"
 #include "mainwindow.h"
+#include "massoperations.h"
 
 
 #include <qtextcodec.h>
@@ -8,6 +9,8 @@
 #include <QStandardItemModel>
 #include <QCheckBox>
 #include <QTableWidgetItem>
+
+
 
 AdminWindow::AdminWindow(QWidget *parent) :
     QDialog(parent),
@@ -938,3 +941,49 @@ void AdminWindow::on_pBtnDeleteUsluga_clicked()
         Refresh_tblV_on_Uslugi();
     }
 }
+
+void AdminWindow::on_pBtnMassOperation_clicked()
+{
+    MassOperations *dlg = new MassOperations;
+    int row;
+    int HomeID,OrganiztionID;
+
+    row = ui->cmBx_Home_on_Uslugi->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Home_on_Uslugi->model()->index(row, 0);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                HomeID = index.data().toInt();
+            }else{
+                return;
+            }
+        }else{
+            return;
+        }
+    }else{
+        return;
+    }
+
+    row = ui->cmBx_Org_on_Uslugi->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Org_on_Uslugi->model()->index(row, 0);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                OrganiztionID = index.data().toInt();
+            }else{
+                return;
+            }
+        }else{
+            return;
+        }
+    }else{
+        return;
+    }
+
+    dlg->setHome(HomeID);
+    dlg->setOrganization(OrganiztionID);
+
+    dlg->open();
+}
+
+

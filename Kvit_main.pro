@@ -41,13 +41,15 @@ HEADERS += adminwindow.h \
     apartment.h \
     editapartmentmodel.h \
     modelusliga.h \
-    dialog_with_lineedit.h
+    dialog_with_lineedit.h \
+    massoperations.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
     editsetting.ui \
     selecter_with_combobox.ui \
-    dialog_with_lineedit.ui
+    dialog_with_lineedit.ui \
+    massoperations.ui
 SOURCES += adminwindow.cpp \
            bd.cpp \
            main.cpp \
@@ -73,7 +75,8 @@ SOURCES += adminwindow.cpp \
     apartment.cpp \
     editapartmentmodel.cpp \
     modelusliga.cpp \
-    dialog_with_lineedit.cpp
+    dialog_with_lineedit.cpp \
+    massoperations.cpp
 
 RESOURCES += \
     qrc.qrc

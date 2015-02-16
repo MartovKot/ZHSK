@@ -81,7 +81,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <property name="tabsClosable">
        <bool>false</bool>
@@ -738,6 +738,13 @@
                 <widget class="QPushButton" name="pBtnDeleteUsluga">
                  <property name="text">
                   <string>Удалить услугу</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pBtnMassOperation">
+                 <property name="text">
+                  <string>Массовые операции</string>
                  </property>
                 </widget>
                </item>

@@ -23,6 +23,9 @@ public:
     explicit BD();
     ~BD();
     bool Create();
+    QString is_DatabaseVersoin();
+    void UpdateDataBase();
+
 
     QString is_NameCounter(int id_counter);
 
@@ -50,7 +53,7 @@ public:
     double is_Balkon(int id_app);
     double is_Lodjia(int id_app);
     int is_NumberAppartament(int id_app);
-    QString is_DatabaseVersoin();
+
 
     QList<int> is_ApartamentService(int id_app);                //Возвращает список ид услуг по квартире
     QList<int> is_ListIdServiceWithCounter(int id_apartament);
@@ -60,7 +63,6 @@ public:
 
     QString is_NameService(int id_service);
 
-//    void UpdateOrganization(QString name = "", QString bank="", QString acc="", QString inn="", int idorg = -1);
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
     void UpdateHome(int id_home, QString home);
 
@@ -86,7 +88,7 @@ public:
     QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
     QSqlError DeleteSetting(QString name_setting);
 
-    void UpdateDataBase();
+
     void new_pokazanie(int id_apartament, int month, int year);
     QString isValueSetting(QString NameSetting);
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
@@ -95,9 +97,8 @@ public:
     QVariant SelectFromTable (QString str) const;
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     void UpdateTable(QString table, QString column, QString value, QString where_column1, QString where_value1, QString where_column2, QString where_value2);
-    int add(QString table, QStringList column,QStringList value);
-    int add(QString table, QString column,QString value);
-//    int addcopy(QString table, QString column, QString old_value, QString new_value);
+    int add(QString table, QStringList column,QStringList value, int mode = 0);
+    int add(QString table, QString column,QString value, int mode = 0);
     QSqlError QueryExecute(QString str);
     QSqlError DeleteLine(QString table, QString id_name ,int id_line);
 
