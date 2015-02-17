@@ -84,6 +84,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="pBtn_Delete">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Отключить у всех</string>
         </property>

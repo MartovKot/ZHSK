@@ -985,5 +985,3 @@ void AdminWindow::on_pBtnMassOperation_clicked()
 
     dlg->open();
 }
-
-

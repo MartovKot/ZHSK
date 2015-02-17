@@ -102,3 +102,6 @@ OTHER_FILES += \
     update_db/01_07_001.sql \
     update_db/01_07_002.sql
 
+DISTFILES += \
+    update_db/01_07_003.sql
+
