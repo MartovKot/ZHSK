@@ -8,6 +8,7 @@
 #include <QDateTime>
 #include <QMessageBox>
 #include <QProgressDialog>
+#include <QThread>
 
 #include "bd.h"
 #include "table_tariff.h"

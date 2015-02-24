@@ -81,7 +81,6 @@ void BD::UpdateDataBase()
         UpdateDataBase();
         return;
     }
-//    qDebug() << res;
 
     QDir dir_with_sql("./update_db");
     QStringList filters;
@@ -146,21 +145,48 @@ QSqlError BD::QueryExecute(QString str)
     return query.lastError();
 }
 
-int BD::add(QString table, QString column, QString value)
+int BD::add(QString table, QString column, QString value, int mode/*=0*/)
 {
     QStringList C_sl, V_sl;
     C_sl<<column;
     V_sl<<value;
-    return add(table,C_sl,V_sl);
+    return add(table,C_sl,V_sl,mode);
 }
 
-int BD::add(QString table,QStringList column,QStringList value)
+int BD::add(QString table,QStringList column,QStringList value, int mode/*=0*/)
 {
     QString strF;
     QSqlQuery query;
     int i;
 
-    strF = "INSERT INTO "+table+" ( ";
+    switch(mode){
+    case 0:
+        strF = "INSERT";
+        break;
+    case 1:
+        strF = "REPLACE";
+        break;
+    case 2:
+        strF = "INSERT OR REPLACE";
+        break;
+    case 3:
+        strF = "INSERT OR ROLLBACK";
+        break;
+    case 4:
+        strF = "INSERT OR ABORT";
+        break;
+    case 5:
+        strF = "INSERT OR FAIL";
+        break;
+    case 6:
+        strF = "INSERT OR IGNORE";
+        break;
+    default:
+        strF = "INSERT";
+        break;
+    }
+
+    strF = strF + " INTO "+table+" ( ";
     for(i=0;i<column.size();i++){
         strF = strF + column[i];
         if(i<column.size()-1)
@@ -592,7 +618,6 @@ QSqlError BD::DeleteUslugaApartament(int id_list_apart_usluga)
 
     str = "DELETE FROM list_app_usluga WHERE id_list_app_usluga=%1";
     str = str.arg(id_list_apart_usluga);
-    qDebug() << str;
     if (!query.exec(str)){
         out = query.lastError();
     }

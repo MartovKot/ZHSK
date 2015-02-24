@@ -63,24 +63,20 @@ private slots:
     void Refresh_Settings();
     void sl_AddOrg();                                  // добавление организации
     void AddHome();                                    // добавление дома
-//    void AddUsluga_of_Apartament();                    // Добавить услуги в квартиру
     void sl_AddUsluga(const QString &usluga, const int &id_type_usluga);
     void Refresh(int);
     void Refresh_cmbNumApp_onUslugi();
     void Refresh_cmBx_NumApp_onApartament();
     void Refresh_tblView_Apartament();
-    void TarifRequest();
     void TarifEdit();
     void SaveTarif();
     void FillTarif();
-//    void UslView();
     void sl_OrgEdit(QModelIndex model);
     void sl_HomeEdit(QModelIndex model);
     void sl_SaveOrg();
     void sl_SaveHome();
     void sl_DeleteOrg();
     void sl_DeleteHome();
-//    void sl_DeleteUsluga();
     void sl_CancelOrg();
     void sl_CancelHome();
     void on_pBtn_addPens_clicked();
@@ -104,6 +100,8 @@ private slots:
     void on_cmBx_NumAp_on_Uslugi_activated(const QString &arg1);
     void on_pBtnAddUsluga_clicked();
     void on_pBtnDeleteUsluga_clicked();
+    void on_pBtnMassOperation_clicked();
+    void on_pBtn_Tarif_request_clicked();
 };
 
 #endif // ADMINWINDOW_H

@@ -92,9 +92,10 @@ void MainWindow::Print_mod()
 
     QDate date;
     date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
-
+    progress.show();
     for(int i = 0;i<list_id_apartament.size();i++){
         progress.setValue(i);
+        qApp->processEvents();
         if (progress.wasCanceled())
             break;
         db.CreditedOfService(list_id_apartament.at(i),date);// Формирование данных по i той квартире

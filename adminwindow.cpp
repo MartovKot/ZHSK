@@ -1,6 +1,7 @@
 #include "adminwindow.h"
 #include "ui_adminwindow.h"
 #include "mainwindow.h"
+#include "massoperations.h"
 
 
 #include <qtextcodec.h>
@@ -8,6 +9,8 @@
 #include <QStandardItemModel>
 #include <QCheckBox>
 #include <QTableWidgetItem>
+
+
 
 AdminWindow::AdminWindow(QWidget *parent) :
     QDialog(parent),
@@ -72,7 +75,6 @@ AdminWindow::AdminWindow(QWidget *parent) :
     ui->lEd_Tarif_month->setText(QString::number(QDate::currentDate().month()));
     ui->tab_Tarif->setLayout(ui->verticalLayout_8);
 
-    AdminWindow::connect(ui->pBtn_Tarif_request,SIGNAL(clicked()),SLOT(TarifRequest()));
     AdminWindow::connect(ui->pBtn_TarifEdit,SIGNAL(clicked()),SLOT(TarifEdit()));
     AdminWindow::connect(ui->pBtn_Fill,SIGNAL(clicked()),SLOT(FillTarif()));
     //---------------------------------------
@@ -268,33 +270,14 @@ void AdminWindow::Mode(QString m)
     }
 }
 
-void AdminWindow::TarifRequest()
-{
 
-    if(ui->lEd_Tarif_month->text()==""||ui->lEd_Tarif_year->text()==""){
-        QMessageBox::warning(this,trUtf8("Предупреждение"),
-                             trUtf8("Заполните одно из полей"),QMessageBox::Ok);
-        return;
-    }
-    if(ui->lEd_Tarif_month->text().toInt()>12
-            || ui->lEd_Tarif_year->text().toInt()<1900
-            || ui->lEd_Tarif_year->text().toInt()>2100){
-        QMessageBox::warning(this,trUtf8("Предупреждение"),
-                             trUtf8("Не верная дата"),QMessageBox::Ok);
-        return;
-    }
-
-    ui->tblV_on_Tarif->setModel(
-                tbl_tariff.ModelTarifTabl(ui->lEd_Tarif_year->text().toInt(),ui->lEd_Tarif_month->text().toInt()));
-    ui->tblV_on_Tarif->hideColumn(0);
-}
 
 void AdminWindow::SaveTarif()
 {
     int TarifID = ui->tblV_on_Tarif->model()->index(ui->tblV_on_Tarif->currentIndex().row(),0).data().toInt();
 
     tbl_tariff.UpdateTarif(lEd_tarif->text(),lEd_tarif2->text(),lEd_norm->text(),TarifID);
-    TarifRequest();
+    on_pBtn_Tarif_request_clicked();
     dlg->close();
     delete dlg;
 }
@@ -527,7 +510,7 @@ void AdminWindow::FillTarif()
     tbl_tariff.FillTarif(ui->lEd_Tarif_month->text().toInt(),ui->lEd_Tarif_year->text().toInt());
     QMessageBox::information(this,trUtf8("Уведомление"),
                              trUtf8("Загрузка завершена"),QMessageBox::Ok);
-    TarifRequest();
+    on_pBtn_Tarif_request_clicked();
 }
 
 void AdminWindow::sl_OrgEdit(QModelIndex model)
@@ -937,4 +920,68 @@ void AdminWindow::on_pBtnDeleteUsluga_clicked()
                                                        ui->tblV_on_Uslugi->currentIndex().row(),2).data().toInt());
         Refresh_tblV_on_Uslugi();
     }
+}
+
+void AdminWindow::on_pBtnMassOperation_clicked()
+{
+    MassOperations *dlg = new MassOperations;
+    int row;
+    int HomeID,OrganiztionID;
+
+    row = ui->cmBx_Home_on_Uslugi->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Home_on_Uslugi->model()->index(row, 0);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                HomeID = index.data().toInt();
+            }else{
+                return;
+            }
+        }else{
+            return;
+        }
+    }else{
+        return;
+    }
+
+    row = ui->cmBx_Org_on_Uslugi->currentIndex();
+    if (row != -1){
+        QModelIndex index = ui->cmBx_Org_on_Uslugi->model()->index(row, 0);
+        if (index.isValid()){
+            if (index.data().canConvert(QVariant::Int)){
+                OrganiztionID = index.data().toInt();
+            }else{
+                return;
+            }
+        }else{
+            return;
+        }
+    }else{
+        return;
+    }
+
+    dlg->setHome(HomeID);
+    dlg->setOrganization(OrganiztionID);
+
+    dlg->open();
+}
+
+void AdminWindow::on_pBtn_Tarif_request_clicked()
+{
+    if(ui->lEd_Tarif_month->text()==""||ui->lEd_Tarif_year->text()==""){
+        QMessageBox::warning(this,trUtf8("Предупреждение"),
+                             trUtf8("Заполните одно из полей"),QMessageBox::Ok);
+        return;
+    }
+    if(ui->lEd_Tarif_month->text().toInt()>12
+            || ui->lEd_Tarif_year->text().toInt()<1900
+            || ui->lEd_Tarif_year->text().toInt()>2100){
+        QMessageBox::warning(this,trUtf8("Предупреждение"),
+                             trUtf8("Не верная дата"),QMessageBox::Ok);
+        return;
+    }
+
+    ui->tblV_on_Tarif->setModel(
+                tbl_tariff.ModelTarifTabl(ui->lEd_Tarif_year->text().toInt(),ui->lEd_Tarif_month->text().toInt()));
+    ui->tblV_on_Tarif->hideColumn(0);
 }
