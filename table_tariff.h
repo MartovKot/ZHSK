@@ -7,6 +7,7 @@ class table_tariff
 {
 private:
     BD *db;
+    QSqlError AddLineTariffNewMonth(DateOfUnixFormat date);
 public:
     table_tariff();
     ~table_tariff();

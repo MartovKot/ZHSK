@@ -2,6 +2,7 @@
 #include "ui_massoperations.h"
 #include "home.h"
 #include "organization.h"
+#include <QProgressDialog>
 
 MassOperations::MassOperations(QWidget *parent) :
     QDialog(parent),
@@ -27,11 +28,22 @@ void MassOperations::on_pBtn_Add_clicked()
 
     id_usluga = ui->cmBx_Usluga->model()->index(ui->cmBx_Usluga->currentIndex(),1).data().toInt();
     apartaments = db.is_ListIdApartament(m_id_org,m_id_home);
+    QProgressDialog progress(trUtf8("Идёт распределение..."), trUtf8("Отмена"), 0, apartaments.count()-1, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setWindowTitle(trUtf8("Расчёт"));
+    progress.show();
     for (int i=0;i<apartaments.count();i++){
+        progress.setValue(i);
+        qApp->processEvents();
+        if (progress.wasCanceled())
+            break;
         value.clear();
         value << QString::number(apartaments.at(i)) << QString::number(id_usluga);
         db.add("list_app_usluga",column,value,6);
     }
+    progress.setValue(apartaments.count()-1);
+    QMessageBox::information(this,trUtf8("Успех"),
+                         trUtf8("Услуга распределена всем \n"),QMessageBox::Ok);
 }
 
 void MassOperations::on_pBtn_Delete_clicked()

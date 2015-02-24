@@ -68,7 +68,6 @@ private slots:
     void Refresh_cmbNumApp_onUslugi();
     void Refresh_cmBx_NumApp_onApartament();
     void Refresh_tblView_Apartament();
-    void TarifRequest();
     void TarifEdit();
     void SaveTarif();
     void FillTarif();
@@ -102,6 +101,7 @@ private slots:
     void on_pBtnAddUsluga_clicked();
     void on_pBtnDeleteUsluga_clicked();
     void on_pBtnMassOperation_clicked();
+    void on_pBtn_Tarif_request_clicked();
 };
 
 #endif // ADMINWINDOW_H

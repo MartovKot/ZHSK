@@ -42,7 +42,8 @@ HEADERS += adminwindow.h \
     editapartmentmodel.h \
     modelusliga.h \
     dialog_with_lineedit.h \
-    massoperations.h
+    massoperations.h \
+    progressdialog.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -76,7 +77,8 @@ SOURCES += adminwindow.cpp \
     editapartmentmodel.cpp \
     modelusliga.cpp \
     dialog_with_lineedit.cpp \
-    massoperations.cpp
+    massoperations.cpp \
+    progressdialog.cpp
 
 RESOURCES += \
     qrc.qrc

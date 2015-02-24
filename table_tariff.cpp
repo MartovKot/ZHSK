@@ -43,26 +43,8 @@ QSqlQueryModel* table_tariff::ModelTarifTabl(int year, int month)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
-    QVariant count_tarif;
+
     DateOfUnixFormat date(year,month,1);
-
-    //----Вынести в другое место----
-    str = "SELECT COUNT() FROM tariff "
-            " WHERE tariff_date = " + QString::number(date.Second());
-    count_tarif = db->SelectFromTable(str);
-    if(!count_tarif.isNull()){
-        if(count_tarif.toInt()==0){
-            QString str2 = "INSERT INTO tariff(id_usluga, tariff_date) SELECT id_usluga, %1 FROM usluga";
-            str2 = str2.arg(QString::number(date.Second()));
-            QSqlQuery query2;
-            if(query2.exec(str2)){
-
-            }else{
-                qDebug() << "aebb8b3a6e4299f530efd00de3e80361" <<query2.lastError();
-            }
-        }
-    }
-    //-----конец
 
     str = "SELECT t.id_tariff, u.name, t.tariff, t.tariff2, t.norm FROM tariff t, usluga u "
             " WHERE t.tariff_date = " + QString::number(date.Second()) + " AND u.id_usluga=t.id_usluga";
@@ -124,4 +106,28 @@ int table_tariff::FillTarif(int month, int year)
     }
 
     return 0;
+}
+
+QSqlError table_tariff::AddLineTariffNewMonth(DateOfUnixFormat date)
+{
+    QVariant count_tariff, count_tariff_used;
+    QString str;
+    QSqlError error;
+
+    str = " SELECT COUNT() FROM tariff "
+          " WHERE tariff_date = " + QString::number(date.Second());
+    count_tariff = db->SelectFromTable(str);
+
+    str = "SELECT COUNT() FROM usluga";
+    count_tariff_used = db->SelectFromTable(str);
+
+    if(!count_tariff.isNull() && !count_tariff_used.isNull()){
+        if(count_tariff.toInt()== 0 || count_tariff_used.toInt()== 0 || count_tariff.toInt() != count_tariff_used.toInt() ){
+            QString str2 = "INSERT OR IGNORE INTO tariff(id_usluga, tariff_date) SELECT id_usluga, %1 FROM usluga";
+            str2 = str2.arg(QString::number(date.Second()));
+            error = db->QueryExecute(str2);
+        }
+    }
+
+    return error;
 }

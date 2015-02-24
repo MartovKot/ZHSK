@@ -15,5 +15,6 @@ SELECT id_list_app_usluga, id_apartament,id_usluga
 FROM list_app_usluga_temp ;
 
 DROP TABLE list_app_usluga_temp;
+DROP TABLE tarif_2;
 
 UPDATE version SET version = '01.07.003';

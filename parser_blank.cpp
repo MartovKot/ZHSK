@@ -1,4 +1,5 @@
 #include "parser_blank.h"
+#include "progressdialog.h"
 
 parser_blank::parser_blank(QWidget *parent):
     QWidget(parent)
@@ -187,10 +188,14 @@ void parser_blank::generating()
     home.setId(ConfData.Home_id);
     str_NameFile_base = organization.getName() + " " + home.getName();
 
+
     QProgressDialog progress(trUtf8("Создание файлов..."), trUtf8("Отмена"), 0, str_L.size()-1, this);
+//    ProgressDialog progress;
     progress.setWindowModality(Qt::WindowModal);
     progress.setWindowTitle(trUtf8("Расчёт"));
 
+//    progress.run();
+    progress.show();
     for(int i=0;i<str_L.size();i++){
         progress.setValue(i);
         if (progress.wasCanceled())
