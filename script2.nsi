@@ -137,6 +137,7 @@ Section "libs" SEC02
   File "${QT_INSTALL}\bin\Qt5Positioning.dll"
   File "${QT_INSTALL}\bin\Qt5Qml.dll"
   File "${QT_INSTALL}\bin\Qt5Quick.dll"
+  File "${QT_INSTALL}\bin\Qt5WebChannel.dll"
   
   File "${QT_INSTALL}\bin\libgcc_s_dw2-1.dll"
   File "${QT_INSTALL}\bin\libwinpthread-1.dll"
