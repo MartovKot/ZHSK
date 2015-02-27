@@ -3,9 +3,9 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "ZHSK"
-!define PRODUCT_VERSION "1.7.2"
+!define PRODUCT_VERSION "1.7.6"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kvit.exe"
-!define QT_INSTALL "E:\Qt\Qt5.3.2\5.3\mingw482_32"
+!define QT_INSTALL "E:\Qt\Qt5.4.0\5.4\mingw491_32"
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
@@ -86,7 +86,9 @@ Section "zhsk" SEC01
   SetOverwrite ifnewer
 ;  File ".\release\kvit.exe"
 ;File "D:\Qt-project\build-Kvit_main-Desktop_Qt_5_2_1_MinGW_32bit-Release\release\kvit.exe"
-  File "E:\QT-sourse\build-Kvit_main-Desktop_Qt_5_3_MinGW_32bit-Release\release\kvit.exe"
+  ;File "E:\QT-sourse\build-Kvit_main-Desktop_Qt_5_3_MinGW_32bit-Release\release\kvit.exe"
+  File "E:\QT-sourse\build-Kvit_main-Desktop_Qt_5_4_0_MinGW_32bit-Release\release\kvit.exe"
+  
   CreateDirectory "$SMPROGRAMS\ZHSK"
   CreateShortCut "$SMPROGRAMS\ZHSK\ZHSK.lnk" "$INSTDIR\kvit.exe"
   CreateShortCut "$DESKTOP\ZHSK.lnk" "$INSTDIR\kvit.exe"
@@ -135,13 +137,14 @@ Section "libs" SEC02
   File "${QT_INSTALL}\bin\Qt5Positioning.dll"
   File "${QT_INSTALL}\bin\Qt5Qml.dll"
   File "${QT_INSTALL}\bin\Qt5Quick.dll"
+  File "${QT_INSTALL}\bin\Qt5WebChannel.dll"
   
   File "${QT_INSTALL}\bin\libgcc_s_dw2-1.dll"
   File "${QT_INSTALL}\bin\libwinpthread-1.dll"
   File "${QT_INSTALL}\bin\libstdc++-6.dll"
-  File "${QT_INSTALL}\bin\icuin52.dll"
-  File "${QT_INSTALL}\bin\icuuc52.dll"
-  File "${QT_INSTALL}\bin\icudt52.dll"
+  File "${QT_INSTALL}\bin\icuin53.dll"
+  File "${QT_INSTALL}\bin\icuuc53.dll"
+  File "${QT_INSTALL}\bin\icudt53.dll"
 
   SetOutPath "$INSTDIR\bearer"
   
