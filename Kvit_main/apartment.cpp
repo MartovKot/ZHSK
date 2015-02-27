@@ -70,7 +70,6 @@ QAbstractItemModel* Apartment::ModelOneApartment(int id)
                         " ORDER BY mia.date_men_in_apartament"
                     );
     model->removeColumn(0);
-    qDebug() << model->lastError();
     sl_ModelApartamentHeaderData(model);
     connect(model,SIGNAL(sgn_EditApartament(int,QString)),this,SLOT(sl_EditApartament(int,QString)));
 
@@ -81,7 +80,6 @@ QAbstractItemModel* Apartment::ModelOneApartment(int id)
 
 void Apartment::sl_ModelApartamentHeaderData(QAbstractTableModel *model)
 {
-//    qDebug() << "sl_ModelApartamentHeaderData";
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Фамилия"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Имя"));
@@ -240,3 +238,76 @@ QString Apartment::is_FIO_payer() const
     return fio;
 }
 
+double Apartment::setTotalArea() const
+{
+    QString str;
+    double out;
+
+    str = "SELECT total_area FROM apartament WHERE id_apartament=%1";
+    str = str.arg(m_id);
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        out = t.toDouble();
+    }else{
+        out = 0;
+    }
+
+    return out;
+}
+
+double Apartment::setLivedArea() const
+{
+    QString str;
+    double out;
+
+    str = "SELECT inhabed_area FROM apartament WHERE id_apartament=%1";
+    str = str.arg(m_id);
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        out = t.toDouble();
+    }else{
+        out = 0;
+    }
+
+    return out;
+}
+
+
+double Apartment::setLodjia() const
+{
+    QString str;
+    double out;
+
+    str = "SELECT loggia FROM apartament WHERE id_apartament=%1";
+    str = str.arg(m_id);
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        out = t.toDouble();
+    }else{
+        out = 0;
+    }
+
+    return out;
+}
+
+
+double Apartment::setBalkon() const
+{
+    QString str;
+    double out;
+
+    str = "SELECT balkon FROM apartament WHERE id_apartament=%1";
+    str = str.arg(m_id);
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        out = t.toDouble();
+    }else{
+        out = 0;
+    }
+
+    return out;
+}

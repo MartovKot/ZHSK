@@ -29,7 +29,11 @@ public:
 
     QString is_NameCounter(int id_counter);
 
+    // Функции перенести в класс объединяющий дом организацию
     QStringList sum_app(int id_org, int id_home);               //Возвращает список имён квартир в доме
+    QList<int> is_ListIdApartament(int id_org, int id_home);    // Возвращает список ид квартир в доме
+    //-------------------------
+
 
     QStringList Sum_Schet(int id_apartament);                   //Возвращает список счётчиков
     QStringList Sum_Service(int id_apartament);                 //Возвращает список услуг
@@ -48,17 +52,17 @@ public:
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
     int is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date/*qint64 unix_date*/);
 
-    double is_TotalArea(int id_app);
-    double is_LivedArea(int id_app);
-    double is_Balkon(int id_app);
-    double is_Lodjia(int id_app);
+//    double is_TotalArea(int id_app);
+//    double is_LivedArea(int id_app);
+//    double is_Balkon(int id_app);
+//    double is_Lodjia(int id_app);
     int is_NumberAppartament(int id_app);
 
 
     QList<int> is_ApartamentService(int id_app);                //Возвращает список ид услуг по квартире
     QList<int> is_ListIdServiceWithCounter(int id_apartament);
     QList<int> is_ListIdServiceOutCounter(int id_apartament);
-    QList<int> is_ListIdApartament(int id_org, int id_home);
+
 
 
     QString is_NameService(int id_service);

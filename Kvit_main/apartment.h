@@ -20,6 +20,10 @@ public:
     QAbstractItemModel* ModelOneApartment(int id);     //модель для квартиры
     void DeleteApartment();
     QString is_FIO_payer() const;
+    double setTotalArea() const;
+    double setLivedArea() const;
+    double setBalkon() const;
+    double setLodjia() const;
 
 private:
     BD db;
