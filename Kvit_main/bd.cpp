@@ -309,51 +309,6 @@ QList<int> BD::is_ListIdApartament(int id_org, int id_home)
     return out;
 }
 
-
-double BD::is_TotalArea(int id_app)
-{
-    QString str;
-
-    str = "SELECT total_area FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toDouble();
-}
-
-
-double BD::is_LivedArea(int id_app)
-{
-    QString str;
-
-    str = "SELECT inhabed_area FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-   return qVariant_from_query(str).toDouble();
-}
-
-
-double BD::is_Lodjia(int id_app)
-{
-    QString str;
-
-    str = "SELECT loggia FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toDouble();
-}
-
-
-double BD::is_Balkon(int id_app)
-{
-    QString str;
-
-    str = "SELECT balkon FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toDouble();
-}
-
-
 int BD::is_NumberAppartament(int id_app)
 {
     QString str;

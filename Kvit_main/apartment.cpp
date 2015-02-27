@@ -238,7 +238,7 @@ QString Apartment::is_FIO_payer() const
     return fio;
 }
 
-double Apartment::setTotalArea() const
+double Apartment::getTotalArea() const
 {
     QString str;
     double out;
@@ -256,7 +256,7 @@ double Apartment::setTotalArea() const
     return out;
 }
 
-double Apartment::setLivedArea() const
+double Apartment::getLivedArea() const
 {
     QString str;
     double out;
@@ -275,7 +275,7 @@ double Apartment::setLivedArea() const
 }
 
 
-double Apartment::setLodjia() const
+double Apartment::getLodjia() const
 {
     QString str;
     double out;
@@ -294,7 +294,7 @@ double Apartment::setLodjia() const
 }
 
 
-double Apartment::setBalkon() const
+double Apartment::getBalkon() const
 {
     QString str;
     double out;
