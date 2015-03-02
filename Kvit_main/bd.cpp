@@ -311,135 +311,6 @@ QList<int> BD::is_ListIdApartament(int id_org, int id_home)
 
 //=====================================================================
 
-QStringList BD::Sum_Schet(int id_apartament)
-{
-    QString str;
-
-    str = "SELECT u.name FROM usluga u, list_app_usluga lau "
-            " WHERE u.id_usluga=lau.id_usluga AND u.type_usluga=1 AND lau.id_apartament=%1";
-    str = str.arg(id_apartament);
-
-    return strL_from_query(str);;
-}
-
-QStringList BD::Sum_Service(int id_apartament)
-{
-    QString str;
-
-    str = "SELECT u.name FROM usluga u, list_app_usluga lau "
-            " WHERE u.id_usluga=lau.id_usluga AND NOT u.type_usluga=1 AND lau.id_apartament=%1";
-    str = str.arg(id_apartament);
-
-    return strL_from_query(str);
-}
-
-QList<int> BD::is_ListIdServiceWithCounter(int id_apartament)
-{
-    QString str;
-    QSqlQuery query;
-    QList<int> out;
-
-    str = "SELECT lau.id_usluga "
-            "FROM usluga u, list_app_usluga lau "
-            "WHERE u.id_usluga=lau.id_usluga AND u.type_usluga=1 AND lau.id_apartament=%1";
-    str = str.arg(id_apartament);
-
-    if (!query.exec(str)){
-        qDebug() << "92df4946066ff2f748cbd0178e263cac" << "Eror in "<<str<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    } else {
-        while (query.next()){
-            out << query.value(0).toInt();
-        }
-    }
-    return out;
-}
-
-QList<int> BD::is_ListIdServiceOutCounter(int id_apartament)
-{
-    QString str;
-    QSqlQuery query;
-    QList<int> out;
-
-    str = "SELECT lau.id_usluga FROM usluga u, list_app_usluga lau "
-            " WHERE u.id_usluga=lau.id_usluga AND NOT u.type_usluga=1 AND lau.id_apartament=%1";
-    str = str.arg(id_apartament);
-
-    if (!query.exec(str)){
-        qDebug() << "657e96603000538d92a0d97f98694612"<< "Eror in "<<str<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    } else {
-        while (query.next()){
-            out << query.value(0).toInt();
-        }
-    }
-    return out;
-}
-
-int BD::is_RealMen(int id_app, DateOfUnixFormat date)
-{
-    QString str;
-
-    str = "SELECT real_men, max(date_men_in_apartament) FROM men_in_apartament "
-            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
-            " ORDER BY date_men_in_apartament";
-    str = str.arg(id_app)
-            .arg(date.Second());
-    return qVariant_from_query(str).toInt();
-}
-
-int BD::is_RentMen(int id_app, DateOfUnixFormat date)
-{
-    QString str;
-
-    str = "SELECT rent_men FROM men_in_apartament "
-            " WHERE id_apartament=%1  AND date_men_in_apartament <= %2 "
-            " ORDER BY date_men_in_apartament"
-            ;
-    str = str.arg(id_app)
-            .arg(date.Second());
-
-    return qVariant_from_query(str).toInt();
-}
-
-int BD::is_ReservMen(int id_app, DateOfUnixFormat date)
-{
-    QString str;
-
-    str = "SELECT reserv_men FROM men_in_apartament "
-            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
-            " ORDER BY date_men_in_apartament"
-            ;
-    str = str.arg(id_app)
-            .arg(date.Second());
-
-    return qVariant_from_query(str).toInt();
-}
-
-
-
-QList<int> BD::is_ApartamentService(int id_app)
-{
-    QList<int> out;   //список ид услуг относящихся к этой квартире
-
-    QString str;
-    QSqlQuery query;
-
-    str = "SELECT id_usluga FROM list_app_usluga WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    if (query.exec(str)){
-      while (query.next()){
-          out <<  query.value(0).toInt();
-      }
-    } else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    return out;
-}
-
 QString BD::is_NameService(int id_service)
 {
     QString out = "";
@@ -777,50 +648,7 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
     return id_new;
 }
 
-void BD::CreditedOfService(int id_apartament, DateOfUnixFormat date)  //расчёт для квартиры
-{
-    QList<int> ListService;
-    QString str;
-    QSqlQuery query;
-    ListService = is_ApartamentService(id_apartament);                  // список ид услуг по квартире
 
-    for(int i=0;i<ListService.size();i++){
-        int id_list_ap_usl = -1;
-        id_list_ap_usl = is_idListAppUsluga(id_apartament, ListService[i]);
-
-        str = "SELECT id_credited FROM credited WHERE id_list_app_usluga=%1 AND date_credited=%2 ";
-        str = str.arg(id_list_ap_usl)
-                .arg(date.Second());
-
-        // начисление по услугам
-        if (query.exec(str)){
-            QVariant cred = CreditedOfApartament(id_list_ap_usl, date);
-            if (query.next()){
-                QVariant credR = SelectFromTable("SELECT credited_of_service FROM credited "
-                                "WHERE id_credited = "+query.value(0).toString());
-                if(cred.toString() != credR.toString()){
-                    UpdateTable("credited","credited_of_service",
-                                cred.toString(),
-                                "id_credited", query.value(0).toString()
-                    );
-                }
-            }else{
-                QStringList column,value;
-                column << "id_list_app_usluga" << "date_credited" << "credited_of_service";
-                value << QString::number(id_list_ap_usl) <<
-                    QString::number(date.Second()) <<
-                       cred.toString();
-//                    CreditedOfApartament(id_list_ap_usl,date).toString();
-                add("credited",column,value);
-            }
-        } else{
-            qDebug()<<query.lastError();
-            LogOut.logout(query.lastError().text());
-        }
-
-    }
-    CreditedForApartament(id_apartament,date);  //расчёт общей оплаты и задолжности
-}
 
 int BD::is_Pokazanie(int id_list_app_usluga, QDate date)
 {
@@ -851,69 +679,6 @@ int BD::is_Pokazanie(int id_list_app_usluga, QDate date)
     return out;
 }
 
-QVariant BD::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date) // начисление услуга-квартрира-дата
-{
-    QString str;
-    QSqlQuery query;
-    int type_usluga, id_usluga;
-    int id_apartment;
-    double tarif = 0;
-    QVariant out;
-
-    //получим тип услуги ид услуги и тариф
-    str = "SELECT u.type_usluga, u.id_usluga, lau.id_apartament FROM usluga u, list_app_usluga lau "
-            "WHERE u.id_usluga=lau.id_usluga AND lau.id_list_app_usluga=%1";
-    str = str.arg(id_list_app_usluga);
-
-    if (query.exec(str)){
-        if (query.next()){
-            type_usluga = query.value(0).toInt();
-            id_usluga = query.value(1).toInt();
-            id_apartment = query.value(2).toInt();
-
-            table_tariff tbl_tariff;
-            tarif = tbl_tariff.is_Tariff(id_usluga,date);// Получаем тариф
-        }else{
-            qDebug() << "not record" << "af43d615b46af5a458e710e8e8f5b61e" << str;
-            return -1;
-        }
-    } else{
-        qDebug() << "CreditedOfApartament" << query.lastError();
-        LogOut.logout(query.lastError().text());
-        return -1;
-    }
-
-    if(type_usluga == 1){ //счётчики
-        out = PaymentCounters(id_list_app_usluga, date);
-    }
-    if(type_usluga == 2){ //на кв метр
-        QString str2;
-        QSqlQuery query2;
-        str2 = "SELECT total_area FROM apartament a, list_app_usluga lau "
-                "WHERE lau.id_apartament=a.id_apartament AND lau.id_list_app_usluga=%1";
-        str2 = str2.arg(id_list_app_usluga);
-        if (query2.exec(str2)){
-            if (query2.next()){
-                out = (QVariant)(tarif * query2.value(0).toDouble());
-            }else{
-                qDebug() << "not record" << str;
-                return -1;
-            }
-        } else{
-            qDebug() << "CreditedOfApartament" << query.lastError();
-            LogOut.logout(query.lastError().text());
-            return -1;
-        }
-    }
-    if(type_usluga == 3){ //на человека
-        out = tarif * is_RealMen(id_apartment, date);
-    }
-    if(type_usluga == 4){ //на квартиру
-        out = tarif;
-    }
-    return out;
-}
-
 double BD::CreditedForReport(int id_apartament, int id_usluga, DateOfUnixFormat date)
 {
     QString str;
@@ -932,149 +697,149 @@ double BD::CreditedForReport(int id_apartament, int id_usluga, DateOfUnixFormat 
     return out;
 }
 
-void BD::CreditedForApartament(int id_apart, DateOfUnixFormat date)
-{
-    QString str;
-    QSqlQuery query;
-    QVariant cred_with_count, cred_out_count;
+//void BD::CreditedForApartament(int id_apart, DateOfUnixFormat date)
+//{
+//    QString str;
+//    QSqlQuery query;
+//    QVariant cred_with_count, cred_out_count;
 
 
-    // К оплате по услугам
-    str = "SELECT SUM(credited_of_service) FROM credited c, list_app_usluga lau, usluga u "
-            "WHERE c.date_credited=%1 "
-            "AND c.id_list_app_usluga=lau.id_list_app_usluga "
-            "AND lau.id_usluga=u.id_usluga "
-            "AND NOT u.type_usluga='1' "
-            "AND lau.id_apartament=%2 ";
-    str = str.arg(date.Second())
-            .arg(id_apart);
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        cred_out_count = t;
-    }
+//    // К оплате по услугам
+//    str = "SELECT SUM(credited_of_service) FROM credited c, list_app_usluga lau, usluga u "
+//            "WHERE c.date_credited=%1 "
+//            "AND c.id_list_app_usluga=lau.id_list_app_usluga "
+//            "AND lau.id_usluga=u.id_usluga "
+//            "AND NOT u.type_usluga='1' "
+//            "AND lau.id_apartament=%2 ";
+//    str = str.arg(date.Second())
+//            .arg(id_apart);
+//    QVariant t = SelectFromTable(str);
+//    if(!t.isNull()){
+//        cred_out_count = t;
+//    }
 
-    // К оплате по счётчикам
-    str = "SELECT SUM(credited_of_service) FROM credited c, list_app_usluga lau, usluga u "
-            "WHERE c.date_credited=%1 "
-                "AND c.id_list_app_usluga=lau.id_list_app_usluga "
-                "AND lau.id_usluga=u.id_usluga "
-                "AND u.type_usluga=1 "
-                "AND lau.id_apartament=%2";
-    str = str.arg(date.Second())
-            .arg(id_apart);
-    t = SelectFromTable(str);
-    if(!t.isNull()){
-        cred_with_count = t;
-    }
-    str = "SELECT id_credited_of_apartament FROM credited_of_apartament "
-            "WHERE date_credited_of_apartament=%1 AND id_apartament=%2 ";
-    str = str.arg(date.Second())
-            .arg(id_apart);
-    if (query.exec(str)){
-        if (query.next()){
-            UpdateTable("credited_of_apartament","credited_with_counter",cred_with_count.toString(),
-                        "id_credited_of_apartament",query.value(0).toString());
-            UpdateTable("credited_of_apartament","credited_out_counter",cred_out_count.toString(),
-                        "id_credited_of_apartament",query.value(0).toString());
-        }else{
-            QStringList column, value;
-            column<<"id_apartament"<<"date_credited_of_apartament"<<"credited_with_counter"<<"credited_out_counter";
-            value<<QString::number(id_apart)<<QString::number(date.Second())
-                <<cred_with_count.toString()<<cred_out_count.toString();
-            add("credited_of_apartament",column,value);
-        }
-    }else{
-        qDebug()<<query.lastError()<<str;
-        LogOut.logout(query.lastError().text());
-    }
-    PaymentOfDebt(id_apart,date.year(),date.month());// Расчёт долга
-}
+//    // К оплате по счётчикам
+//    str = "SELECT SUM(credited_of_service) FROM credited c, list_app_usluga lau, usluga u "
+//            "WHERE c.date_credited=%1 "
+//                "AND c.id_list_app_usluga=lau.id_list_app_usluga "
+//                "AND lau.id_usluga=u.id_usluga "
+//                "AND u.type_usluga=1 "
+//                "AND lau.id_apartament=%2";
+//    str = str.arg(date.Second())
+//            .arg(id_apart);
+//    t = SelectFromTable(str);
+//    if(!t.isNull()){
+//        cred_with_count = t;
+//    }
+//    str = "SELECT id_credited_of_apartament FROM credited_of_apartament "
+//            "WHERE date_credited_of_apartament=%1 AND id_apartament=%2 ";
+//    str = str.arg(date.Second())
+//            .arg(id_apart);
+//    if (query.exec(str)){
+//        if (query.next()){
+//            UpdateTable("credited_of_apartament","credited_with_counter",cred_with_count.toString(),
+//                        "id_credited_of_apartament",query.value(0).toString());
+//            UpdateTable("credited_of_apartament","credited_out_counter",cred_out_count.toString(),
+//                        "id_credited_of_apartament",query.value(0).toString());
+//        }else{
+//            QStringList column, value;
+//            column<<"id_apartament"<<"date_credited_of_apartament"<<"credited_with_counter"<<"credited_out_counter";
+//            value<<QString::number(id_apart)<<QString::number(date.Second())
+//                <<cred_with_count.toString()<<cred_out_count.toString();
+//            add("credited_of_apartament",column,value);
+//        }
+//    }else{
+//        qDebug()<<query.lastError()<<str;
+//        LogOut.logout(query.lastError().text());
+//    }
+//    PaymentOfDebt(id_apart,date.year(),date.month());// Расчёт долга
+//}
 
-double BD::AmountToPay(int id_apart, qint64 u_date)
-{
-    QString str;
-    double out = 0.0, debt = 0.0;
+//double BD::AmountToPay(int id_apart, qint64 u_date)
+//{
+//    QString str;
+//    double out = 0.0, debt = 0.0;
 
-    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";
+//    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";
 
-    str = str.arg(u_date)
-            .arg(id_apart);
-    QVariant t = SelectFromTable(str);
-    if (!t.isNull()){
-        debt = t.toDouble();
-    }
+//    str = str.arg(u_date)
+//            .arg(id_apart);
+//    QVariant t = SelectFromTable(str);
+//    if (!t.isNull()){
+//        debt = t.toDouble();
+//    }
 
-    out = debt + AmountForServices(id_apart,u_date);
-//    qDebug() << out << u_date << debt;
-    return out;
-}
+//    out = debt + AmountForServices(id_apart,u_date);
+////    qDebug() << out << u_date << debt;
+//    return out;
+//}
 
-void BD::PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*/)
-{
-    QString str;
-    QSqlQuery query;
-    double debt = 0.0, payment = 0.0;
-    DateOfUnixFormat  date(year,month,25);
+//void BD::PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*/)
+//{
+//    QString str;
+//    QSqlQuery query;
+//    double debt = 0.0, payment = 0.0;
+//    DateOfUnixFormat  date(year,month,25);
 
-    // --------- К оплате в прошлом месяце
-    debt = debt + AmountToPay(id_apart,date.Second_first_day(-1));
-//    qDebug() <<"debt1 " << debt;
-    //---------- Долг за счётчики в этом месяце
-    str="SELECT credited_with_counter FROM credited_of_apartament WHERE  date_credited_of_apartament=%1 AND id_apartament=%2";
-    str = str.arg(date.Second_first_day())
-            .arg(id_apart);
-    QVariant t = SelectFromTable(str);
-//    qDebug() << str;
-    if(!t.isNull()){
-        debt = debt + t.toDouble();
-//        qDebug() << "counter" << t.toDouble();
-    }
-//    qDebug() << "t4" << payment << debt;
-    //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
-    str = "SELECT payment FROM payment "
-            "WHERE payment_date >= %1 AND payment_date <= %2 AND id_apartament = %3";
-    str = str.arg(date.Second(-1))
-            .arg(date.Second())
-            .arg(id_apart);
+//    // --------- К оплате в прошлом месяце
+//    debt = debt + AmountToPay(id_apart,date.Second_first_day(-1));
+////    qDebug() <<"debt1 " << debt;
+//    //---------- Долг за счётчики в этом месяце
+//    str="SELECT credited_with_counter FROM credited_of_apartament WHERE  date_credited_of_apartament=%1 AND id_apartament=%2";
+//    str = str.arg(date.Second_first_day())
+//            .arg(id_apart);
+//    QVariant t = SelectFromTable(str);
+////    qDebug() << str;
+//    if(!t.isNull()){
+//        debt = debt + t.toDouble();
+////        qDebug() << "counter" << t.toDouble();
+//    }
+////    qDebug() << "t4" << payment << debt;
+//    //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
+//    str = "SELECT payment FROM payment "
+//            "WHERE payment_date >= %1 AND payment_date <= %2 AND id_apartament = %3";
+//    str = str.arg(date.Second(-1))
+//            .arg(date.Second())
+//            .arg(id_apart);
 
-    if (query.exec(str)){
-        while (query.next()){
-            payment = payment + query.value(0).toDouble();
-//            qDebug() << query.value(0);
-        }
-    }else{
-        LogOut.logout(query.lastError().text());
-    }
-    debt = debt - payment;
-//    qDebug() << "t3" << payment << debt;
-    //-----обновление/добавление долга
-    str = "SELECT id_debt, debt FROM debt WHERE date_debt=%1 AND id_apartament=%2";
-    str = str.arg(date.Second_first_day())
-            .arg(id_apart);
-    if (query.exec(str)){
-//        qDebug() << "z1";
-        if (query.next()){
-            if(fabs(debt - query.value(1).toDouble()) <0.01){
-                return;
-            }else{
-                UpdateTable("debt","debt",QString::number(debt,'f',2),"id_debt",query.value(0).toString());
-            }
-//            qDebug() << "z2";
-        }else{
-            QStringList column,value;
-            column << "date_debt" << "id_apartament" << "debt";
-            value << QString::number(date.Second_first_day())
-                  << QString::number(id_apart) << QString::number(debt,'f',2);
-            add("debt",column,value);
+//    if (query.exec(str)){
+//        while (query.next()){
+//            payment = payment + query.value(0).toDouble();
+////            qDebug() << query.value(0);
+//        }
+//    }else{
+//        LogOut.logout(query.lastError().text());
+//    }
+//    debt = debt - payment;
+////    qDebug() << "t3" << payment << debt;
+//    //-----обновление/добавление долга
+//    str = "SELECT id_debt, debt FROM debt WHERE date_debt=%1 AND id_apartament=%2";
+//    str = str.arg(date.Second_first_day())
+//            .arg(id_apart);
+//    if (query.exec(str)){
+////        qDebug() << "z1";
+//        if (query.next()){
+//            if(fabs(debt - query.value(1).toDouble()) <0.01){
+//                return;
+//            }else{
+//                UpdateTable("debt","debt",QString::number(debt,'f',2),"id_debt",query.value(0).toString());
+//            }
+////            qDebug() << "z2";
+//        }else{
+//            QStringList column,value;
+//            column << "date_debt" << "id_apartament" << "debt";
+//            value << QString::number(date.Second_first_day())
+//                  << QString::number(id_apart) << QString::number(debt,'f',2);
+//            add("debt",column,value);
 
-//            qDebug() << "z3";
-        }
-    }else{
-        qDebug()<<query.lastError()<<str;
-        LogOut.logout(query.lastError().text());
-        return;
-    }
-}
+////            qDebug() << "z3";
+//        }
+//    }else{
+//        qDebug()<<query.lastError()<<str;
+//        LogOut.logout(query.lastError().text());
+//        return;
+//    }
+//}
 //-------------------------------------------------------------------------------------------
 QString BD::is_Debt(int id_apart, DateOfUnixFormat date)
 {
@@ -1099,21 +864,21 @@ QString BD::is_Debt(int id_apart, DateOfUnixFormat date)
 }
 
 
-double BD::AmountForServices(int id_apart, qint64 u_date)
-{
-    QString str;
-    double out = 0;
+//double BD::AmountForServices(int id_apart, qint64 u_date)
+//{
+//    QString str;
+//    double out = 0;
 
-    str="SELECT credited_out_counter FROM credited_of_apartament WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
-    str = str.arg(u_date)
-            .arg(id_apart);
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        out = t.toDouble();
-    }
+//    str="SELECT credited_out_counter FROM credited_of_apartament WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
+//    str = str.arg(u_date)
+//            .arg(id_apart);
+//    QVariant t = SelectFromTable(str);
+//    if(!t.isNull()){
+//        out = t.toDouble();
+//    }
 
-    return out;
-}
+//    return out;
+//}
 bool BD::isElectroUsluga(int id_usluga)
 {
     if(id_usluga == 4 ){
@@ -1158,89 +923,7 @@ bool BD::is_pensioner_living_alone(int id_apartament)
 
 }
 
-double BD::PaymentCounters(int id_list_app_usluga, DateOfUnixFormat date)  //расчёт оплаты за счётчик
-{
-    QString str;
-    QSqlQuery query;
-    int id_usluga, id_apartament;
-    double tarif,tarif2,norma, out = -1;
-    DateOfUnixFormat previous_date(date.year(),date.month(),date.day());
-    previous_date = date.addMonths(-1);
 
-
-    //Получим ид квартиры и ид услуги
-    str = "SELECT id_usluga, id_apartament FROM list_app_usluga WHERE id_list_app_usluga=%1";
-    str = str.arg(id_list_app_usluga);
-    if (query.exec(str)){
-        if (query.next()){
-            id_usluga = query.value(0).toInt();
-            id_apartament = query.value(1).toInt();
-        }else{
-            qDebug()<<"not record" << str;
-            return -1;
-        }
-    } else{
-        qDebug()<<"CreditedOfApartament"<<query.lastError()<<str;
-        LogOut.logout(query.lastError().text());
-        return -1;
-    }
-
-    //получим тариф
-    str = "SELECT t.tariff, t.tariff2, t.norm FROM tariff t, list_app_usluga lau "
-            "WHERE lau.id_usluga=t.id_usluga AND lau.id_list_app_usluga=%1 AND tariff_date=%2 ";
-    str = str.arg(id_list_app_usluga)
-            .arg(previous_date.Second());
-    if (query.exec(str)){
-      if (query.next()){
-            tarif = query.value(0).toDouble();
-            tarif2 = query.value(1).toDouble();
-            norma = query.value(2).toDouble();
-      }else{
-          return -1;
-      }
-    } else{
-        qDebug()<<"50989f8dadb00b65e3396658407c7197 "<<query.lastError();
-        LogOut.logout(query.lastError().text());
-        return -1;
-    }
-
-    //пенсионеры
-    if (is_pensioner_living_alone(id_apartament)){
-        if (isElectroUsluga(id_usluga)){
-            norma = 75;
-        }else if(isElectroUslugaDay(id_usluga)){
-            norma = 55;
-        }else if(isElectroUslugaNight(id_usluga)){
-            norma = 20;
-        }
-    }
-
-    if(is_TypeUsluga(id_usluga)==1){
-        str = "SELECT pokazanie_end, pokazanie_home FROM pokazanie "
-                "WHERE id_list_app_usluga=%1 "
-                "AND date_pokazanie=%2 ";
-        str = str.arg(id_list_app_usluga)
-                .arg(date.Second());
-        if (query.exec(str)){
-            if (query.next()){
-                int count = query.value(0).toDouble() - query.value(1).toDouble();
-                if (count <= norma * is_RealMen(id_apartament,date) || norma==0){
-                    out = tarif * count;
-                }else{
-                    out = norma * is_RealMen(id_apartament,date) * (tarif - tarif2) + count * tarif2;
-                }
-
-            }else{
-                return -1;
-            }
-        }else{
-            qDebug()<<"91748951796616cc5b01273b7a07c8f7"<<query.lastError();
-            LogOut.logout(query.lastError().text());
-            return -1;
-        }
-    }
-    return out;
-}
 
 void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт показаний канализации
 {

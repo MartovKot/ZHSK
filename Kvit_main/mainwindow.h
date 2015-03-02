@@ -11,6 +11,7 @@
 #include "adminwindow.h"
 #include "operwindow.h"
 #include "viewblank.h"
+#include "calculation.h"
 
 namespace Ui {
     class MainWindow;
@@ -31,6 +32,7 @@ private:
     AdminWindow *AdmWin;
     ViewBlank *VwBlank;
     BD db;
+    Calculation calculation;
     QString CurentDirArhiv;
     QString Version;
 

@@ -43,7 +43,8 @@ HEADERS += adminwindow.h \
     modelusliga.h \
     dialog_with_lineedit.h \
     massoperations.h \
-    progressdialog.h
+    progressdialog.h \
+    calculation.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -78,7 +79,8 @@ SOURCES += adminwindow.cpp \
     modelusliga.cpp \
     dialog_with_lineedit.cpp \
     massoperations.cpp \
-    progressdialog.cpp
+    progressdialog.cpp \
+    calculation.cpp
 
 RESOURCES += \
     qrc.qrc

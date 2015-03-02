@@ -15,6 +15,7 @@
 #include "TransposeProxyModel.h"
 #include "dateofunixformat.h"
 
+
 class BD : public  QObject
 {
     Q_OBJECT
@@ -35,37 +36,19 @@ public:
     //-------------------------
 
 
-    QStringList Sum_Schet(int id_apartament);                   //Возвращает список счётчиков
-    QStringList Sum_Service(int id_apartament);                 //Возвращает список услуг
-
-
     int is_TypeUsluga(int id_usluga);                           //возвращает ид типа услуги
     int is_idListAppUsluga(int id_apartament, int id_usluga);
 
-//    int is_LSh(int id_app);                                     //возвращает лицевой счёт квартиры
-
-    int is_RealMen(int id_app, DateOfUnixFormat date);                     //возвращает количество проживающих.
-    int is_RentMen(int id_app, DateOfUnixFormat date);                     //возвращает количество снимающих
-    int is_ReservMen(int id_app, DateOfUnixFormat date);                   //возвращает количество на брони
-
-
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
     int is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date/*qint64 unix_date*/);
-
-    QList<int> is_ApartamentService(int id_app);                //Возвращает список ид услуг по квартире
-    QList<int> is_ListIdServiceWithCounter(int id_apartament);
-    QList<int> is_ListIdServiceOutCounter(int id_apartament);
-
-
 
     QString is_NameService(int id_service);
 
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
     void UpdateHome(int id_home, QString home);
 
-    void CreditedOfService (int id_apartament, DateOfUnixFormat date);                             //начисление по квартире
-    double CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
 
+    double CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
 
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
@@ -77,14 +60,13 @@ public:
     QSqlQueryModel* ModelTypeUsluga();
 
 
-    double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
+
     QString is_Debt(int id_apart, DateOfUnixFormat date);
-    double AmountForServices(int id_apart, qint64 u_date);
+
 
     QSqlError DeletePension(int id_apart);
     QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
     QSqlError DeleteSetting(QString name_setting);
-
 
     void new_pokazanie(int id_apartament, int month, int year);
     QString isValueSetting(QString NameSetting);
@@ -99,6 +81,11 @@ public:
     QSqlError QueryExecute(QString str);
     QSqlError DeleteLine(QString table, QString id_name ,int id_line);
 
+    bool isElectroUsluga(int id_usluga);
+    bool isElectroUslugaDay (int id_usluga);
+    bool isElectroUslugaNight (int id_usluga);
+
+    bool is_pensioner_living_alone(int id_apartament);
 
 private:
 
@@ -106,19 +93,9 @@ private:
     LogReport LogOut;
 
     bool RunScript(QString filename);
-
-    QVariant CreditedOfApartament(int id_list_app_usluga, DateOfUnixFormat date);
-    void CreditedForApartament(int id_apart, DateOfUnixFormat date);
-    void PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*/);                                       //расчёт долга
-    double PaymentCounters(int id_list_app_usluga, DateOfUnixFormat date);
-
+                                          //расчёт долга
     void SumCount(int id_pokazanie, bool New = false);                                  //Расчёт показаний канализации
 
-    bool isElectroUsluga(int id_usluga);
-    bool isElectroUslugaDay (int id_usluga);
-    bool isElectroUslugaNight (int id_usluga);
-
-    bool is_pensioner_living_alone(int id_apartament);
 
     //delete dublicate
     QStringList strL_from_query(QString str);

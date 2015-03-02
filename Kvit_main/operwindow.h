@@ -17,6 +17,7 @@
 #include "organization.h"
 #include "home.h"
 #include "apartment.h"
+#include "calculation.h"
 
 namespace Ui {
     class OperWindow;
@@ -34,6 +35,7 @@ public:
 private:
     Ui::OperWindow *ui;
     BD db;
+    Calculation calculation;
     void Refresh_tblVPayment(int ApartamentID);
     TableViewPokazanie *tbl;
     QDialog *dlg;

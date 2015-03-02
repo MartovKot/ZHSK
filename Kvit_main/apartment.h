@@ -17,6 +17,7 @@ public:
     int getNumber() const;
     bool New(int id_home, int id_org, int number);
     void setIdAndNum(int id_home, int id_org, int number);
+    void setId(int id_apartment);
     QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
     QAbstractItemModel* ModelOneApartment(int id);     //модель для квартиры
     void DeleteApartment();
@@ -25,7 +26,13 @@ public:
     double getLivedArea() const;
     double getBalkon() const;
     double getLodjia() const;
-    int getPersonalAccount() const;
+    int getPersonalAccount() const;  //возвращает лицевой счёт квартиры
+    QList<int> getListIdServiceWithCounter();
+    QList<int> getListIdServiceOutCounter();
+    QList<int> getListIdServiceFull();                //Возвращает список ид услуг по квартире
+    int getRealMen(DateOfUnixFormat date) const;                     //возвращает количество проживающих.
+    int getRentMen(DateOfUnixFormat date) const;                     //возвращает количество снимающих
+    int getReservMen(DateOfUnixFormat date) const;                   //возвращает количество на брони
 
 private:
     BD db;

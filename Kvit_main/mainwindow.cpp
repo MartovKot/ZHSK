@@ -98,7 +98,7 @@ void MainWindow::Print_mod()
         qApp->processEvents();
         if (progress.wasCanceled())
             break;
-        db.CreditedOfService(list_id_apartament.at(i),date);// Формирование данных по i той квартире
+        calculation.CreditedOfService(list_id_apartament.at(i),date);// Формирование данных по i той квартире
     }
     progress.setValue(list_id_apartament.size()-1);
 

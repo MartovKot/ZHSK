@@ -253,9 +253,9 @@ void OperWindow::sl_RefreshLabel() //обновление выводяшейся
     DateOfUnixFormat date_calc(year,month,1);
 
     if (ui->dEd_Count->date() == QDate::currentDate()){ //Расчёт производим только за текущий месяц
-        db.CreditedOfService(apartment.getId(),date_calc);
+        calculation.CreditedOfService(apartment.getId(),date_calc);
     }
-    ui->lblInPayment->setText(QString::number(db.AmountToPay(apartment.getId(),date_calc.Second())));
+    ui->lblInPayment->setText(QString::number(calculation.AmountToPay(apartment.getId(),date_calc.Second())));
     ui->lblDolg->setText(db.is_Debt(apartment.getId(),date_calc));
 }
 

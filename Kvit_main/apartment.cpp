@@ -220,6 +220,11 @@ void Apartment::setIdAndNum(int id_home, int id_org, int number)
     }
 }
 
+void Apartment::setId(int id_apartment)
+{
+    m_id = id_apartment;
+}
+
 void Apartment::DeleteApartment()
 {
     db.DeleteLine("apartament","id_apartament",m_id);
@@ -312,10 +317,70 @@ int Apartment::getPersonalAccount() const
     }else{
         out = 0;
     }
-
     return out;
 }
 
+QList<int> Apartment::getListIdServiceWithCounter()
+{
+    QString str;
+    QSqlQuery query;
+    QList<int> out;
+
+    str = "SELECT lau.id_usluga "
+            "FROM usluga u, list_app_usluga lau "
+            "WHERE u.id_usluga=lau.id_usluga AND u.type_usluga=1 AND lau.id_apartament=%1";
+    str = str.arg(m_id);
+
+    if (!query.exec(str)){
+        qDebug() << "92df4946066ff2f748cbd0178e263cac" << "Eror in "<<str<<query.lastError();
+    } else {
+        while (query.next()){
+            out << query.value(0).toInt();
+        }
+    }
+    return out;
+}
+
+QList<int> Apartment::getListIdServiceOutCounter()
+{
+    QString str;
+    QSqlQuery query;
+    QList<int> out;
+
+    str = "SELECT lau.id_usluga FROM usluga u, list_app_usluga lau "
+            " WHERE u.id_usluga=lau.id_usluga AND NOT u.type_usluga=1 AND lau.id_apartament=%1";
+    str = str.arg(m_id);
+
+    if (!query.exec(str)){
+        qDebug() << "657e96603000538d92a0d97f98694612"<< "Eror in "<<str<<query.lastError();
+    } else {
+        while (query.next()){
+            out << query.value(0).toInt();
+        }
+    }
+    return out;
+}
+
+QList<int> Apartment::getListIdServiceFull()
+{
+    QList<int> out;   //список ид услуг относящихся к этой квартире
+
+    QString str;
+    QSqlQuery query;
+
+    str = "SELECT id_usluga FROM list_app_usluga WHERE id_apartament=%1";
+    str = str.arg(m_id);
+
+    if (query.exec(str)){
+      while (query.next()){
+          out <<  query.value(0).toInt();
+      }
+    } else{
+        qDebug()<<query.lastError();
+    }
+
+    return out;
+}
 
 double Apartment::getBalkon() const
 {
@@ -328,6 +393,71 @@ double Apartment::getBalkon() const
     QVariant t = db.SelectFromTable(str);
     if (!t.isNull()){
         out = t.toDouble();
+    }else{
+        out = 0;
+    }
+
+    return out;
+}
+
+int Apartment::getRealMen(DateOfUnixFormat date) const
+{
+    QString str;
+    int out;
+
+    str = "SELECT real_men, max(date_men_in_apartament) FROM men_in_apartament "
+            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
+            " ORDER BY date_men_in_apartament";
+    str = str.arg(m_id)
+            .arg(date.Second());
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        out = t.toInt();
+    }else{
+        out = 0;
+    }
+
+    return out;
+}
+
+int Apartment::getRentMen(DateOfUnixFormat date) const
+{
+    QString str;
+    int out;
+
+    str = "SELECT rent_men FROM men_in_apartament "
+            " WHERE id_apartament=%1  AND date_men_in_apartament <= %2 "
+            " ORDER BY date_men_in_apartament"
+            ;
+    str = str.arg(m_id)
+            .arg(date.Second());
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        out = t.toInt();
+    }else{
+        out = 0;
+    }
+
+    return out;
+}
+
+int Apartment::getReservMen(DateOfUnixFormat date) const
+{
+    QString str;
+    int out;
+
+    str = "SELECT reserv_men FROM men_in_apartament "
+            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
+            " ORDER BY date_men_in_apartament"
+            ;
+    str = str.arg(m_id)
+            .arg(date.Second());
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        out = t.toInt();
     }else{
         out = 0;
     }
