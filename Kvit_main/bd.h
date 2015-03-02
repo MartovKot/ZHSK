@@ -52,13 +52,6 @@ public:
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
     int is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date/*qint64 unix_date*/);
 
-//    double is_TotalArea(int id_app);
-//    double is_LivedArea(int id_app);
-//    double is_Balkon(int id_app);
-//    double is_Lodjia(int id_app);
-    int is_NumberAppartament(int id_app);
-
-
     QList<int> is_ApartamentService(int id_app);                //Возвращает список ид услуг по квартире
     QList<int> is_ListIdServiceWithCounter(int id_apartament);
     QList<int> is_ListIdServiceOutCounter(int id_apartament);

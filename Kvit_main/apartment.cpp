@@ -28,6 +28,11 @@ int Apartment::getId() const
     return m_id;
 }
 
+int Apartment::getNumber() const
+{
+    return m_number;
+}
+
 bool Apartment::New(int id_home, int id_org, int number)
 {
     QStringList column, value;

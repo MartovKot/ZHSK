@@ -309,17 +309,6 @@ QList<int> BD::is_ListIdApartament(int id_org, int id_home)
     return out;
 }
 
-int BD::is_NumberAppartament(int id_app)
-{
-    QString str;
-
-    str = "SELECT number FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toDouble();
-}
-
-
 int BD::is_LSh(int id_app)
 {
     QString str;
