@@ -298,6 +298,24 @@ double Apartment::getLodjia() const
     return out;
 }
 
+int Apartment::getPersonalAccount() const
+{
+    QString str;
+    int out;
+
+    str = "SELECT personal_account FROM apartament WHERE id_apartament=%1";
+    str = str.arg(m_id);
+
+    QVariant t = db.SelectFromTable(str);
+    if (!t.isNull()){
+        out = t.toInt();
+    }else{
+        out = 0;
+    }
+
+    return out;
+}
+
 
 double Apartment::getBalkon() const
 {

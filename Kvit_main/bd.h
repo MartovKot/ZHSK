@@ -42,7 +42,7 @@ public:
     int is_TypeUsluga(int id_usluga);                           //возвращает ид типа услуги
     int is_idListAppUsluga(int id_apartament, int id_usluga);
 
-    int is_LSh(int id_app);                                     //возвращает лицевой счёт квартиры
+//    int is_LSh(int id_app);                                     //возвращает лицевой счёт квартиры
 
     int is_RealMen(int id_app, DateOfUnixFormat date);                     //возвращает количество проживающих.
     int is_RentMen(int id_app, DateOfUnixFormat date);                     //возвращает количество снимающих

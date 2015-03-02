@@ -309,23 +309,8 @@ QList<int> BD::is_ListIdApartament(int id_org, int id_home)
     return out;
 }
 
-int BD::is_LSh(int id_app)
-{
-    QString str;
-
-    str = "SELECT personal_account FROM apartament WHERE id_apartament=%1";
-    str = str.arg(id_app);
-
-    return qVariant_from_query(str).toInt();
-}
-
-//=====================================================================
-//дома
-
-
 //=====================================================================
 
-//=====================================================================
 QStringList BD::Sum_Schet(int id_apartament)
 {
     QString str;

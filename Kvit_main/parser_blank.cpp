@@ -286,7 +286,7 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
 
     DateOfUnixFormat u_date(ConfData.date);
     strL_replace << organization->getName()     << apartment.is_FIO_payer()
-                 << QString::number(db.is_LSh(apartment.getId()))
+                 << QString::number(apartment.getPersonalAccount())
                  << QString::number(db.is_RealMen(apartment.getId(),ConfData.date))
                  << QString::number(db.is_RentMen(apartment.getId(),ConfData.date))
                  << QString::number(db.is_ReservMen(apartment.getId(),ConfData.date))

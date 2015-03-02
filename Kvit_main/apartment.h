@@ -25,6 +25,7 @@ public:
     double getLivedArea() const;
     double getBalkon() const;
     double getLodjia() const;
+    int getPersonalAccount() const;
 
 private:
     BD db;
