@@ -99,7 +99,6 @@ private:
 
     //delete dublicate
     QStringList strL_from_query(QString str);
-    QVariant qVariant_from_query(QString str);
 private slots:
     void sl_EditPokazanie(int id_pok, QString value);
     void sl_ModelPokazanieHeaderData(QAbstractTableModel* t);
