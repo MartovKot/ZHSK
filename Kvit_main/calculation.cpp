@@ -14,7 +14,7 @@ QVariant Calculation::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFor
 {
     QString str;
     QSqlQuery query;
-    int type_usluga, id_usluga;
+    int type_usluga;
     int id_apartment;
     double tarif = 0;
     QVariant out;
@@ -26,6 +26,7 @@ QVariant Calculation::CreditedOfApartament(int id_list_app_usluga, DateOfUnixFor
 
     if (query.exec(str)){
         if (query.next()){
+            int id_usluga;
             type_usluga = query.value(0).toInt();
             id_usluga = query.value(1).toInt();
             id_apartment = query.value(2).toInt();
@@ -84,7 +85,7 @@ void Calculation::CreditedOfService(int id_apartament, DateOfUnixFormat date)  /
     ListService = apartment.getListIdServiceFull();                  // список ид услуг по квартире
 
     for(int i=0;i<ListService.size();i++){
-        int id_list_ap_usl = -1;
+        int id_list_ap_usl;
         id_list_ap_usl = db.is_idListAppUsluga(id_apartament, ListService[i]);
 
         str = "SELECT id_credited FROM credited WHERE id_list_app_usluga=%1 AND date_credited=%2 ";
@@ -124,7 +125,7 @@ double Calculation::PaymentCounters(int id_list_app_usluga, DateOfUnixFormat dat
 {
     QString str;
     QSqlQuery query;
-    int id_usluga, id_apartament;
+    int id_usluga;
     double tarif,tarif2,norma, out = -1;
     DateOfUnixFormat previous_date(date.year(),date.month(),date.day());
     Apartment apartment;
@@ -136,6 +137,7 @@ double Calculation::PaymentCounters(int id_list_app_usluga, DateOfUnixFormat dat
     str = str.arg(id_list_app_usluga);
     if (query.exec(str)){
         if (query.next()){
+            int id_apartament;
             id_usluga = query.value(0).toInt();
             id_apartament = query.value(1).toInt();
             apartment.setId(id_apartament);
@@ -167,7 +169,7 @@ double Calculation::PaymentCounters(int id_list_app_usluga, DateOfUnixFormat dat
     }
 
     //пенсионеры
-    if (db.is_pensioner_living_alone(id_apartament)){
+    if (apartment.isPensionerLivingAlone()){
         if (db.isElectroUsluga(id_usluga)){
             norma = 75;
         }else if(db.isElectroUslugaDay(id_usluga)){

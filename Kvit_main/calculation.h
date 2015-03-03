@@ -27,6 +27,7 @@ private:
     void CreditedForApartament(int id_apart, DateOfUnixFormat date);
     void PaymentOfDebt(int id_apart, int year, int month/*DateOfUnixFormat date*/);
 
+
     BD db;
 
 signals:

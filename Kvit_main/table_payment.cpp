@@ -2,12 +2,12 @@
 
 Table_Payment::Table_Payment()
 {
-    db = new BD();
+//    db = new BD();
 }
 
 Table_Payment::~Table_Payment()
 {
-    delete db;
+//    delete db;
 }
 
 bool Table_Payment::add_line(QString id_apartament, QString y_payment, QString m_payment, QString d_payment, QString payment)
@@ -17,7 +17,7 @@ bool Table_Payment::add_line(QString id_apartament, QString y_payment, QString m
 
     column << "id_apartament" << "payment_date" << "payment";
     value << id_apartament << QString::number(date.Second()) << payment;
-    if (db->add("payment",column,value)!=0){
+    if (db.add("payment",column,value)!=0){
         return false;
     }
     return true;

@@ -49,12 +49,12 @@ void MassOperations::on_pBtn_Add_clicked()
 void MassOperations::on_pBtn_Delete_clicked()
 {
     int id_usluga;
-    int id_lau;
     QList<int> apartaments;
 
     id_usluga = ui->cmBx_Usluga->model()->index(ui->cmBx_Usluga->currentIndex(),1).data().toInt();
     apartaments = db.is_ListIdApartament(m_id_org,m_id_home);
     for (int i=0;i<apartaments.count();i++){
+       int id_lau;
        id_lau = db.is_idListAppUsluga(apartaments.at(i),id_usluga);
        db.DeleteUslugaApartament(id_lau);
     }

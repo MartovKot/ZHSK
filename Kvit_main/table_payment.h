@@ -7,7 +7,7 @@ class Table_Payment
 {
 
 private:
-    BD *db;
+    BD db;
 public:
     Table_Payment();
     ~Table_Payment();
@@ -15,8 +15,6 @@ public:
     QSqlQueryModel* ModelPayment(int id_apartament);                                        //все платежи по квартире
     QString delete_Payment(int id_apartament, int year,int month,int day);
     QSqlQueryModel* ModelPayment(int id_apartament, int month, int year);
-//    QVariant SumLastMonthPayment();
-
 
 };
 

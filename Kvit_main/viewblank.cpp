@@ -126,7 +126,7 @@ void ViewBlank::Print()
         QPainter painter(&printer);
         QWebView view;
         QWebPage *page;
-        QWebFrame *frame;
+
         if(     printer.fromPage() <= 0
                 || printer.toPage() <= 0
                 || printer.toPage() > strL_page.count()){       //устанавливаем страницы печати с первой по последнюю.
@@ -137,6 +137,7 @@ void ViewBlank::Print()
             view.setHtml(strL_page.at(i-1));
             page = view.page();
             page->setViewportSize(QSize(800,1200));
+            QWebFrame *frame;
             frame = page->mainFrame();
             frame->setScrollBarPolicy(Qt::Vertical,Qt::ScrollBarAlwaysOff);
             frame->render(&painter);
@@ -164,7 +165,7 @@ void ViewBlank::Pdf()
     QPainter painter(&printer);
     QWebView view;
     QWebPage *page;
-    QWebFrame *frame;
+
     if(printer.fromPage() <= 0 || printer.toPage() <= 0 || printer.toPage() > strL_page.count()){       //устанавливаем страницы печати с первой по последнюю.
         printer.setFromTo(1,strL_page.count());
     }
@@ -176,6 +177,7 @@ void ViewBlank::Pdf()
         int x = 780*coef;
         int y = 1200*coef;
         page->setViewportSize(QSize(x,y));
+        QWebFrame *frame;
         frame = page->mainFrame();
         frame->setScrollBarPolicy(Qt::Vertical,Qt::ScrollBarAlwaysOff);
         frame->render(&painter);

@@ -33,6 +33,7 @@ public:
     int getRealMen(DateOfUnixFormat date) const;                     //возвращает количество проживающих.
     int getRentMen(DateOfUnixFormat date) const;                     //возвращает количество снимающих
     int getReservMen(DateOfUnixFormat date) const;                   //возвращает количество на брони
+    bool isPensionerLivingAlone();
 
 private:
     BD db;

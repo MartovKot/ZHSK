@@ -45,8 +45,6 @@ public:
     QString is_NameService(int id_service);
 
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
-    void UpdateHome(int id_home, QString home);
-
 
     double CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
 
@@ -59,10 +57,7 @@ public:
     QSqlQueryModel* ModelPensioner(int id_home, int id_org);
     QSqlQueryModel* ModelTypeUsluga();
 
-
-
     QString is_Debt(int id_apart, DateOfUnixFormat date);
-
 
     QSqlError DeletePension(int id_apart);
     QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
@@ -85,17 +80,11 @@ public:
     bool isElectroUslugaDay (int id_usluga);
     bool isElectroUslugaNight (int id_usluga);
 
-    bool is_pensioner_living_alone(int id_apartament);
-
 private:
-
     QSqlDatabase db;
     LogReport LogOut;
-
     bool RunScript(QString filename);
-                                          //расчёт долга
     void SumCount(int id_pokazanie, bool New = false);                                  //Расчёт показаний канализации
-
 
     //delete dublicate
     QStringList strL_from_query(QString str);

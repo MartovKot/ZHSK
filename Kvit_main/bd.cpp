@@ -274,6 +274,27 @@ QSqlError BD::DeleteLine(QString table, QString id_name, int id_line)
     return query.lastError();
 }
 
+QString BD::is_DatabaseVersoin()
+{
+    QString str;
+    QSqlQuery query;
+    QString res = "";
+
+    str = "SELECT version FROM version";
+    if (query.exec(str)) {
+        if (query.next()){
+            res = trUtf8("Версия БД - ")+query.value(0).toString();
+        }else{
+            res = "Version not found";
+            LogOut.logout("Version not found");
+        }
+    }else{
+        res = query.lastError().text();
+        LogOut.logout(query.lastError().text());
+    }
+    return res;
+}
+
 //======================================================================
 // Квартиры
 
@@ -372,8 +393,6 @@ QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
     return model;
 }
 
-
-
 QSqlQueryModel* BD::ModelPensioner(int id_home, int id_org)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
@@ -394,6 +413,7 @@ QSqlQueryModel* BD::ModelPensioner(int id_home, int id_org)
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("№ Квартиры"));
     return model;
 }
+
 QSqlError BD::DeletePension(int id_apart)
 {
     QString str;
@@ -566,7 +586,7 @@ int BD::is_idListAppUsluga(int id_apartament, int id_usluga)
     if (!t.isNull()){
         out = t.toInt();
     }else{
-        out = 0;
+        out = -1;
     }
 
     return out;
@@ -616,8 +636,6 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
     QString str;
     QStringList column, value;
     QSqlQuery query;
-
-
 
     //  найдём дату текущих показаний
     str = "SELECT date_pokazanie, id_list_app_usluga FROM pokazanie WHERE id_pokazanie=%1";
@@ -741,15 +759,14 @@ bool BD::isElectroUsluga(int id_usluga)
     if(id_usluga == 4 ){
         return true;
     }
-
     return false;
 }
+
 bool BD::isElectroUslugaDay(int id_usluga)
 {
     if(id_usluga == 6){
         return true;
     }
-
     return false;
 }
 
@@ -757,36 +774,14 @@ bool BD::isElectroUslugaNight(int id_usluga){
     if(id_usluga == 7){
         return true;
     }
-
-return false;
-}
-bool BD::is_pensioner_living_alone(int id_apartament)
-{
-    QString str;
-    int count = -1;
-
-    str = "SELECT COUNT(*) FROM pensioner_living_alone WHERE id_apartament = %1";
-    str = str.arg(id_apartament);
-
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        count = t.toInt();
-    }
-    if (count>0){
-        return true;
-    }
-
     return false;
-
 }
-
-
 
 void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт показаний канализации
 {
     QString str;
     QSqlQuery query;
-    int id_app, value = 0, id_sumpok;
+    int id_app, value = 0;
     qint64 Unix_date;
 
 
@@ -848,6 +843,7 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
 
     if (query.exec(str)){
         if (query.next()){
+            int id_sumpok;
             id_sumpok = query.value(0).toInt();
             if (query.value(1).toInt() != value){
                 if(!New){
@@ -869,27 +865,6 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
         LogOut.logout(query.lastError().text());
         return;
     } 
-}
-
-QString BD::is_DatabaseVersoin()
-{
-    QString str;
-    QSqlQuery query;
-    QString res = "";
-
-    str = "SELECT version FROM version";
-    if (query.exec(str)) {
-        if (query.next()){
-            res = trUtf8("Версия БД - ")+query.value(0).toString();
-        }else{
-            res = "Version not found";
-            LogOut.logout("Version not found");
-        }
-    }else{
-        res = query.lastError().text();
-        LogOut.logout(query.lastError().text());
-    }
-    return res;
 }
 
 QString BD::is_NameCounter(int id_counter)
@@ -930,11 +905,6 @@ int BD::is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date)
         out = t.toInt();
     }
     return out;
-}
-
-void BD::UpdateHome(int id_home, QString home)
-{
-    UpdateTable("homes","name",home,"id_homes",QString::number(id_home));
 }
 
 QSqlQueryModel* BD::ModelSettings()

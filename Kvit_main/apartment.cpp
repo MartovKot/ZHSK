@@ -464,3 +464,22 @@ int Apartment::getReservMen(DateOfUnixFormat date) const
 
     return out;
 }
+
+bool Apartment::isPensionerLivingAlone()
+{
+    QString str;
+    int count = -1;
+
+    str = "SELECT COUNT(*) FROM pensioner_living_alone WHERE id_apartament = %1";
+    str = str.arg(m_id);
+
+    QVariant t = db.SelectFromTable(str);
+    if(!t.isNull()){
+        count = t.toInt();
+    }
+    if (count>0){
+        return true;
+    }
+
+    return false;
+}

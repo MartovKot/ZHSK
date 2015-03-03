@@ -33,7 +33,7 @@ private:
     QNetworkAccessManager m_manager_download;
     QNetworkAccessManager *m_manager_json;
     QFile *file;
-    QProgressDialog *progressDialog;
+    QProgressDialog progressDialog;
     bool httpRequestAborted;
     BD db;
 

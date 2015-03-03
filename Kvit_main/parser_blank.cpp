@@ -78,9 +78,10 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)
     strlst_find << "@Usliga#"<<"@Tarif#"<<"@Nachisl#"<<"@Pererasch#"<<"@ItogUsluga#";
     str_out = "";
 
-    int find_pos;
+
 
     for (int i=0;i<ServiceList.count();i++){
+        int find_pos;
         str_out = str_out + str_in_usl;
         find_pos = str_out.indexOf(strlst_find.at(0));
         if(find_pos>=0){
@@ -119,8 +120,9 @@ QString parser_blank::process_schet(QString str_in_sch,const int id_apartment, Q
 
     strlst_find<<"@Schetchik#"<<"@PokazanieEnd#"<<"@Tarif#"<<"@Tarif2#";
 
-    int find_pos;
+
     for(int i=0;i<CounterList.size();i++){
+        int find_pos;
         str_out = str_out + str_in_sch;
         find_pos = str_out.indexOf(strlst_find.at(0));
         if(find_pos>=0){ //Название Счётчика
@@ -264,7 +266,7 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
 {
     QString str_out;
     QStringList strL_find, strL_replace;
-    int find_pos;
+
     Organization *organization = new Organization(apartment.getId());
     Home home;
     home.setId(ConfData.Home_id);
@@ -313,6 +315,7 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
 
     str_out = str_in;
     for (int i=0; i<strL_find.size(); i++){
+        int find_pos;
         find_pos = str_out.indexOf(strL_find.at(i));
         while (find_pos>=0){
             str_out.replace(find_pos,strL_find.at(i).size(),strL_replace.at(i));

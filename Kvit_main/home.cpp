@@ -59,3 +59,7 @@ QSqlQueryModel* Home::ModelAllHome()
     return model;
 }
 
+void Home::rename(QString new_name)
+{
+    db.UpdateTable("homes","name",new_name,"id_homes",QString::number(m_id));
+}

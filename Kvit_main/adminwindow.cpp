@@ -585,8 +585,12 @@ void AdminWindow::sl_DeleteHome()
 
 void AdminWindow::sl_SaveHome()
 {
-    db.UpdateHome(ui->tblView_Home->model()->index(
-                      ui->tblView_Home->currentIndex().row(),0).data().toInt(),ui->lEdHome->text());
+    Home home;
+    home.setId(ui->tblView_Home->model()->index(
+                   ui->tblView_Home->currentIndex().row(),0).data().toInt());
+    home.rename(ui->lEdHome->text());
+//    db.UpdateHome(ui->tblView_Home->model()->index(
+//                      ui->tblView_Home->currentIndex().row(),0).data().toInt(),ui->lEdHome->text());
     Refresh_Home();
     Mode("home_default");
 }
