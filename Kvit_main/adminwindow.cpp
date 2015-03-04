@@ -145,16 +145,16 @@ void AdminWindow::Refresh_Appartament()
 void AdminWindow::Refresh_tblView_Apartament()
 {
     MyItemDelegate * dDeleg = new MyItemDelegate ();
-    if (apartment_for_apartment == nullptr){
-        apartment_for_apartment = new Apartment();
-    }
     Home home;
     home.setName(ui->lbl_HomeSelect->text());
     Organization organization;
     organization.setName(ui->lbl_OrgSelect->text());
-    apartment_for_apartment->setIdAndNum(home.getId(),
-                                         organization.getId() ,
-                                         ui->cmBx_NumAp_on_Apartament->currentText().toInt());
+
+    if (apartment_for_apartment == nullptr){
+        apartment_for_apartment = new Apartment(home.getId(),
+                                                organization.getId() ,
+                                                ui->cmBx_NumAp_on_Apartament->currentText().toInt());
+    }
 
     TransposeProxyModel *trans = new TransposeProxyModel;
     trans->setSourceModel(apartment_for_apartment->ModelOneApartment(apartment_for_apartment->getId()));

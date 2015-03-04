@@ -16,7 +16,6 @@ public:
     int getId() const;
     int getNumber() const;
     bool New(int id_home, int id_org, int number);
-    void setIdAndNum(int id_home, int id_org, int number);
     void setId(int id_apartment);
     QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
     QAbstractItemModel* ModelOneApartment(int id);     //модель для квартиры

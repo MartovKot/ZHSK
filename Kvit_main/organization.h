@@ -29,6 +29,7 @@ private:
     QString m_sett_account;
     QString m_inn;
     BD db;
+    void setDefault();
 };
 
 #endif // ORGANIZATION_H

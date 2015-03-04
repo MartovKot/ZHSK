@@ -55,24 +55,11 @@ void BD::UpdateDataBase()
 {
     QString str;
     QSqlQuery query;
-    QString res = "";
+    QString version;
 
-    str = "SELECT version FROM version";
-    if (query.exec(str)) {
-        if (query.next()){
-            res = query.value(0).toString();
-        }else{
-            qDebug()<<"Version not found";
-            LogOut.logout("Version not found");
-            return;
-        }
-    }else{
-        qDebug() << query.lastError();
-        LogOut.logout(query.lastError().text());
-        return;
-    }
-    query.finish();
-    if (res == "1.5"){
+    version = getDatabaseVersion();
+
+    if (version == "1.5"){
         str = "UPDATE version SET version = '01.05.000' WHERE version = 1.5";
         if (!query.exec(str)) {
             qDebug()<<query.lastError();
@@ -93,9 +80,9 @@ void BD::UpdateDataBase()
     QString minor;
     QString subversion;
 
-    major = res.left(2);
-    minor = res.mid(3,2);
-    subversion = res.right(3);
+    major = version.left(2);
+    minor = version.mid(3,2);
+    subversion = version.right(3);
 
     for(int i = 0;i < list_with_sql.count();i++){
         if(list_with_sql.at(i).left(2).toInt() > major.toInt()){
@@ -121,19 +108,26 @@ void BD::UpdateDataBase()
 
 }
 
-QVariant BD::SelectFromTable(QString str) const //Функция возврящает только одно поле, но этого пока хватает
+QSqlError BD::SelectFromTable(QString str, QString *var) const
 {
+    *var = "";
     QSqlQuery query;
-    QVariant out;
     if (query.exec(str)){
         if (query.next()){
-            out = query.value(0);
+            *var = query.value(0).toString();
         }
     } else{
-        qDebug() <<"ERROR \n"<< "d04157f41fd3c5c4dee3f0e0dd41baed" << query.lastError() << str;
+        qDebug() <<"ERROR "<< "d04157f41fd3c5c4dee3f0e0dd41baed \n" << query.lastError() << "\n" << str;
     }
-    return out;
+    return query.lastError();
 }
+
+//QString BD::SelectFromTable(const QString  str)
+//{
+//    QString out;
+//    SelectFromTable(str,&out);
+//    return out;
+//}
 
 QSqlError BD::QueryExecute(QString str)
 {
@@ -216,9 +210,10 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
 {
     QString str;
     QSqlQuery query;
-    QVariant t;
-    t = SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where1+" = '"+where2+"'");
-    if (t.toString() != value ){
+    QString value_temp = "";
+
+    SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where1+" = '"+where2+"'",&value_temp);
+    if (value_temp != value ){
         str = "UPDATE %1 SET %2 = '%3' WHERE %4 = '%5'";
         str = str.arg(table)
                     .arg(column)
@@ -237,10 +232,10 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
 {
     QString str;
     QSqlQuery query;
-    QVariant t;
-    t = SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where_column1+" = '"+where_value1+"'" +
-                        " AND "+where_column2+" = '"+where_value2+"'");
-    if (t.toString() != value ){
+    QString value_temp = "";
+    SelectFromTable("SELECT "+column+" FROM "+table+" WHERE "+where_column1+" = '"+where_value1+"'" +
+                        " AND "+where_column2+" = '"+where_value2+"'",&value_temp);
+    if (value_temp != value ){
         str = "UPDATE %1 SET %2 = '%3' WHERE %4 = '%5' AND %6 = '%7'";
         str = str.arg(table)
                     .arg(column)
@@ -274,7 +269,7 @@ QSqlError BD::DeleteLine(QString table, QString id_name, int id_line)
     return query.lastError();
 }
 
-QString BD::is_DatabaseVersoin()
+QString BD::getDatabaseVersion()
 {
     QString str;
     QSqlQuery query;
@@ -283,13 +278,12 @@ QString BD::is_DatabaseVersoin()
     str = "SELECT version FROM version";
     if (query.exec(str)) {
         if (query.next()){
-            res = trUtf8("Версия БД - ")+query.value(0).toString();
+            res = query.value(0).toString();
         }else{
-            res = "Version not found";
-            LogOut.logout("Version not found");
+            res = "";
         }
     }else{
-        res = query.lastError().text();
+        res = "";
         LogOut.logout(query.lastError().text());
     }
     return res;
@@ -558,38 +552,28 @@ void BD::sl_ModelPokazanieHeaderData(QAbstractTableModel *t)
 int BD::is_TypeUsluga(int id_usluga)
 {
     QString str;
-    int out;
+    QString out;
 
     str = "SELECT type_usluga FROM usluga WHERE id_usluga=%1";
     str = str.arg(id_usluga);
 
-    QVariant t = SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toInt();
-    }else{
-        out = 0;
-    }
+    SelectFromTable(str, &out);
 
-    return out;
+    return out.toInt();
 }
 
 int BD::is_idListAppUsluga(int id_apartament, int id_usluga)
 {
     QString str;
-    int out;
+    QString out;
 
     str = "SELECT id_list_app_usluga FROM list_app_usluga WHERE id_usluga=%1 AND id_apartament=%2";
     str = str.arg(id_usluga)
             .arg(id_apartament);
 
-    QVariant t = SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toInt();
-    }else{
-        out = -1;
-    }
+    SelectFromTable(str, &out);
 
-    return out;
+    return out.toInt();
 }
 
 void BD::sl_EditPokazanie(int id_pok, QString value)
@@ -662,8 +646,9 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
             "WHERE date_pokazanie=%1 AND id_list_app_usluga=%2";
     str = str.arg(date.Second())
             .arg(QString::number(id_ListApart));
-    QVariant t = SelectFromTable(str);
-    if(t.isNull()){//если нет записей
+    QString id_pok_var;
+    SelectFromTable(str,&id_pok_var);
+    if(id_pok_var == ""){//если нет записей
         //добавим новое показание на след месяц
         column.clear();
         column<<"id_list_app_usluga"<<"date_pokazanie"<<"pokazanie_home"<<"pokazanie_end";
@@ -676,8 +661,8 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
         }
     }else{//иначе
         //Обновим запись
-        UpdateTable("pokazanie","pokazanie_home",value_home,"id_pokazanie",t.toString());
-        return t.toInt();
+        UpdateTable("pokazanie","pokazanie_home",value_home,"id_pokazanie",id_pok_var);
+        return id_pok_var.toInt();
     }
     return id_new;
 }
@@ -687,36 +672,32 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
 int BD::is_Pokazanie(int id_list_app_usluga, QDate date)
 {
     QString str;
-    int out = -1;
-    QDate next_date;
-    next_date = date.addMonths(1);
-    DateOfUnixFormat unix_date(next_date);
+    QString out;
+    DateOfUnixFormat unix_date(date.addMonths(1));
 
     str = "SELECT pokazanie_home FROM pokazanie WHERE id_list_app_usluga=%1 AND date_pokazanie=%2 ";
     str = str.arg(id_list_app_usluga)
             .arg(unix_date.Second());
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        out = t.toInt();   
-    }
+    SelectFromTable(str,&out);
 
-    str = " SELECT u.id_usluga FROM usluga u, list_app_usluga lau "
-            " WHERE lau.id_list_app_usluga=%1 AND lau.id_usluga = u.id_usluga";
-    str = str.arg(id_list_app_usluga);
-    t = SelectFromTable(str);
-    if(!t.isNull()){
-        if (t.toInt() == 3){
-            out = 0;
-        }
-    }
 
-    return out;
+//    str = " SELECT u.id_usluga FROM usluga u, list_app_usluga lau "
+//            " WHERE lau.id_list_app_usluga=%1 AND lau.id_usluga = u.id_usluga";
+//    str = str.arg(id_list_app_usluga);
+//    t = SelectFromTable(str);
+//    if(!t.isNull()){
+//        if (t.toInt() == 3){
+//            out = 0;
+//        }
+//    }
+
+    return out.toInt();
 }
 
 double BD::CreditedForReport(int id_apartament, int id_usluga, DateOfUnixFormat date)
 {
     QString str;
-    double out = -1;
+    QString out;
 
     str = "SELECT credited_of_service FROM credited c, list_app_usluga lau "
             "WHERE date_credited=%1 AND lau.id_list_app_usluga=c.id_list_app_usluga "
@@ -724,32 +705,29 @@ double BD::CreditedForReport(int id_apartament, int id_usluga, DateOfUnixFormat 
     str = str.arg(date.Second())
             .arg(id_apartament)
             .arg(id_usluga);
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        out = t.toDouble();
-    }
-    return out;
+    SelectFromTable(str,&out);
+
+    return out.toDouble();
 }
 
 //-------------------------------------------------------------------------------------------
 QString BD::is_Debt(int id_apart, DateOfUnixFormat date)
 {
     QString str;
-    double debt = 0.0;
+    QString debt;
     QString out= "" ;
 
     str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%3";
     str = str.arg(date.Second())
             .arg(id_apart);
-    QVariant t = SelectFromTable(str);
-    if (!t.isNull()){
-        debt = t.toDouble();
-    }
+    SelectFromTable(str,&debt);
 
-    if (debt>0){
-        out = QObject::trUtf8("Ваш долг составляет:  ") + QString::number(debt,'f',2) + QObject::trUtf8(" p. ");
+    if (debt.toDouble()>0.0){
+        out = QObject::trUtf8("Ваш долг составляет:  ")
+                + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
     }else if(debt<0){
-        out = QObject::trUtf8("Ваша переплата составляет:  ") + QString::number(debt,'f',2) + QObject::trUtf8(" p. ");
+        out = QObject::trUtf8("Ваша переплата составляет:  ")
+                + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
     }
     return out;
 }
@@ -870,17 +848,14 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
 QString BD::is_NameCounter(int id_counter)
 {
     QString str;
-    QString out = "";
+    QString out;
 
     str = " SELECT u.name FROM pokazanie p, list_app_usluga lau, usluga u "
             " WHERE  p.id_pokazanie = %1"
             " AND lau.id_usluga = u.id_usluga"
             " AND p.id_list_app_usluga = lau.id_list_app_usluga";
     str = str.arg(id_counter);
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        out = t.toString();
-    }
+    SelectFromTable(str,&out);
 
     return out;
 }
@@ -894,17 +869,15 @@ void BD::UpdatePokazanieHome(int id_pokazanie, int new_pokazanie)
 int BD::is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date)
 {
     QString str;
-    int out = -1;
+    QString out;
 
     str = "SELECT id_pokazanie FROM pokazanie WHERE id_list_app_usluga = %1 AND date_pokazanie = %2";
     str = str.arg(id_list_app_usluga)
             .arg(date.Second(1));
 
-    QVariant t = SelectFromTable(str);
-    if(!t.isNull()){
-        out = t.toInt();
-    }
-    return out;
+    SelectFromTable(str,&out);
+
+    return out.toInt();
 }
 
 QSqlQueryModel* BD::ModelSettings()

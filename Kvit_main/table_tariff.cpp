@@ -2,18 +2,18 @@
 
 table_tariff::table_tariff()
 {
-//    db = new BD();
+
 }
 
 table_tariff::~table_tariff()
 {
-//    delete db;
+
 }
 
-float table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
+double table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
 {
     QString str, strF;
-    double out = -1;
+    QString out;
     DateOfUnixFormat t_date(date.year(),date.month(),1);
 
     switch (tariff) {
@@ -29,12 +29,9 @@ float table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
     str += "FROM tariff WHERE id_usluga=%2  AND tariff_date=%1 ";
     strF = str.arg(t_date.Second())
             .arg(usluga);
-    QVariant t = db.SelectFromTable(strF);
-    if (!t.isNull()){
-        out = t.toDouble();
-    }
-    out = QString::number(out,'f',2).toDouble();
-    return out;
+    db.SelectFromTable(strF,&out);
+
+    return QString::number(out.toDouble(),'f',2).toDouble();
 
 }
 
@@ -109,23 +106,23 @@ int table_tariff::FillTarif(int month, int year)
 
 QSqlError table_tariff::AddLineTariffNewMonth(DateOfUnixFormat date)
 {
-    QVariant count_tariff, count_tariff_used;
+    QString count_tariff;
+    QString count_tariff_used;
+
     QString str;
     QSqlError error;
 
     str = " SELECT COUNT() FROM tariff "
           " WHERE tariff_date = " + QString::number(date.Second());
-    count_tariff = db.SelectFromTable(str);
+    db.SelectFromTable(str,&count_tariff);
 
     str = "SELECT COUNT() FROM usluga";
-    count_tariff_used = db.SelectFromTable(str);
+    db.SelectFromTable(str,&count_tariff_used);
 
-    if(!count_tariff.isNull() && !count_tariff_used.isNull()){
-        if(count_tariff.toInt()== 0 || count_tariff_used.toInt()== 0 || count_tariff.toInt() != count_tariff_used.toInt() ){
-            QString str2 = "INSERT OR IGNORE INTO tariff(id_usluga, tariff_date) SELECT id_usluga, %1 FROM usluga";
-            str2 = str2.arg(QString::number(date.Second()));
-            error = db.QueryExecute(str2);
-        }
+    if(count_tariff.toInt()== 0 || count_tariff_used.toInt()== 0 || count_tariff.toInt() != count_tariff_used.toInt() ){
+        QString str2 = "INSERT OR IGNORE INTO tariff(id_usluga, tariff_date) SELECT id_usluga, %1 FROM usluga";
+        str2 = str2.arg(QString::number(date.Second()));
+        error = db.QueryExecute(str2);
     }
 
     return error;

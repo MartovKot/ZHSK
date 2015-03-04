@@ -13,22 +13,21 @@ void Home::set_default()
 
 void Home::setId(int id)
 {
-    QVariant t = db.SelectFromTable(
-                "SELECT name FROM homes WHERE id_homes = " + QString::number(id)
-                );
-    if(t.isValid()){
-        m_name = t.toString();
+    QString name;
+    db.SelectFromTable( "SELECT name FROM homes WHERE id_homes = " + QString::number(id),&name );
+
+    if (name != ""){
         m_id = id;
+        m_name = name;
     }
 }
 
 void Home::setName(QString name)
 {
-    QVariant t = db.SelectFromTable(
-                "SELECT id_homes FROM homes WHERE name = '" + name + "'"
-                );
-    if(t.isValid()){
-        m_id = t.toInt();
+    QString id;
+    db.SelectFromTable( "SELECT id_homes FROM homes WHERE name = '" + name + "'",&id);
+    if(id != ""){
+        m_id = id.toInt();
         m_name = name;
     }
 }

@@ -11,16 +11,14 @@ Apartment::Apartment(int id_home, int id_org, int number)
     m_number = number;
 
     QString str;
+    QString id;
     str = "SELECT id_apartament FROM apartament WHERE id_homes='%1' AND id_organiz='%2' AND number='%3'";
     str = str.arg(id_home)
            .arg(id_org)
            .arg(number);
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        m_id = t.toInt();
-    }else{
-        m_id = -1;
-    }
+    db.SelectFromTable(str, &id);
+    m_id = id.toInt();
+
 }
 
 int Apartment::getId() const
@@ -166,17 +164,16 @@ void Apartment::UpdateMenInApartment(QString column, QString value, int idapart)
     str = str.arg(idapart)
             .arg(date.Second_first_day());
 
-    QVariant t =  db.SelectFromTable(str);
-    if(!t.isNull()){
-        if (t.toInt() == 0){//если записей за текущий месяц нету
-            AddLineMenInApartment(idapart); //добавим запись
-        }
-        db.UpdateTable("men_in_apartament",column,value,
-                       "date_men_in_apartament",QString::number(date.Second_first_day()),
-                       "id_apartament", QString::number(idapart));
-    }else{
-        qDebug() << "is NULL";
+    QString count = 0;
+    db.SelectFromTable(str,&count);
+
+    if (count.toInt() == 0){//если записей за текущий месяц нету
+        AddLineMenInApartment(idapart); //добавим запись
     }
+    db.UpdateTable("men_in_apartament",column,value,
+                   "date_men_in_apartament",QString::number(date.Second_first_day()),
+                   "id_apartament", QString::number(idapart));
+
 }
 void Apartment::AddLineMenInApartment(int id_apartment)
 {
@@ -185,40 +182,24 @@ void Apartment::AddLineMenInApartment(int id_apartment)
 
     str = "SELECT max(date_men_in_apartament) FROM men_in_apartament WHERE id_apartament = %1";
     str = str.arg(id_apartment);
-    QVariant t =  db.SelectFromTable(str);
-    if(!t.isNull()){
-        QString str2;
+    QString date;
+    db.SelectFromTable(str,&date);
+    QString str2;
 
-        str2 = " INSERT INTO men_in_apartament (id_apartament, real_men, rent_men, reserv_men, date_men_in_apartament ) "
-                " SELECT id_apartament, real_men, rent_men, reserv_men, %1 "
-                " FROM men_in_apartament"
-                " WHERE date_men_in_apartament = %2 AND id_apartament = %3";
+    str2 = " INSERT INTO men_in_apartament (id_apartament, real_men, rent_men, reserv_men, date_men_in_apartament ) "
+            " SELECT id_apartament, real_men, rent_men, reserv_men, %1 "
+            " FROM men_in_apartament"
+            " WHERE date_men_in_apartament = %2 AND id_apartament = %3";
 
-        str2 = str2.arg(QString::number(date_now.Second_first_day()))
-                .arg(t.toString())
-                .arg(id_apartment);
-        db.QueryExecute(str2);
-    }else{
-        qDebug() << "need add code";
-    }
+    str2 = str2.arg(QString::number(date_now.Second_first_day()))
+            .arg(date)
+            .arg(id_apartment);
+    db.QueryExecute(str2);
+//    }else{
+//        qDebug() << "need add code";
+//    }
 }
 
-void Apartment::setIdAndNum(int id_home, int id_org, int number)
-{
-    m_number = number;
-
-    QString str;
-    str = "SELECT id_apartament FROM apartament WHERE id_homes='%1' AND id_organiz='%2' AND number='%3'";
-    str = str.arg(id_home)
-           .arg(id_org)
-           .arg(number);
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        m_id = t.toInt();
-    }else{
-        m_id = -1;
-    }
-}
 
 void Apartment::setId(int id_apartment)
 {
@@ -233,91 +214,68 @@ void Apartment::DeleteApartment()
 QString Apartment::is_FIO_payer() const
 {
     QString str;
-    QString fio = "";
+    QString out;
+
 
     str = "SELECT  surname || ' ' || name || ' ' || patronymic   FROM apartament WHERE id_apartament = %1";
     str = str.arg(m_id);
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        fio = t.toString();
-    }else{
-        fio = "";
-    }
+    db.SelectFromTable(str, &out);
 
-    return fio;
+    return out;
 }
 
 double Apartment::getTotalArea() const
 {
     QString str;
-    double out;
+    QString out;
 
     str = "SELECT total_area FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toDouble();
-    }else{
-        out = 0;
-    }
+    db.SelectFromTable(str,&out);
 
-    return out;
+    return out.toDouble();
 }
 
 double Apartment::getLivedArea() const
 {
     QString str;
-    double out;
+    QString out;
 
     str = "SELECT inhabed_area FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toDouble();
-    }else{
-        out = 0;
-    }
+    db.SelectFromTable(str,&out);
 
-    return out;
+    return out.toDouble();
 }
 
 
 double Apartment::getLodjia() const
 {
     QString str;
-    double out;
+    QString out;
 
     str = "SELECT loggia FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toDouble();
-    }else{
-        out = 0;
-    }
+    db.SelectFromTable(str,&out);
 
-    return out;
+    return out.toDouble();
 }
 
 int Apartment::getPersonalAccount() const
 {
     QString str;
-    int out;
+    QString out;
 
     str = "SELECT personal_account FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toInt();
-    }else{
-        out = 0;
-    }
-    return out;
+    db.SelectFromTable(str,&out);
+
+    return out.toInt();
 }
 
 QList<int> Apartment::getListIdServiceWithCounter()
@@ -385,25 +343,20 @@ QList<int> Apartment::getListIdServiceFull()
 double Apartment::getBalkon() const
 {
     QString str;
-    double out;
+    QString out;
 
     str = "SELECT balkon FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toDouble();
-    }else{
-        out = 0;
-    }
+    db.SelectFromTable(str,&out);
 
-    return out;
+    return out.toDouble();
 }
 
 int Apartment::getRealMen(DateOfUnixFormat date) const
 {
     QString str;
-    int out;
+    QString out;
 
     str = "SELECT real_men, max(date_men_in_apartament) FROM men_in_apartament "
             " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
@@ -411,20 +364,15 @@ int Apartment::getRealMen(DateOfUnixFormat date) const
     str = str.arg(m_id)
             .arg(date.Second());
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toInt();
-    }else{
-        out = 0;
-    }
+    db.SelectFromTable(str,&out);
 
-    return out;
+    return out.toInt();
 }
 
 int Apartment::getRentMen(DateOfUnixFormat date) const
 {
     QString str;
-    int out;
+    QString out;
 
     str = "SELECT rent_men FROM men_in_apartament "
             " WHERE id_apartament=%1  AND date_men_in_apartament <= %2 "
@@ -433,20 +381,15 @@ int Apartment::getRentMen(DateOfUnixFormat date) const
     str = str.arg(m_id)
             .arg(date.Second());
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toInt();
-    }else{
-        out = 0;
-    }
+    db.SelectFromTable(str,&out);
 
-    return out;
+    return out.toInt();
 }
 
 int Apartment::getReservMen(DateOfUnixFormat date) const
 {
     QString str;
-    int out;
+    QString out;
 
     str = "SELECT reserv_men FROM men_in_apartament "
             " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
@@ -455,29 +398,22 @@ int Apartment::getReservMen(DateOfUnixFormat date) const
     str = str.arg(m_id)
             .arg(date.Second());
 
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        out = t.toInt();
-    }else{
-        out = 0;
-    }
+    db.SelectFromTable(str,&out);
 
-    return out;
+    return out.toInt();
 }
 
 bool Apartment::isPensionerLivingAlone()
 {
     QString str;
-    int count = -1;
+    QString count;
 
     str = "SELECT COUNT(*) FROM pensioner_living_alone WHERE id_apartament = %1";
     str = str.arg(m_id);
 
-    QVariant t = db.SelectFromTable(str);
-    if(!t.isNull()){
-        count = t.toInt();
-    }
-    if (count>0){
+    db.SelectFromTable(str,&count);
+
+    if (count.toInt()>0){
         return true;
     }
 

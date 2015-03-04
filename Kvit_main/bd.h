@@ -24,7 +24,7 @@ public:
     explicit BD();
     ~BD();
     bool Create();
-    QString is_DatabaseVersoin();
+    QString getDatabaseVersion();
     void UpdateDataBase();
 
 
@@ -68,7 +68,8 @@ public:
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
     //----new interface
-    QVariant SelectFromTable (QString str) const;
+
+//    QSqlError SelectFromTable(QString str, T) const;
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     void UpdateTable(QString table, QString column, QString value, QString where_column1, QString where_value1, QString where_column2, QString where_value2);
     int add(QString table, QStringList column,QStringList value, int mode = 0);
@@ -80,6 +81,8 @@ public:
     bool isElectroUslugaDay (int id_usluga);
     bool isElectroUslugaNight (int id_usluga);
 
+    QSqlError SelectFromTable(QString str, QString *var) const;
+//    QString SelectFromTable(const QString str);
 private:
     QSqlDatabase db;
     LogReport LogOut;

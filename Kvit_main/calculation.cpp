@@ -96,9 +96,10 @@ void Calculation::CreditedOfService(int id_apartament, DateOfUnixFormat date)  /
         if (query.exec(str)){
             QVariant cred = CreditedOfApartament(id_list_ap_usl, date);
             if (query.next()){
-                QVariant credR = db.SelectFromTable("SELECT credited_of_service FROM credited "
-                                "WHERE id_credited = "+query.value(0).toString());
-                if(cred.toString() != credR.toString()){
+                QString credR;
+                db.SelectFromTable("SELECT credited_of_service FROM credited "
+                                "WHERE id_credited = "+query.value(0).toString(),&credR);
+                if(cred.toString() != credR){
                     db.UpdateTable("credited","credited_of_service",
                                 cred.toString(),
                                 "id_credited", query.value(0).toString()
@@ -209,7 +210,8 @@ void Calculation::CreditedForApartament(int id_apart, DateOfUnixFormat date)
 {
     QString str;
     QSqlQuery query;
-    QVariant cred_with_count, cred_out_count;
+    QString cred_with_count;
+    QString cred_out_count;
 
 
     // К оплате по услугам
@@ -221,10 +223,8 @@ void Calculation::CreditedForApartament(int id_apart, DateOfUnixFormat date)
             "AND lau.id_apartament=%2 ";
     str = str.arg(date.Second())
             .arg(id_apart);
-    QVariant t = db.SelectFromTable(str);
-    if(!t.isNull()){
-        cred_out_count = t;
-    }
+    db.SelectFromTable(str,&cred_out_count);
+
 
     // К оплате по счётчикам
     str = "SELECT SUM(credited_of_service) FROM credited c, list_app_usluga lau, usluga u "
@@ -235,25 +235,23 @@ void Calculation::CreditedForApartament(int id_apart, DateOfUnixFormat date)
                 "AND lau.id_apartament=%2";
     str = str.arg(date.Second())
             .arg(id_apart);
-    t = db.SelectFromTable(str);
-    if(!t.isNull()){
-        cred_with_count = t;
-    }
+    db.SelectFromTable(str,&cred_with_count);
+
     str = "SELECT id_credited_of_apartament FROM credited_of_apartament "
             "WHERE date_credited_of_apartament=%1 AND id_apartament=%2 ";
     str = str.arg(date.Second())
             .arg(id_apart);
     if (query.exec(str)){
         if (query.next()){
-            db.UpdateTable("credited_of_apartament","credited_with_counter",cred_with_count.toString(),
+            db.UpdateTable("credited_of_apartament","credited_with_counter",cred_with_count,
                         "id_credited_of_apartament",query.value(0).toString());
-            db.UpdateTable("credited_of_apartament","credited_out_counter",cred_out_count.toString(),
+            db.UpdateTable("credited_of_apartament","credited_out_counter",cred_out_count,
                         "id_credited_of_apartament",query.value(0).toString());
         }else{
             QStringList column, value;
-            column<<"id_apartament"<<"date_credited_of_apartament"<<"credited_with_counter"<<"credited_out_counter";
-            value<<QString::number(id_apart)<<QString::number(date.Second())
-                <<cred_with_count.toString()<<cred_out_count.toString();
+            column << "id_apartament"<<"date_credited_of_apartament" << "credited_with_counter" << "credited_out_counter";
+            value << QString::number(id_apart) << QString::number(date.Second())
+                << cred_with_count << cred_out_count;
             db.add("credited_of_apartament",column,value);
         }
     }else{
@@ -271,18 +269,17 @@ void Calculation::PaymentOfDebt(int id_apart, int year, int month)
 
     // --------- К оплате в прошлом месяце
     debt = debt + AmountToPay(id_apart,date.Second_first_day(-1));
-//    qDebug() <<"debt1 " << debt;
+    //qDebug() <<"К оплате в прошлом месяце: " << debt;
     //---------- Долг за счётчики в этом месяце
     str="SELECT credited_with_counter FROM credited_of_apartament WHERE  date_credited_of_apartament=%1 AND id_apartament=%2";
     str = str.arg(date.Second_first_day())
             .arg(id_apart);
-    QVariant t = db.SelectFromTable(str);
-//    qDebug() << str;
-    if(!t.isNull()){
-        debt = debt + t.toDouble();
-//        qDebug() << "counter" << t.toDouble();
-    }
-//    qDebug() << "t4" << payment << debt;
+    QString temp_debt;
+    db.SelectFromTable(str,&temp_debt);
+
+    debt = debt + temp_debt.toDouble();
+
+    //qDebug() << "Долг за счётчики в этом месяце: " << debt << "Сумма: "<< payment ;
     //---------- Оплата после 25 числа прошлого месяца по 25 число этого месяца
     str = "SELECT payment FROM payment "
             "WHERE payment_date >= %1 AND payment_date <= %2 AND id_apartament = %3";
@@ -299,7 +296,7 @@ void Calculation::PaymentOfDebt(int id_apart, int year, int month)
         qDebug() << query.lastError().text();
     }
     debt = debt - payment;
-//    qDebug() << "t3" << payment << debt;
+    //qDebug() << "Оплата после 25 числа прошлого месяца по 25 число этого месяца:" << debt << "Сумма: " << payment;
     //-----обновление/добавление долга
     str = "SELECT id_debt, debt FROM debt WHERE date_debt=%1 AND id_apartament=%2";
     str = str.arg(date.Second_first_day())
@@ -331,34 +328,28 @@ void Calculation::PaymentOfDebt(int id_apart, int year, int month)
 double Calculation::AmountForServices(int id_apart, qint64 u_date)
 {
     QString str;
-    double out = 0;
+    QString out;
 
     str="SELECT credited_out_counter FROM credited_of_apartament WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
     str = str.arg(u_date)
             .arg(id_apart);
-    QVariant t = db.SelectFromTable(str);
-    if(!t.isNull()){
-        out = t.toDouble();
-    }
+    db.SelectFromTable(str, &out);
 
-    return out;
+    return out.toDouble();
 }
 
 double Calculation::AmountToPay(int id_apart, qint64 u_date)
 {
     QString str;
-    double out = 0.0, debt = 0.0;
+    double out = 0.0;
+    QString debt;
 
     str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";
 
     str = str.arg(u_date)
             .arg(id_apart);
-    QVariant t = db.SelectFromTable(str);
-    if (!t.isNull()){
-        debt = t.toDouble();
-    }
+    db.SelectFromTable(str,&debt);
 
-    out = debt + AmountForServices(id_apart,u_date);
-//    qDebug() << out << u_date << debt;
+    out = debt.toDouble() + AmountForServices(id_apart,u_date);
     return out;
 }
