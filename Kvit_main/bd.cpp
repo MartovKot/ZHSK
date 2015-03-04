@@ -122,13 +122,6 @@ QSqlError BD::SelectFromTable(QString str, QString *var) const
     return query.lastError();
 }
 
-//QString BD::SelectFromTable(const QString  str)
-//{
-//    QString out;
-//    SelectFromTable(str,&out);
-//    return out;
-//}
-
 QSqlError BD::QueryExecute(QString str)
 {
     QSqlQuery query;

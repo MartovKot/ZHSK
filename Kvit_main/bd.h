@@ -69,7 +69,6 @@ public:
                                                                                         //на сдед месяц
     //----new interface
 
-//    QSqlError SelectFromTable(QString str, T) const;
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     void UpdateTable(QString table, QString column, QString value, QString where_column1, QString where_value1, QString where_column2, QString where_value2);
     int add(QString table, QStringList column,QStringList value, int mode = 0);
@@ -82,7 +81,6 @@ public:
     bool isElectroUslugaNight (int id_usluga);
 
     QSqlError SelectFromTable(QString str, QString *var) const;
-//    QString SelectFromTable(const QString str);
 private:
     QSqlDatabase db;
     LogReport LogOut;
@@ -96,8 +94,6 @@ private slots:
     void sl_ModelPokazanieHeaderData(QAbstractTableModel* t);
 signals:
     void SelectError(int error);
-
-
 };
 
 #endif // BD_H
