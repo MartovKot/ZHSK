@@ -41,10 +41,10 @@ QSqlQueryModel* table_tariff::ModelTarifTabl(int year, int month)
     QString str;
 
     DateOfUnixFormat date(year,month,1);
+    AddLineTariffNewMonth(date);
 
     str = "SELECT t.id_tariff, u.name, t.tariff, t.tariff2, t.norm FROM tariff t, usluga u "
             " WHERE t.tariff_date = " + QString::number(date.Second()) + " AND u.id_usluga=t.id_usluga";
-    qDebug() << str;
     model->setQuery(QSqlQuery(str));
     if (model->lastError().number() != -1){
         qDebug() << "d79f962a16168e6156e982b602b533dc" << model->lastError();

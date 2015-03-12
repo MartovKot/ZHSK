@@ -44,6 +44,7 @@ void MassOperations::on_pBtn_Add_clicked()
     progress.setValue(apartaments.count()-1);
     QMessageBox::information(this,trUtf8("Успех"),
                          trUtf8("Услуга распределена всем \n"),QMessageBox::Ok);
+    emit end();
 }
 
 void MassOperations::on_pBtn_Delete_clicked()

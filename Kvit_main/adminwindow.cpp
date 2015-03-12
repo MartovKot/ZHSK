@@ -966,6 +966,7 @@ void AdminWindow::on_pBtnMassOperation_clicked()
 
     dlg->setHome(HomeID);
     dlg->setOrganization(OrganiztionID);
+    connect(dlg,SIGNAL(end()),this,SLOT(Refresh_tblV_on_Uslugi()));
 
     dlg->open();
 }
@@ -985,7 +986,6 @@ void AdminWindow::on_pBtn_Tarif_request_clicked()
                              trUtf8("Не верная дата"),QMessageBox::Ok);
         return;
     }
-        qDebug() << "test";
     ui->tblV_on_Tarif->setModel(
                 tbl_tariff.ModelTarifTabl(ui->lEd_Tarif_year->text().toInt(),ui->lEd_Tarif_month->text().toInt()));
     ui->tblV_on_Tarif->hideColumn(0);

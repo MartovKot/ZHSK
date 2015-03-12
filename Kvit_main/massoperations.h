@@ -29,6 +29,8 @@ private:
     BD db;
     int m_id_home;
     int m_id_org;
+signals:
+    void end();
 };
 
 #endif // MASSOPERATIONS_H

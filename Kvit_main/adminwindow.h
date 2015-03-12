@@ -50,8 +50,6 @@ private:
     void Refresh_Uslugi();
     void Refresh_Pensioner();
 
-    void Refresh_tblV_on_Uslugi();
-
     QList<QHBoxLayout> list;
     QDialog *dlg;
     QLineEdit *lEd_tarif;
@@ -61,6 +59,7 @@ private:
 
 private slots:
     void Refresh_Settings();
+    void Refresh_tblV_on_Uslugi();
     void sl_AddOrg();                                  // добавление организации
     void AddHome();                                    // добавление дома
     void sl_AddUsluga(const QString &usluga, const int &id_type_usluga);
