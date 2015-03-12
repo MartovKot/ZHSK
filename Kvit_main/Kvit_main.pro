@@ -44,7 +44,8 @@ HEADERS += adminwindow.h \
     dialog_with_lineedit.h \
     massoperations.h \
     progressdialog.h \
-    calculation.h
+    calculation.h \
+    fast_calculation.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -80,7 +81,8 @@ SOURCES += adminwindow.cpp \
     dialog_with_lineedit.cpp \
     massoperations.cpp \
     progressdialog.cpp \
-    calculation.cpp
+    calculation.cpp \
+    fast_calculation.cpp
 
 RESOURCES += \
     qrc.qrc

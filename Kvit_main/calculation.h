@@ -18,7 +18,7 @@ class Calculation : public QObject
 public:
     explicit Calculation(QObject *parent = 0);
     ~Calculation();
-    void CreditedOfService (int id_apartament, DateOfUnixFormat date);                             //начисление по квартире
+    void CreditedOfService (int id_apartament, DateOfUnixFormat date);                     //начисление по квартире
     double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
     double AmountForServices(int id_apart, qint64 u_date);
 private:

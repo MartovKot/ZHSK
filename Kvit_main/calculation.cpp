@@ -330,7 +330,8 @@ double Calculation::AmountForServices(int id_apart, qint64 u_date)
     QString str;
     QString out;
 
-    str="SELECT credited_out_counter FROM credited_of_apartament WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
+    str = "SELECT credited_out_counter FROM credited_of_apartament "
+          "WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
     str = str.arg(u_date)
             .arg(id_apart);
     db.SelectFromTable(str, &out);

@@ -1,6 +1,11 @@
 #include "dateofunixformat.h"
 #include <QDebug>
 
+DateOfUnixFormat::DateOfUnixFormat()
+{
+
+}
+
 DateOfUnixFormat::DateOfUnixFormat(int year, int month, int day)
 {
     setDate(year,month,day);

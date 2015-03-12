@@ -28,7 +28,7 @@ public:
     int getPersonalAccount() const;  //возвращает лицевой счёт квартиры
     QList<int> getListIdServiceWithCounter();
     QList<int> getListIdServiceOutCounter();
-    QList<int> getListIdServiceFull();                //Возвращает список ид услуг по квартире
+    QList<int> getListIdServiceFull();                              //Возвращает список ид услуг по квартире
     int getRealMen(DateOfUnixFormat date) const;                     //возвращает количество проживающих.
     int getRentMen(DateOfUnixFormat date) const;                     //возвращает количество снимающих
     int getReservMen(DateOfUnixFormat date) const;                   //возвращает количество на брони

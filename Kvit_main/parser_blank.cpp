@@ -198,7 +198,7 @@ void parser_blank::generating()
     QProgressDialog progress(trUtf8("Создание файлов..."), trUtf8("Отмена"), 0, str_L.size()-1, this);
 //    ProgressDialog progress;
     progress.setWindowModality(Qt::WindowModal);
-    progress.setWindowTitle(trUtf8("Расчёт"));
+    progress.setWindowTitle(trUtf8("Создание файлов..."));
 
 //    progress.run();
     progress.show();
@@ -306,10 +306,10 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
                     + " / " + QString::number(ConfData.date.year())
                  << QDate::longMonthName(ConfData.date.month())
                     + "  " + QString::number(ConfData.date.year()) + QObject::trUtf8(" г.")
-                 << QString::number(calculation.AmountToPay(apartment.getId(),u_date.Second()))
+                 << QString::number(Fast_Calculation::AmountToPay(apartment.getId(),u_date.Second()))
                  << db.is_Debt(apartment.getId(),ConfData.date)
-                 << QString::number(calculation.AmountForServices(apartment.getId(), u_date.Second()))
-                 << QString::number(calculation.AmountForServices(apartment.getId(), u_date.Second()))
+                 << QString::number(Fast_Calculation::AmountForServices(apartment.getId(), u_date.Second()))
+                 << QString::number(Fast_Calculation::AmountForServices(apartment.getId(), u_date.Second()))
                  << QObject::trUtf8(" ИНН ") + organization->getINN()
                  << organization->getBank();
 

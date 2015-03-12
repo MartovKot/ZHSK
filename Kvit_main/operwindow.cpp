@@ -247,15 +247,15 @@ void OperWindow::sl_RefreshLabel() //обновление выводяшейся
 
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
-
     int month = ui->dEd_Count->date().month();
     int year = ui->dEd_Count->date().year();
     DateOfUnixFormat date_calc(year,month,1);
 
     if (ui->dEd_Count->date() == QDate::currentDate()){ //Расчёт производим только за текущий месяц
-        calculation.CreditedOfService(apartment.getId(),date_calc);
+        Fast_Calculation calculate(HomeID,OrganizationID,date_calc);
+        calculate.fullCalc();
     }
-    ui->lblInPayment->setText(QString::number(calculation.AmountToPay(apartment.getId(),date_calc.Second())));
+    ui->lblInPayment->setText(QString::number(Fast_Calculation::AmountToPay(apartment.getId(),date_calc.Second())));
     ui->lblDolg->setText(db.is_Debt(apartment.getId(),date_calc));
 }
 

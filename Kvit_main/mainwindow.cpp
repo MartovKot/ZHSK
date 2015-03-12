@@ -81,26 +81,34 @@ void MainWindow::Print_mod()
 {
     VwBlank = new ViewBlank(this);
 
-    QList<int> list_id_apartament; //Список ид квартир
-
-    list_id_apartament = db.is_ListIdApartament(isIdSelectOrganiztion(), isIdSelectHome());
-
-    QProgressDialog progress(trUtf8("Идёт формирование..."), trUtf8("Отмена"), 0, list_id_apartament.size()-1, this);
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setWindowTitle(trUtf8("Расчёт"));
-
-
     QDate date;
     date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
-    progress.show();
-    for(int i = 0;i<list_id_apartament.size();i++){
-        progress.setValue(i);
-        qApp->processEvents();
-        if (progress.wasCanceled())
-            break;
-        calculation.CreditedOfService(list_id_apartament.at(i),date);// Формирование данных по i той квартире
-    }
-    progress.setValue(list_id_apartament.size()-1);
+    DateOfUnixFormat udate(date);
+
+    Fast_Calculation fast_calculation(isIdSelectOrganiztion(),isIdSelectHome(),udate);
+    fast_calculation.fullCalc();
+
+
+//    QList<int> list_id_apartament; //Список ид квартир
+
+//    list_id_apartament = db.is_ListIdApartament(isIdSelectOrganiztion(), isIdSelectHome());
+
+//    QProgressDialog progress(trUtf8("Идёт формирование..."), trUtf8("Отмена"), 0, list_id_apartament.size()-1, this);
+//    progress.setWindowModality(Qt::WindowModal);
+//    progress.setWindowTitle(trUtf8("Расчёт"));
+
+
+//    QDate date;
+//    date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
+//    progress.show();
+//    for(int i = 0;i<list_id_apartament.size();i++){
+//        progress.setValue(i);
+//        qApp->processEvents();
+//        if (progress.wasCanceled())
+//            break;
+//        calculation.CreditedOfService(list_id_apartament.at(i),date);// Формирование данных по i той квартире
+//    }
+//    progress.setValue(list_id_apartament.size()-1);
 
     //-------------------------------------------------------------------------------------------
 //    db.DataProcessing(OrganiztionID, HomeID, month, year);

@@ -11,7 +11,9 @@
 #include "adminwindow.h"
 #include "operwindow.h"
 #include "viewblank.h"
-#include "calculation.h"
+//#include "calculation.h"
+#include "fast_calculation.h"
+#include "dateofunixformat.h"
 
 namespace Ui {
     class MainWindow;
@@ -32,7 +34,7 @@ private:
     AdminWindow *AdmWin;
     ViewBlank *VwBlank;
     BD db;
-    Calculation calculation;
+//    Fast_Calculation calculation;
     QString CurentDirArhiv;
     QString Version;
 
@@ -50,6 +52,7 @@ private slots:
     void sl_OperWinClose();
     void sl_AdminWinClose();
     void sl_test();
+
 };
 
 #endif // MAINWINDOW_H

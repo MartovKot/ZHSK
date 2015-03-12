@@ -29,8 +29,6 @@ bool BD::RunScript(QString sqlfilename)
                 qDebug() << str << query.lastError();
                 LogOut.logout(query.lastError().text());
                 return false;
-            } else {
-               // qDebug() << "Run script " << str;
             }
             pos = count+1;
             count = bArrSqlFile.indexOf(";",pos);

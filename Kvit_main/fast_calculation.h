@@ -1,0 +1,33 @@
+#ifndef FAST_CALCULATION_H
+#define FAST_CALCULATION_H
+
+#include <QObject>
+#include "bd.h"
+#include  "apartment.h"
+#include "dateofunixformat.h"
+
+class Fast_Calculation
+{
+public:
+    Fast_Calculation(const int &id_home, const int &id_organization, DateOfUnixFormat date);
+    ~Fast_Calculation();
+    DateOfUnixFormat date() const;
+    void setDate(const DateOfUnixFormat &date);
+    void fullCalc();
+    static double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
+    static double AmountForServices(int id_apart, qint64 u_date);
+
+private:
+    int m_idHome;
+    int m_idOrganization;
+    QList<int> m_listIdApartment;
+    DateOfUnixFormat m_date;
+    QString calcOfService(const QStringList &row);
+    QString calcOfCounters(const QStringList &row);
+    void recordInDB_CredOfApart(const QList<QStringList> &table);
+    void calcOfDebt();
+
+//    static BD db;
+};
+
+#endif // FAST_CALCULATION_H

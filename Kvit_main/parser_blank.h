@@ -17,7 +17,7 @@
 #include "organization.h"
 #include "home.h"
 #include "apartment.h"
-#include "calculation.h"
+#include "fast_calculation.h"
 
 class parser_blank :public QWidget
 {
@@ -40,7 +40,6 @@ private:
     QString str_folder;  //каталог для создания отчётов
     QString str_folder_arhiv;
     BD db;
-    Calculation calculation;
     table_tariff tbl_tariff;
     void creat_blank(QString name, const Apartment & apartment,QDate date);
     QString process_usluga(QString str_in_usl, int id_app, QDate date);
