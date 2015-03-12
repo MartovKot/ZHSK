@@ -972,6 +972,7 @@ void AdminWindow::on_pBtnMassOperation_clicked()
 
 void AdminWindow::on_pBtn_Tarif_request_clicked()
 {
+
     if(ui->lEd_Tarif_month->text()==""||ui->lEd_Tarif_year->text()==""){
         QMessageBox::warning(this,trUtf8("Предупреждение"),
                              trUtf8("Заполните одно из полей"),QMessageBox::Ok);
@@ -984,7 +985,7 @@ void AdminWindow::on_pBtn_Tarif_request_clicked()
                              trUtf8("Не верная дата"),QMessageBox::Ok);
         return;
     }
-
+        qDebug() << "test";
     ui->tblV_on_Tarif->setModel(
                 tbl_tariff.ModelTarifTabl(ui->lEd_Tarif_year->text().toInt(),ui->lEd_Tarif_month->text().toInt()));
     ui->tblV_on_Tarif->hideColumn(0);

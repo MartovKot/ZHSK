@@ -61,7 +61,6 @@ private slots:
 
     void on_pBtn_NewCounterNext_clicked();
 
-    void on_pBtn_AddPayment_clicked();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

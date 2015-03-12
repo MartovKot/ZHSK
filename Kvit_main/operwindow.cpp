@@ -344,11 +344,5 @@ void OperWindow::Refresh_lbl_Payer()
 {
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
-
     ui->lbl_Payer->setText(apartment.is_FIO_payer());
-}
-
-void OperWindow::on_pBtn_AddPayment_clicked()
-{
-
 }
