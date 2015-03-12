@@ -103,6 +103,7 @@ void BD::UpdateDataBase()
             qDebug() << "run script" << list_update.at(i);
         }
     }
+    QueryExecute("VACUUM");
 
 }
 

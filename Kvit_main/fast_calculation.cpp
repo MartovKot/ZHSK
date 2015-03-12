@@ -42,8 +42,6 @@ void Fast_Calculation::fullCalc()
     QSqlQuery query;
     if (query.exec(str)){
         while (query.next()){
-//            qDebug() << query.value(0).toString() << query.value(1).toString() << query.value(2).toString()
-//                     << query.value(3).toString() << query.value(4).toString() << query.value(5).toString();
             QStringList list;
             list << query.value(0).toString() << query.value(1).toString() << query.value(2).toString()
                  << query.value(3).toString() << query.value(4).toString() << query.value(5).toString() << "";
@@ -51,14 +49,10 @@ void Fast_Calculation::fullCalc()
         }
     }
 
-    if (result_tabl.size() != 0){
-        for(int i=0;i<result_tabl.size();i++){
-
-            QString t = calcOfService(result_tabl.at(i));
-            result_tabl[i][6] = t;
-        }
+    for(int i=0;i<result_tabl.size();i++){
+        QString t = calcOfService(result_tabl.at(i));
+        result_tabl[i][6] = t;
     }
-
     recordInDB_CredOfApart(result_tabl);
     calcOfDebt(); // Расчёт долга
 }
@@ -203,6 +197,28 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
     }
     BD db;
     db.QueryExecute(str);
+
+    str = "";
+    for (int i=0;i<table.size();i++){
+        if (table.at(i).at(2).toInt() == 1){
+            continue;
+        }
+        if (str == "") {
+            str =
+            " INSERT OR REPLACE INTO 'credited' (id_list_app_usluga,date_credited,credited_of_service) "
+            " SELECT %1, %2, %3";
+            str = str.arg(db.is_idListAppUsluga(table.at(i).at(0).toInt(),table.at(i).at(1).toInt()))
+                    .arg(m_date.Second_first_day())
+                    .arg(table.at(i).at(6));
+            continue;
+        }
+
+        str = str + " UNION SELECT %1, %2, %3 ";
+        str = str.arg(db.is_idListAppUsluga(table.at(i).at(0).toInt(),table.at(i).at(1).toInt()))
+                .arg(m_date.Second_first_day())
+                .arg(table.at(i).at(6));
+    }
+    db.QueryExecute(str);
 }
 
 void Fast_Calculation::calcOfDebt()
@@ -226,7 +242,6 @@ void Fast_Calculation::calcOfDebt()
 
     str = str.arg(m_date.Second_first_day(-1))
             .arg(m_date.Second_first_day());
-    //qDebug() << str;
     BD db;
     db.QueryExecute(str);
 

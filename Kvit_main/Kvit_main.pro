@@ -44,7 +44,6 @@ HEADERS += adminwindow.h \
     dialog_with_lineedit.h \
     massoperations.h \
     progressdialog.h \
-    calculation.h \
     fast_calculation.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
@@ -81,7 +80,6 @@ SOURCES += adminwindow.cpp \
     dialog_with_lineedit.cpp \
     massoperations.cpp \
     progressdialog.cpp \
-    calculation.cpp \
     fast_calculation.cpp
 
 RESOURCES += \
@@ -109,5 +107,6 @@ OTHER_FILES += \
     update_db/01_07_002.sql
 
 DISTFILES += \
-    update_db/01_07_003.sql
+    update_db/01_07_003.sql \
+    update_db/01_07_004.sql
 

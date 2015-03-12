@@ -24,7 +24,9 @@ private:
     DateOfUnixFormat m_date;
     QString calcOfService(const QStringList &row);
     QString calcOfCounters(const QStringList &row);
+    void createTempTableCredited(const QList<QStringList> &table);
     void recordInDB_CredOfApart(const QList<QStringList> &table);
+
     void calcOfDebt();
 
 //    static BD db;
