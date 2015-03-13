@@ -686,43 +686,10 @@ int BD::is_Pokazanie(int id_list_app_usluga, QDate date)
     return out.toInt();
 }
 
-double BD::CreditedForReport(int id_apartament, int id_usluga, DateOfUnixFormat date)
-{
-    QString str;
-    QString out;
 
-    str = "SELECT credited_of_service FROM credited c, list_app_usluga lau "
-            "WHERE date_credited=%1 AND lau.id_list_app_usluga=c.id_list_app_usluga "
-            "AND lau.id_apartament=%2 AND lau.id_usluga=%3 ";
-    str = str.arg(date.Second())
-            .arg(id_apartament)
-            .arg(id_usluga);
-    SelectFromTable(str,&out);
-
-    return out.toDouble();
-}
 
 //-------------------------------------------------------------------------------------------
-QString BD::is_Debt(int id_apart, DateOfUnixFormat date)
-{
-    QString str;
-    QString debt;
-    QString out= "" ;
 
-    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%3";
-    str = str.arg(date.Second())
-            .arg(id_apart);
-    SelectFromTable(str,&debt);
-
-    if (debt.toDouble()>0.0){
-        out = QObject::trUtf8("Ваш долг составляет:  ")
-                + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
-    }else if(debt<0){
-        out = QObject::trUtf8("Ваша переплата составляет:  ")
-                + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
-    }
-    return out;
-}
 
 bool BD::isElectroUsluga(int id_usluga)
 {
@@ -827,13 +794,10 @@ void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт пок�
             if (!New){
                 new_pokazanie(id_sumpok,QString::number(value)); //показание на начало след месяца
             }
-        }else{           
-            return;
         }
     }else{
         qDebug()<<query.lastError();
         LogOut.logout(query.lastError().text());
-        return;
     } 
 }
 

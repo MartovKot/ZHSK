@@ -197,7 +197,23 @@ void Apartment::AddLineMenInApartment(int id_apartment)
     db.QueryExecute(str2);
 //    }else{
 //        qDebug() << "need add code";
-//    }
+    //    }
+}
+
+int Apartment::getMenInApartment(QString typeofuse, DateOfUnixFormat date) const
+{
+    QString str;
+    QString out;
+
+    str =   " SELECT " + typeofuse + " FROM men_in_apartament "
+            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
+            " ORDER BY date_men_in_apartament DESC "
+            " LIMIT 1 ";
+    str = str.arg(m_id)
+            .arg(date.Second());
+    db.SelectFromTable(str,&out);
+
+    return out.toInt();
 }
 
 
@@ -355,52 +371,17 @@ double Apartment::getBalkon() const
 
 int Apartment::getRealMen(DateOfUnixFormat date) const
 {
-    QString str;
-    QString out;
-
-    str = "SELECT real_men, max(date_men_in_apartament) FROM men_in_apartament "
-            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
-            " ORDER BY date_men_in_apartament";
-    str = str.arg(m_id)
-            .arg(date.Second());
-
-    db.SelectFromTable(str,&out);
-
-    return out.toInt();
+    return getMenInApartment("real_men",date);
 }
 
 int Apartment::getRentMen(DateOfUnixFormat date) const
 {
-    QString str;
-    QString out;
-
-    str = "SELECT rent_men FROM men_in_apartament "
-            " WHERE id_apartament=%1  AND date_men_in_apartament <= %2 "
-            " ORDER BY date_men_in_apartament"
-            ;
-    str = str.arg(m_id)
-            .arg(date.Second());
-
-    db.SelectFromTable(str,&out);
-
-    return out.toInt();
+    return getMenInApartment("rent_men",date);
 }
 
 int Apartment::getReservMen(DateOfUnixFormat date) const
 {
-    QString str;
-    QString out;
-
-    str = "SELECT reserv_men FROM men_in_apartament "
-            " WHERE id_apartament=%1 AND date_men_in_apartament <= %2"
-            " ORDER BY date_men_in_apartament"
-            ;
-    str = str.arg(m_id)
-            .arg(date.Second());
-
-    db.SelectFromTable(str,&out);
-
-    return out.toInt();
+    return getMenInApartment("reserv_men",date);
 }
 
 bool Apartment::isPensionerLivingAlone()

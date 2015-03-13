@@ -13,11 +13,13 @@ public:
     explicit Apartment();
     explicit Apartment(int id_home,int id_org,int number);
 
+    QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
+
     int getId() const;
     int getNumber() const;
     bool New(int id_home, int id_org, int number);
     void setId(int id_apartment);
-    QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
+
     QAbstractItemModel* ModelOneApartment(int id);     //модель для квартиры
     void DeleteApartment();
     QString is_FIO_payer() const;
@@ -42,6 +44,7 @@ private:
     void UpdateApartament(QString column,QString value, int idapart);           //Обновление таблицы с квартирами
     void UpdateMenInApartment(QString column,QString value, int idapart);
     void AddLineMenInApartment(int id_apartment);
+    int getMenInApartment(QString typeofuse,DateOfUnixFormat date) const;
 
 private slots:
     void sl_ModelApartamentHeaderData(QAbstractTableModel* t);

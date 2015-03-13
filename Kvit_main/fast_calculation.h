@@ -16,6 +16,8 @@ public:
     void fullCalc();
     static double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
     static double AmountForServices(int id_apart, qint64 u_date);
+    static QString Debt(int id_apart, DateOfUnixFormat date);
+    static QString CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
 
 private:
     int m_idHome;

@@ -51,7 +51,6 @@ private slots:
     void sl_OpenArhiv();
     void sl_OperWinClose();
     void sl_AdminWinClose();
-    void sl_test();
 
 };
 

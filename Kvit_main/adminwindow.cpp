@@ -393,8 +393,9 @@ void AdminWindow::Refresh_Pensioner()
 {
     Apartment apartment;
     ui->cmBx_PensApart->setModel(
-    apartment.ModelAllApartment(ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
-                       ,ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
+    apartment.ModelAllApartment(
+                    ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt(),
+                    ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
     ui->cmBx_PensApart->addItem("");
     ui->cmBx_Org_on_Pens->setModel(db.Model("organiz"));
     ui->cmBx_Home_on_Pens->setModel(db.Model("homes"));
@@ -458,6 +459,7 @@ void AdminWindow::Refresh_cmbNumApp_onUslugi()
     }
 
     QSqlQueryModel *model;
+
     Apartment apartment;
     model = apartment.ModelAllApartment(HomeID,OrganiztionID);
     ui->cmBx_NumAp_on_Uslugi->setModel(model);
@@ -829,42 +831,12 @@ void AdminWindow::on_pBtn_DeleteApartment_clicked()
 
 void AdminWindow::Refresh_tblV_on_Uslugi()
 {
-    int OrganiztionID = -1, HomeID = -1;
-    int row;
+    Organization organization;
+    organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
+    Home home;
+    home.setName(ui->cmBx_Org_on_Uslugi->currentText());
 
-    row = ui->cmBx_Org_on_Uslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org_on_Uslugi->model()->index(row, 0);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                OrganiztionID = index.data().toInt();
-            }else{
-                return;
-            }
-        }else{
-            return;
-        }
-    }else{
-        return;
-    }
-
-    row = ui->cmBx_Home_on_Uslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home_on_Uslugi->model()->index(row, 0);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                HomeID = index.data().toInt();
-            }else{
-                return;
-            }
-        }else{
-            return;
-        }
-    }else{
-        return;
-    }
-
-    Apartment apartment(HomeID,OrganiztionID,ui->cmBx_NumAp_on_Uslugi->currentText().toInt());
+    Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Uslugi->currentText().toInt());
 
 
     ModelUsliga *model = new ModelUsliga;
@@ -929,43 +901,14 @@ void AdminWindow::on_pBtnDeleteUsluga_clicked()
 void AdminWindow::on_pBtnMassOperation_clicked()
 {
     MassOperations *dlg = new MassOperations;
-    int row;
-    int HomeID,OrganiztionID;
 
-    row = ui->cmBx_Home_on_Uslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home_on_Uslugi->model()->index(row, 0);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                HomeID = index.data().toInt();
-            }else{
-                return;
-            }
-        }else{
-            return;
-        }
-    }else{
-        return;
-    }
+    Organization organization;
+    organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
+    Home home;
+    home.setName(ui->cmBx_Org_on_Uslugi->currentText());
 
-    row = ui->cmBx_Org_on_Uslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org_on_Uslugi->model()->index(row, 0);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                OrganiztionID = index.data().toInt();
-            }else{
-                return;
-            }
-        }else{
-            return;
-        }
-    }else{
-        return;
-    }
-
-    dlg->setHome(HomeID);
-    dlg->setOrganization(OrganiztionID);
+    dlg->setHome(home.getId());
+    dlg->setOrganization(organization.getId());
     connect(dlg,SIGNAL(end()),this,SLOT(Refresh_tblV_on_Uslugi()));
 
     dlg->open();

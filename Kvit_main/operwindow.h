@@ -44,6 +44,7 @@ private:
     int p_id_pokazanie;
     int p_pokazanie;
     void Refresh_lbl_Payer();
+    int idCurrentCounter();
 
 private slots:
     void sl_addPayment();

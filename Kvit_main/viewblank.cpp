@@ -10,9 +10,6 @@ ViewBlank::ViewBlank(QWidget *parent) :
     btn_layout = new QHBoxLayout;
     web = new QWebView(this);
 
-//    connect(this,SIGNAL(finished(int)),SLOT(sl_Test()));  ///!!!!!!!!!!!!!!!!!!!!!!
-
-
     QToolButton *btn_print = new QToolButton;
     QToolButton *btn_pdf = new QToolButton;
     QToolButton *btn_next = new QToolButton;
@@ -119,7 +116,6 @@ void ViewBlank::Print()
     printer.setFromTo(1 ,strL_page.count());
     QPrintDialog printDialog(&printer,this);
 
-    qDebug() << printDialog.exec();
     if  (printDialog.exec()){
         printer.setPageSize(QPrinter::A4);
 
@@ -144,7 +140,6 @@ void ViewBlank::Print()
             if (i <= strL_page.count() && i  < printer.toPage())
                printer.newPage();
             delete page;
-//            qDebug() << "==6==" << frame;
         }
 
     }else{

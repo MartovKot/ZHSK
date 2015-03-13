@@ -262,10 +262,50 @@ double Fast_Calculation::AmountForServices(int id_apart, qint64 u_date)
     return out.toDouble();
 }
 
+QString Fast_Calculation::Debt(int id_apart, DateOfUnixFormat date)
+{
+    QString str;
+    QString debt;
+    QString out= "" ;
+
+    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%3";
+    str = str.arg(date.Second())
+            .arg(id_apart);
+    BD db;
+    db.SelectFromTable(str,&debt);
+
+    if (debt.toDouble()>0.0){
+        out = QObject::trUtf8("Ваш долг составляет:  ")
+                + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
+    }else if(debt<0){
+        out = QObject::trUtf8("Ваша переплата составляет:  ")
+                + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
+    }
+    return out;
+}
+
+QString Fast_Calculation::CreditedForReport(int id_apartament, int id_usluga, DateOfUnixFormat date)
+{
+    QString str;
+    QString out;
+
+    str = "SELECT credited_of_service FROM credited c, list_app_usluga lau "
+            "WHERE date_credited=%1 AND lau.id_list_app_usluga=c.id_list_app_usluga "
+            "AND lau.id_apartament=%2 AND lau.id_usluga=%3 ";
+    str = str.arg(date.Second())
+            .arg(id_apartament)
+            .arg(id_usluga);
+    BD db;
+    db.SelectFromTable(str,&out);
+
+    return out;
+
+}
+
 double Fast_Calculation::AmountToPay(int id_apart, qint64 u_date)
 {
     QString str;
-    double out = 0.0;
+    double out;
     QString debt;
 
     str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";

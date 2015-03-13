@@ -75,5 +75,5 @@ void MassOperations::setOrganization(int id_org)
     Organization organization;
     organization.setId(id_org);
     m_id_org = id_org;
-    ui->lbl_org->setText(organization.getName());
+    ui->lbl_org->setText(organization.name());
 }

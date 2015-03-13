@@ -14,14 +14,19 @@ public:
 
     bool New(QString name, QString bank, QString sett_account, QString inn);
     QSqlQueryModel* ModelAllOrganization();
-    QString getName();
-    QString getBank();
-    QString getINN();
     int getId();
     void setId(int id_organization);
-    void setName(QString NameOrganization);
     void deleteFromDB();
     void Update(QString name = "", QString bank="", QString acc="", QString inn="");
+    QString inn() const;
+    void setInn(const QString &inn);
+
+    QString bank() const;
+    void setBank(const QString &bank);
+
+    QString name() const;
+    void setName(const QString &name);
+
 private:
     int m_id;
     QString m_name;

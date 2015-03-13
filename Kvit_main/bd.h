@@ -46,7 +46,7 @@ public:
 
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
 
-    double CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
+
 
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
@@ -56,8 +56,6 @@ public:
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
     QSqlQueryModel* ModelPensioner(int id_home, int id_org);
     QSqlQueryModel* ModelTypeUsluga();
-
-    QString is_Debt(int id_apart, DateOfUnixFormat date);
 
     QSqlError DeletePension(int id_apart);
     QSqlError DeleteUslugaApartament(int id_list_apart_usluga);

@@ -95,7 +95,7 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)
         find_pos = str_out.indexOf(strlst_find.at(2));
         if(find_pos>=0){
             str_out.replace(find_pos,strlst_find.at(2).size(),
-                            QString::number(db.CreditedForReport(id_app,ServiceList.at(i),date)));
+                            Fast_Calculation::CreditedForReport(id_app,ServiceList.at(i),date));
         }
         find_pos = str_out.indexOf(strlst_find.at(3));
         if(find_pos>=0){
@@ -104,7 +104,7 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)
         find_pos = str_out.indexOf(strlst_find.at(4));
         if(find_pos>=0){
             str_out.replace(find_pos,strlst_find.at(4).size(),
-                            QString::number(db.CreditedForReport(id_app,ServiceList.at(i),date)));
+                            Fast_Calculation::CreditedForReport(id_app,ServiceList.at(i),date));
         }
     }
     return str_out;
@@ -192,7 +192,7 @@ void parser_blank::generating()
     organization.setId(ConfData.Org_id);
     Home home;
     home.setId(ConfData.Home_id);
-    str_NameFile_base = organization.getName() + " " + home.getName();
+    str_NameFile_base = organization.name() + " " + home.getName();
 
 
     QProgressDialog progress(trUtf8("Создание файлов..."), trUtf8("Отмена"), 0, str_L.size()-1, this);
@@ -267,7 +267,8 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
     QString str_out;
     QStringList strL_find, strL_replace;
 
-    Organization *organization = new Organization(apartment.getId());
+//    Organization *organization = new Organization(apartment.getId());
+    Organization organization(apartment.getId());
     Home home;
     home.setId(ConfData.Home_id);
 
@@ -291,7 +292,7 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
               << "@Bank#";
 
     DateOfUnixFormat u_date(ConfData.date);
-    strL_replace << organization->getName()     << apartment.is_FIO_payer()
+    strL_replace << organization.name()     << apartment.is_FIO_payer()
                  << QString::number(apartment.getPersonalAccount())
                  << QString::number(apartment.getRealMen(ConfData.date))
                  << QString::number(apartment.getRentMen(ConfData.date))
@@ -307,11 +308,11 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
                  << QDate::longMonthName(ConfData.date.month())
                     + "  " + QString::number(ConfData.date.year()) + QObject::trUtf8(" г.")
                  << QString::number(Fast_Calculation::AmountToPay(apartment.getId(),u_date.Second()))
-                 << db.is_Debt(apartment.getId(),ConfData.date)
+                 << Fast_Calculation::Debt(apartment.getId(),ConfData.date)
                  << QString::number(Fast_Calculation::AmountForServices(apartment.getId(), u_date.Second()))
                  << QString::number(Fast_Calculation::AmountForServices(apartment.getId(), u_date.Second()))
-                 << QObject::trUtf8(" ИНН ") + organization->getINN()
-                 << organization->getBank();
+                 << QObject::trUtf8(" ИНН ") + organization.inn()
+                 << organization.bank();
 
     str_out = str_in;
     for (int i=0; i<strL_find.size(); i++){
@@ -323,6 +324,5 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
         }
     }
 
-    delete organization;
     return str_out;
 }

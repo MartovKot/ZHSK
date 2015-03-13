@@ -40,15 +40,12 @@ OperWindow::OperWindow(QWidget *parent) :
     ui->groupBox->setLayout(ui->horizontalLayout_10);
     ui->groupBox_2->setLayout(ui->horizontalLayout_5);
 
-
-
 }
 
 OperWindow::~OperWindow()
 {
     delete ui;
 }
-
 
 void OperWindow::Refresh_tblVPayment(int ApartamenID)
 {
@@ -121,7 +118,7 @@ void OperWindow::set_parametr(int id_org, int id_home)
     OrganizationID = id_org;
 
     ui->lbl_home->setText("<font color=blue>"+home.getName()+"</font>");
-    ui->lbl_organization->setText(organization.getName());
+    ui->lbl_organization->setText(organization.name());
     Apartment apartment;
     ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(id_home,id_org));
 
@@ -256,7 +253,7 @@ void OperWindow::sl_RefreshLabel() //обновление выводяшейся
         calculate.fullCalc();
     }
     ui->lblInPayment->setText(QString::number(Fast_Calculation::AmountToPay(apartment.getId(),date_calc.Second())));
-    ui->lblDolg->setText(db.is_Debt(apartment.getId(),date_calc));
+    ui->lblDolg->setText(Fast_Calculation::Debt(apartment.getId(),date_calc));
 }
 
 void OperWindow::sl_ApartFirst()
@@ -307,15 +304,10 @@ void OperWindow::sl_RefreshFull()
 
 void OperWindow::sl_NewCounter()//вызывается когда происходит смена счётчика
 {
-    int id_counter,row;
-
-    row = ui->tblV_Count->currentIndex().row(); //Номер строки
-    if(row == -1){
-        QMessageBox::warning(this,trUtf8("Предупреждение!"),
-                             trUtf8("Не выбран счётчик. \nВыберите нужный и повторите ещё раз."),QMessageBox::Ok);
+    int id_counter = idCurrentCounter();
+    if(id_counter == -1 ){
         return;
     }
-    id_counter = ui->tblV_Count->model()->index(row,0).data().toInt(); //ID Показания Счётчика
 
     NewCounter *dlg = new NewCounter(this);
     dlg->set_IdPokazanie(id_counter);
@@ -325,15 +317,10 @@ void OperWindow::sl_NewCounter()//вызывается когда происхо
 
 void OperWindow::on_pBtn_NewCounterNext_clicked()
 {
-    int id_counter,row;
-
-    row = ui->tblV_Count->currentIndex().row(); //Номер строки
-    if(row == -1){
-        QMessageBox::warning(this,trUtf8("Предупреждение!"),
-                             trUtf8("Не выбран счётчик. \nВыберите нужный и повторите ещё раз."),QMessageBox::Ok);
+    int id_counter = idCurrentCounter();
+    if(id_counter == -1 ){
         return;
     }
-    id_counter = ui->tblV_Count->model()->index(row,0).data().toInt(); //ID Показания Счётчика
 
     NewCounter *dlg = new NewCounter(this);
     dlg->set_IdPokazanie(db.new_pokazanie(id_counter,"0"));
@@ -345,4 +332,17 @@ void OperWindow::Refresh_lbl_Payer()
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
     ui->lbl_Payer->setText(apartment.is_FIO_payer());
+}
+
+int OperWindow::idCurrentCounter()
+{
+    int row;
+
+    row = ui->tblV_Count->currentIndex().row(); //Номер строки
+    if(row == -1){
+        QMessageBox::warning(this,trUtf8("Предупреждение!"),
+                             trUtf8("Не выбран счётчик. \nВыберите нужный и повторите ещё раз."),QMessageBox::Ok);
+        return -1;
+    }
+    return ui->tblV_Count->model()->index(row,0).data().toInt(); //ID Показания Счётчика
 }

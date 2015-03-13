@@ -101,12 +101,6 @@ void MainWindow::sl_OpenArhiv()
     VwBlank->open();
 }
 
-void MainWindow::sl_test()
-{
-//    delete VwBlank;
-//    VwBlank = nullptr;
-}
-
 void MainWindow::sl_ArhivKvit()
 {
     QStringList strL_dir;//список папок с квитанциями
@@ -151,48 +145,16 @@ void MainWindow::setVersion(QString ver)
 
 int MainWindow::isIdSelectHome()
 {
-    int row;
-    int id_home = -1;
-
-    row = ui->cmBx_Home->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                id_home = index.data().toInt();
-            }else{
-                return -1;
-            }
-        }else{
-            return -1;
-        }
-    }else{
-        return -1;
-    }
-    return id_home;
+    Home home;
+    home.setName(ui->cmBx_Home->currentText());
+    return home.getId();
 }
 
 int MainWindow::isIdSelectOrganiztion()
 {
-    int row;
-    int id_org = -1;
-
-    row = ui->cmBx_Org->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org->model()->index(row, 1);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                id_org = index.data().toInt();
-            }else{
-                return -1;
-            }
-        }else{
-            return -1;
-        }
-    }else{
-        return -1;
-    }
-    return id_org;
+    Organization organization;
+    organization.setName(ui->cmBx_Org->currentText());
+    return organization.getId();
 }
 
 void MainWindow::sl_OperWinClose()
