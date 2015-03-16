@@ -11,7 +11,6 @@
 #include "adminwindow.h"
 #include "operwindow.h"
 #include "viewblank.h"
-//#include "calculation.h"
 #include "fast_calculation.h"
 #include "dateofunixformat.h"
 
@@ -34,7 +33,6 @@ private:
     AdminWindow *AdmWin;
     ViewBlank *VwBlank;
     BD db;
-//    Fast_Calculation calculation;
     QString CurentDirArhiv;
     QString Version;
 

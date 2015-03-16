@@ -410,62 +410,18 @@ void AdminWindow::Refresh_Pensioner()
 }
 
 void AdminWindow::Refresh_cmbNumApp_onUslugi()
-{
-    int OrganiztionID = -1, HomeID = -1;
-    int row;
-
-    row = ui->cmBx_Org_on_Uslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Org_on_Uslugi->model()->index(row, 0);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                OrganiztionID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле организация или дома"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле организация или дома"),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле организация или дома"),QMessageBox::Ok);
-        return;
-    }
-
-    row = ui->cmBx_Home_on_Uslugi->currentIndex();
-    if (row != -1){
-        QModelIndex index = ui->cmBx_Home_on_Uslugi->model()->index(row, 0);
-        if (index.isValid()){
-            if (index.data().canConvert(QVariant::Int)){
-                HomeID = index.data().toInt();
-            }else{
-                QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                     trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-                return;
-            }
-        }else{
-            QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                                 trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-            return;
-        }
-    }else{
-        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-                             trUtf8("Ошибка в поле дом"),QMessageBox::Ok);
-        return;
-    }
+{   
+    Organization organization;
+    organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
+    Home home;
+    home.setName(ui->cmBx_Home_on_Uslugi->currentText());
 
     QSqlQueryModel *model;
 
     Apartment apartment;
-    model = apartment.ModelAllApartment(HomeID,OrganiztionID);
+    model = apartment.ModelAllApartment(home.getId(),organization.getId());
     ui->cmBx_NumAp_on_Uslugi->setModel(model);
-
 }
-
 
 void AdminWindow::Refresh_cmBx_NumApp_onApartament()
 {
@@ -631,13 +587,10 @@ void AdminWindow::on_tblV_on_Pens_clicked(const QModelIndex &index)
 
 void AdminWindow::on_pBtn_NewApartament_clicked()
 {
-    int id_org;
-    int id_home;
     Organization organization;
     organization.setName(ui->lbl_OrgSelect->text());
 
-    id_org = organization.getId();
-    if(id_org == -1){
+    if(organization.getId() == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Организация "),QMessageBox::Ok);
         return;
@@ -645,8 +598,7 @@ void AdminWindow::on_pBtn_NewApartament_clicked()
 
     Home home;
     home.setName(ui->lbl_HomeSelect->text());
-    id_home = home.getId();
-    if(id_home == -1){
+    if(home.getId() == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Дом "),QMessageBox::Ok);
         return;
@@ -834,10 +786,9 @@ void AdminWindow::Refresh_tblV_on_Uslugi()
     Organization organization;
     organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
     Home home;
-    home.setName(ui->cmBx_Org_on_Uslugi->currentText());
+    home.setName(ui->cmBx_Home_on_Uslugi->currentText());
 
     Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Uslugi->currentText().toInt());
-
 
     ModelUsliga *model = new ModelUsliga;
     model->setIdApartment(apartment.getId());
@@ -846,7 +797,6 @@ void AdminWindow::Refresh_tblV_on_Uslugi()
     ui->tblV_on_Uslugi->horizontalHeader()->setStretchLastSection(false);
     ui->tblV_on_Uslugi->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblV_on_Uslugi->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-
 
 }
 

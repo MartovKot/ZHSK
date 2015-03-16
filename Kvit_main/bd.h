@@ -46,8 +46,6 @@ public:
 
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
 
-
-
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
     QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
     QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
@@ -65,6 +63,10 @@ public:
     QString isValueSetting(QString NameSetting);
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
+    bool isElectroUsluga(int id_usluga);
+    bool isElectroUslugaDay (int id_usluga);
+    bool isElectroUslugaNight (int id_usluga);
+
     //----new interface
 
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
@@ -73,10 +75,6 @@ public:
     int add(QString table, QString column,QString value, int mode = 0);
     QSqlError QueryExecute(QString str);
     QSqlError DeleteLine(QString table, QString id_name ,int id_line);
-
-    bool isElectroUsluga(int id_usluga);
-    bool isElectroUslugaDay (int id_usluga);
-    bool isElectroUslugaNight (int id_usluga);
 
     QSqlError SelectFromTable(QString str, QString *var) const;
 private:

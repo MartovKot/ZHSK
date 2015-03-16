@@ -18,8 +18,6 @@ public:
     void setHome(int id_home);
     void setOrganization(int id_org);
 
-
-
 private slots:
     void on_pBtn_Add_clicked();
     void on_pBtn_Delete_clicked();
@@ -29,6 +27,7 @@ private:
     BD db;
     int m_id_home;
     int m_id_org;
+
 signals:
     void end();
 };
