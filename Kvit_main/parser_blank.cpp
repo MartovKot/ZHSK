@@ -82,10 +82,11 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)
 
     for (int i=0;i<ServiceList.count();i++){
         int find_pos;
+        Service service(ServiceList.at(i));
         str_out = str_out + str_in_usl;
         find_pos = str_out.indexOf(strlst_find.at(0));
         if(find_pos>=0){
-            str_out.replace(find_pos,strlst_find.at(0).size(), db.is_NameService(ServiceList.at(i)));
+            str_out.replace(find_pos,strlst_find.at(0).size(), service.getName());
         }
         find_pos = str_out.indexOf(strlst_find.at(1));
         if(find_pos>=0){
@@ -123,10 +124,11 @@ QString parser_blank::process_schet(QString str_in_sch,const int id_apartment, Q
 
     for(int i=0;i<CounterList.size();i++){
         int find_pos;
+        Service service(CounterList.at(i));
         str_out = str_out + str_in_sch;
         find_pos = str_out.indexOf(strlst_find.at(0));
         if(find_pos>=0){ //Название Счётчика
-            str_out.replace(find_pos,strlst_find.at(0).size(), db.is_NameService(CounterList.at(i)));
+            str_out.replace(find_pos,strlst_find.at(0).size(), service.getName());
         }
         find_pos = str_out.indexOf(strlst_find.at(1));
         if(find_pos>=0){ //Показание

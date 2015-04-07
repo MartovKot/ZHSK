@@ -1,5 +1,4 @@
 #include <QApplication>
-#include <QApplication>
 #include <QMessageBox>
 #include <QSplashScreen>
 #include <QTextCodec>

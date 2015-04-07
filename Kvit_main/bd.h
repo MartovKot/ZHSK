@@ -35,15 +35,9 @@ public:
     QList<int> is_ListIdApartament(int id_org, int id_home);    // Возвращает список ид квартир в доме
     //-------------------------
 
-
-    int is_TypeUsluga(int id_usluga);                           //возвращает ид типа услуги
     int is_idListAppUsluga(int id_apartament, int id_usluga);
-
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
     int is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date/*qint64 unix_date*/);
-
-    QString is_NameService(int id_service);
-
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
 
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox

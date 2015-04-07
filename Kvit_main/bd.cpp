@@ -318,31 +318,6 @@ QList<int> BD::is_ListIdApartament(int id_org, int id_home)
 
 //=====================================================================
 
-QString BD::is_NameService(int id_service)
-{
-    QString out = "";
-    QString str;
-    QSqlQuery query;
-
-    str = "SELECT name FROM usluga WHERE id_usluga=%1";
-    str = str.arg(id_service);
-
-    if (query.exec(str)){
-      if (query.next()){
-          out =  query.value(0).toString();
-      }else{
-          qDebug() << "not record" << "f7d877056cf6319e6142c1d9feb4f3b7" << str;
-          out = "";
-      }
-    } else{
-        qDebug()<<query.lastError();
-        LogOut.logout(query.lastError().text());
-        out = "";
-    }
-
-    return out;
-}
-
 QSqlQueryModel* BD::Model(QString table)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
@@ -539,19 +514,6 @@ void BD::sl_ModelPokazanieHeaderData(QAbstractTableModel *t)
     t->setHeaderData(0, Qt::Horizontal, QObject::trUtf8("№"));
     t->setHeaderData(1, Qt::Horizontal, QObject::trUtf8("Счётчик"));
     t->setHeaderData(2, Qt::Horizontal, QObject::trUtf8("Показазия текущие"));
-}
-
-int BD::is_TypeUsluga(int id_usluga)
-{
-    QString str;
-    QString out;
-
-    str = "SELECT type_usluga FROM usluga WHERE id_usluga=%1";
-    str = str.arg(id_usluga);
-
-    SelectFromTable(str, &out);
-
-    return out.toInt();
 }
 
 int BD::is_idListAppUsluga(int id_apartament, int id_usluga)
