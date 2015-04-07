@@ -331,17 +331,6 @@ QSqlQueryModel* BD::Model(QString table)
     return model;
 }
 
-QSqlQueryModel* BD::ModelTypeUsluga()
-{
-    QSqlQueryModel *model = new QSqlQueryModel;
-    QString str;
-    str = "SELECT  name,id_type_usluga FROM type_usluga";
-    model->setQuery(QSqlQuery(str));
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Тип услуги"));
-
-    return model;
-}
-
 QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
@@ -652,29 +641,6 @@ int BD::is_Pokazanie(int id_list_app_usluga, QDate date)
 
 //-------------------------------------------------------------------------------------------
 
-
-bool BD::isElectroUsluga(int id_usluga)
-{
-    if(id_usluga == 4 ){
-        return true;
-    }
-    return false;
-}
-
-bool BD::isElectroUslugaDay(int id_usluga)
-{
-    if(id_usluga == 6){
-        return true;
-    }
-    return false;
-}
-
-bool BD::isElectroUslugaNight(int id_usluga){
-    if(id_usluga == 7){
-        return true;
-    }
-    return false;
-}
 
 void BD::SumCount(int id_pokazanie, bool New/* = false*/) //Расчёт показаний канализации
 {

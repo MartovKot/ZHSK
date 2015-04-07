@@ -11,8 +11,7 @@ Dialog_with_LineEdit::Dialog_with_LineEdit(QWidget *parent) :
     this->adjustSize();
     connect(ui->buttonBox,SIGNAL(accepted()),SLOT(sl_Ok()));
 
-
-    ui->comboBox->setModel(db.ModelTypeUsluga());
+    ui->comboBox->setModel(Service::modelServiceType());
 }
 
 Dialog_with_LineEdit::~Dialog_with_LineEdit()
@@ -22,6 +21,6 @@ Dialog_with_LineEdit::~Dialog_with_LineEdit()
 
 void Dialog_with_LineEdit::sl_Ok()
 {
-    sgn_string(ui->lineEdit->text(),ui->comboBox->model()->index(
-                   ui->comboBox->currentIndex(),1).data().toInt());
+    sgn_string(ui->lineEdit->text(),
+               ui->comboBox->model()->index(ui->comboBox->currentIndex(),1).data().toInt());
 }

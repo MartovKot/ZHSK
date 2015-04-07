@@ -44,5 +44,40 @@ void Service::setName(const QString &value)
     name = value;
 }
 
+bool Service::isElectro()
+{
+    if(idService == 4 ){
+        return true;
+    }
+    return false;
+}
+
+bool Service::isElectroDay()
+{
+    if(idService == 6 ){
+        return true;
+    }
+    return false;
+}
+
+bool Service::isElectroNight()
+{
+    if(idService == 7 ){
+        return true;
+    }
+    return false;
+}
+
+QSqlQueryModel *Service::modelServiceType()
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    QString str;
+    str = "SELECT  name,id_type_usluga FROM type_usluga";
+    model->setQuery(QSqlQuery(str));
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Тип услуги"));
+
+    return model;
+}
+
 
 

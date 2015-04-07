@@ -35,36 +35,38 @@ public:
     QList<int> is_ListIdApartament(int id_org, int id_home);    // Возвращает список ид квартир в доме
     //-------------------------
 
+    // объединение улуги и квартиры
     int is_idListAppUsluga(int id_apartament, int id_usluga);
+    QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
+    QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
+    //-----------------------------
+
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
     int is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date/*qint64 unix_date*/);
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
 
     QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
-    QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
+
     QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания
     QSqlQueryModel* ModelSettings();
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
     QSqlQueryModel* ModelPensioner(int id_home, int id_org);
-    QSqlQueryModel* ModelTypeUsluga();
 
     QSqlError DeletePension(int id_apart);
-    QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
+
     QSqlError DeleteSetting(QString name_setting);
 
     void new_pokazanie(int id_apartament, int month, int year);
     QString isValueSetting(QString NameSetting);
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
-    bool isElectroUsluga(int id_usluga);
-    bool isElectroUslugaDay (int id_usluga);
-    bool isElectroUslugaNight (int id_usluga);
 
     //----new interface
 
     void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
-    void UpdateTable(QString table, QString column, QString value, QString where_column1, QString where_value1, QString where_column2, QString where_value2);
+    void UpdateTable(QString table, QString column, QString value,
+                     QString where_column1, QString where_value1, QString where_column2, QString where_value2);
     int add(QString table, QStringList column,QStringList value, int mode = 0);
     int add(QString table, QString column,QString value, int mode = 0);
     QSqlError QueryExecute(QString str);

@@ -85,7 +85,6 @@ QString Fast_Calculation::calcOfService(const QStringList &row)
 
 QString Fast_Calculation::calcOfCounters(const QStringList &row)
 {
-    BD db;
     QString out;
     Apartment apartment;
     apartment.setId(row.at(0).toInt());
@@ -103,11 +102,12 @@ QString Fast_Calculation::calcOfCounters(const QStringList &row)
     norma = row.at(5);
     //пенсионеры
     if (apartment.isPensionerLivingAlone()){
-        if (db.isElectroUsluga(id_usluga)){
+        Service service(id_usluga);
+        if (service.isElectro()){
             norma = 75;
-        }else if(db.isElectroUslugaDay(id_usluga)){
+        }else if(service.isElectroDay()){
             norma = 55;
-        }else if(db.isElectroUslugaNight(id_usluga)){
+        }else if(service.isElectroNight()){
             norma = 20;
         }
     }

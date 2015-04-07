@@ -2,9 +2,9 @@
 #define FAST_CALCULATION_H
 
 #include <QObject>
-#include "bd.h"
-#include  "apartment.h"
+#include "apartment.h"
 #include "dateofunixformat.h"
+#include "service.h"
 
 class Fast_Calculation
 {
@@ -30,8 +30,6 @@ private:
     void recordInDB_CredOfApart(const QList<QStringList> &table);
 
     void calcOfDebt();
-
-//    static BD db;
 };
 
 #endif // FAST_CALCULATION_H

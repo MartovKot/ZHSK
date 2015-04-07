@@ -16,6 +16,11 @@ public:
     QString getName() const;
     void setName(const QString &value);
 
+    bool isElectro();
+    bool isElectroDay ();
+    bool isElectroNight ();
+    static QSqlQueryModel *modelServiceType();
+
 private:
     int idService;
     int idType;
