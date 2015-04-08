@@ -10,7 +10,7 @@ MassOperations::MassOperations(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Услуги");
-    ui->cmBx_Usluga->setModel(db.Model("usluga"));
+    ui->cmBx_Usluga->setModel(Service::modelService());
 
 }
 
@@ -21,27 +21,29 @@ MassOperations::~MassOperations()
 
 void MassOperations::on_pBtn_Add_clicked()
 {
-    int id_usluga;
-    QList<int> apartaments;
+
     QStringList column, value;
     column << "id_apartament" << "id_usluga";
 
-    id_usluga = ui->cmBx_Usluga->model()->index(ui->cmBx_Usluga->currentIndex(),1).data().toInt();
-    apartaments = db.is_ListIdApartament(m_id_org,m_id_home);
-    QProgressDialog progress(trUtf8("Идёт распределение..."), trUtf8("Отмена"), 0, apartaments.count()-1, this);
+    Service service(ui->cmBx_Usluga->currentText());
+
+    QList<int> apartments;
+    apartments = db.is_ListIdApartament(m_id_org,m_id_home);
+
+    QProgressDialog progress(trUtf8("Идёт распределение..."), trUtf8("Отмена"), 0, apartments.count()-1, this);
     progress.setWindowModality(Qt::WindowModal);
     progress.setWindowTitle(trUtf8("Расчёт"));
     progress.show();
-    for (int i=0;i<apartaments.count();i++){
+    for (int i=0;i<apartments.count();i++){
         progress.setValue(i);
         qApp->processEvents();
         if (progress.wasCanceled())
             break;
         value.clear();
-        value << QString::number(apartaments.at(i)) << QString::number(id_usluga);
+        value << QString::number(apartments.at(i)) << QString::number(service.getIdService());
         db.add("list_app_usluga",column,value,6);
     }
-    progress.setValue(apartaments.count()-1);
+    progress.setValue(apartments.count()-1);
     QMessageBox::information(this,trUtf8("Успех"),
                          trUtf8("Услуга распределена всем \n"),QMessageBox::Ok);
     emit end();

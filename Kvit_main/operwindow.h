@@ -35,7 +35,6 @@ public:
 private:
     Ui::OperWindow *ui;
     BD db;
-//    Fast_Calculation calculation;
     void Refresh_tblVPayment(int ApartamentID);
     TableViewPokazanie *tbl;
     QDialog *dlg;

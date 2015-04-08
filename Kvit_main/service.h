@@ -9,6 +9,7 @@ class Service : public QObject
     Q_OBJECT
 public:
     Service(int idService);
+    Service(QString name);
     ~Service();
     int getIdType() const;
     void setIdType(int value);
@@ -20,6 +21,10 @@ public:
     bool isElectroDay ();
     bool isElectroNight ();
     static QSqlQueryModel *modelServiceType();
+    static QSqlQueryModel *modelService();
+
+    int getIdService() const;
+    void setIdService(int value);
 
 private:
     int idService;

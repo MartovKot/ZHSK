@@ -17,7 +17,6 @@ public:
     ~EditSetting();
     void setNameSetting(QString NameSetting);
 
-
 private slots:
     void on_buttonBox_accepted();
 

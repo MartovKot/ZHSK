@@ -855,7 +855,7 @@ void AdminWindow::on_pBtnMassOperation_clicked()
     Organization organization;
     organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
     Home home;
-    home.setName(ui->cmBx_Org_on_Uslugi->currentText());
+    home.setName(ui->cmBx_Home_on_Uslugi->currentText());
 
     dlg->setHome(home.getId());
     dlg->setOrganization(organization.getId());

@@ -21,6 +21,27 @@ Service::Service(int id)
     setName(out);
 }
 
+Service::Service(QString name)
+{
+    setName(name);
+    QString str;
+    QString out;
+
+    str = "SELECT id_usluga FROM usluga WHERE name='%1'";
+    str = str.arg(name);
+
+    db.SelectFromTable(str, &out);
+
+    idService = out.toInt();
+
+    str = "SELECT type_usluga FROM usluga WHERE id_usluga=%1";
+    str = str.arg(idService);
+
+    db.SelectFromTable(str, &out);
+
+    setIdType(out.toInt());
+}
+
 Service::~Service()
 {
 
@@ -78,6 +99,27 @@ QSqlQueryModel *Service::modelServiceType()
 
     return model;
 }
+
+QSqlQueryModel *Service::modelService()
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    QString str;
+    str = "SELECT  name FROM usluga";
+    model->setQuery(QSqlQuery(str));
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Услуга"));
+
+    return model;
+}
+int Service::getIdService() const
+{
+    return idService;
+}
+
+void Service::setIdService(int value)
+{
+    idService = value;
+}
+
 
 
 

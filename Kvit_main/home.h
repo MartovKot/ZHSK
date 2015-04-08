@@ -2,6 +2,7 @@
 #define HOME_H
 
 #include <QObject>
+#include <QSqlQueryModel>
 #include "bd.h"
 
 class Home : public QObject

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "bd.h"
+#include "service.h"
 
 namespace Ui {
 class MassOperations;
