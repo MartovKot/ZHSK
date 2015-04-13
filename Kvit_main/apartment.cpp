@@ -16,7 +16,7 @@ Apartment::Apartment(int id_home, int id_org, int number)
     str = str.arg(id_home)
            .arg(id_org)
            .arg(number);
-    db.SelectFromTable(str, &id);
+    BD::SelectFromTable(str, &id);
     m_id = id.toInt();
 
 }
@@ -38,7 +38,7 @@ bool Apartment::New(int id_home, int id_org, int number)
     column<<"id_homes"<<"id_organiz"<<"number";
 
     value << QString::number(id_home) << QString::number(id_org) << QString::number(number);
-    if (db.add("apartament",column,value) == 0){
+    if (BD::add("apartament",column,value) == 0){
         return true;
     }
     return false;
@@ -145,13 +145,13 @@ void Apartment::sl_EditApartament(int col,QString val)
 void Apartment::UpdateApartament(QStringList column, QStringList value, int idapart)
 {
     for(int i=0; i<column.count();i++ ){
-        db.UpdateTable("apartament",column[i],value[i],"id_apartament", QString::number(idapart));
+        BD::UpdateTable("apartament",column[i],value[i],"id_apartament", QString::number(idapart));
     }
 }
 
 void Apartment::UpdateApartament(QString column, QString value, int idapart)
 {
-    db.UpdateTable("apartament",column,value,"id_apartament", QString::number(idapart));
+    BD::UpdateTable("apartament",column,value,"id_apartament", QString::number(idapart));
 }
 
 void Apartment::UpdateMenInApartment(QString column, QString value, int idapart)
@@ -165,12 +165,12 @@ void Apartment::UpdateMenInApartment(QString column, QString value, int idapart)
             .arg(date.Second_first_day());
 
     QString count = 0;
-    db.SelectFromTable(str,&count);
+    BD::SelectFromTable(str,&count);
 
     if (count.toInt() == 0){//если записей за текущий месяц нету
         AddLineMenInApartment(idapart); //добавим запись
     }
-    db.UpdateTable("men_in_apartament",column,value,
+    BD::UpdateTable("men_in_apartament",column,value,
                    "date_men_in_apartament",QString::number(date.Second_first_day()),
                    "id_apartament", QString::number(idapart));
 
@@ -183,7 +183,7 @@ void Apartment::AddLineMenInApartment(int id_apartment)
     str = "SELECT max(date_men_in_apartament) FROM men_in_apartament WHERE id_apartament = %1";
     str = str.arg(id_apartment);
     QString date;
-    db.SelectFromTable(str,&date);
+    BD::SelectFromTable(str,&date);
     QString str2;
 
     str2 = " INSERT INTO men_in_apartament (id_apartament, real_men, rent_men, reserv_men, date_men_in_apartament ) "
@@ -194,7 +194,7 @@ void Apartment::AddLineMenInApartment(int id_apartment)
     str2 = str2.arg(QString::number(date_now.Second_first_day()))
             .arg(date)
             .arg(id_apartment);
-    db.QueryExecute(str2);
+    BD::QueryExecute(str2);
 //    }else{
 //        qDebug() << "need add code";
     //    }
@@ -211,7 +211,7 @@ int Apartment::getMenInApartment(QString typeofuse, DateOfUnixFormat date) const
             " LIMIT 1 ";
     str = str.arg(m_id)
             .arg(date.Second());
-    db.SelectFromTable(str,&out);
+    BD::SelectFromTable(str,&out);
 
     return out.toInt();
 }
@@ -224,7 +224,7 @@ void Apartment::setId(int id_apartment)
 
 void Apartment::DeleteApartment()
 {
-    db.DeleteLine("apartament","id_apartament",m_id);
+    BD::DeleteLine("apartament","id_apartament",m_id);
 }
 
 QString Apartment::is_FIO_payer() const
@@ -236,7 +236,7 @@ QString Apartment::is_FIO_payer() const
     str = "SELECT  surname || ' ' || name || ' ' || patronymic   FROM apartament WHERE id_apartament = %1";
     str = str.arg(m_id);
 
-    db.SelectFromTable(str, &out);
+    BD::SelectFromTable(str, &out);
 
     return out;
 }
@@ -249,7 +249,7 @@ double Apartment::getTotalArea() const
     str = "SELECT total_area FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    db.SelectFromTable(str,&out);
+    BD::SelectFromTable(str,&out);
 
     return out.toDouble();
 }
@@ -262,7 +262,7 @@ double Apartment::getLivedArea() const
     str = "SELECT inhabed_area FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    db.SelectFromTable(str,&out);
+    BD::SelectFromTable(str,&out);
 
     return out.toDouble();
 }
@@ -276,7 +276,7 @@ double Apartment::getLodjia() const
     str = "SELECT loggia FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    db.SelectFromTable(str,&out);
+    BD::SelectFromTable(str,&out);
 
     return out.toDouble();
 }
@@ -289,7 +289,7 @@ int Apartment::getPersonalAccount() const
     str = "SELECT personal_account FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    db.SelectFromTable(str,&out);
+    BD::SelectFromTable(str,&out);
 
     return out.toInt();
 }
@@ -364,7 +364,7 @@ double Apartment::getBalkon() const
     str = "SELECT balkon FROM apartament WHERE id_apartament=%1";
     str = str.arg(m_id);
 
-    db.SelectFromTable(str,&out);
+    BD::SelectFromTable(str,&out);
 
     return out.toDouble();
 }
@@ -392,7 +392,7 @@ bool Apartment::isPensionerLivingAlone()
     str = "SELECT COUNT(*) FROM pensioner_living_alone WHERE id_apartament = %1";
     str = str.arg(m_id);
 
-    db.SelectFromTable(str,&count);
+    BD::SelectFromTable(str,&count);
 
     if (count.toInt()>0){
         return true;

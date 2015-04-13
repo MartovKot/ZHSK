@@ -192,8 +192,7 @@ void parser_blank::generating()
 
     Organization organization;
     organization.setId(ConfData.Org_id);
-    Home home;
-    home.setId(ConfData.Home_id);
+    Home home(ConfData.Home_id);
     str_NameFile_base = organization.name() + " " + home.getName();
 
 
@@ -269,10 +268,8 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
     QString str_out;
     QStringList strL_find, strL_replace;
 
-//    Organization *organization = new Organization(apartment.getId());
     Organization organization(apartment.getId());
-    Home home;
-    home.setId(ConfData.Home_id);
+    Home home(ConfData.Home_id);
 
 
     strL_find << "@NameOrganization#"   << "@FIO#"

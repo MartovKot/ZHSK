@@ -13,30 +13,6 @@
 
 static bool createConnection() //подключение к БД
 {
-    /// Временный блок для востановления БД
-//    QFile file("backup.qsl");
-//    file.open(QIODevice::ReadOnly);
-//    if (file.isReadable()){
-//        QFile oldDB("kvitdb.qsl");
-
-//        oldDB.open(QIODevice::ReadOnly);
-//        if (oldDB.isReadable()){
-//            if (oldDB.remove()){
-//                file.copy("kvitdb.qsl");
-//            }else{
-//                qDebug() << "no delete "<< file.errorString();
-//            }
-//        }else{
-//            qDebug()<< "no read old" << oldDB.errorString();
-//        }
-//    }else{
-//        qDebug()<< "no read backup" << file.errorString();
-//    }
-
-//        qDebug() << "delete DB is " << oldDB.remove();
-    //------------------------
-
-
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("kvitdb.qsl");
     LogReport out;
@@ -49,7 +25,6 @@ static bool createConnection() //подключение к БД
         return false;
     }
     return true;
-
 }
 
 int main(int argc, char *argv[])

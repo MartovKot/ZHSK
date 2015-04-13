@@ -107,7 +107,7 @@ void BD::UpdateDataBase()
 
 }
 
-QSqlError BD::SelectFromTable(QString str, QString *var) const
+QSqlError BD::SelectFromTable(QString str, QString *var)
 {
     *var = "";
     QSqlQuery query;
@@ -126,7 +126,7 @@ QSqlError BD::QueryExecute(QString str)
     QSqlQuery query;
     if (!query.exec(str)){
         qDebug() << "1098339a5e20736b5ba8f1eb1839f4ea" << query.lastError() << str;
-        LogOut.logout(query.lastError().text());
+//        LogOut.logout(query.lastError().text());
     }
     return query.lastError();
 }
@@ -191,7 +191,6 @@ int BD::add(QString table,QStringList column,QStringList value, int mode/*=0*/)
 
     if (!query.exec(strF)){
         qDebug() << "3c1f9d13f59a784144a975dd9f5f1fc4" << query.lastError() << strF;
-        LogOut.logout(query.lastError().text());
         return query.lastError().number();
     }else{
         return 0;
@@ -215,7 +214,7 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
         if (!query.exec(str))
         {
             qDebug()<<"bf206b5a653a24ca32249bfd24515d4e" <<"Eror  "<<query.lastError()<<"\n"<<str;
-            LogOut.logout(query.lastError().text());
+//            LogOut.logout(query.lastError().text());
         }
     }
 }
@@ -239,7 +238,7 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
         if (!query.exec(str))
         {
             qDebug()<<"bf206b5a653a24ca32249bfd24515d4e" <<"Eror  "<<query.lastError()<<"\n"<<str;
-            LogOut.logout(query.lastError().text());
+//            LogOut.logout(query.lastError().text());
         }
     }
 }

@@ -11,6 +11,7 @@ class Organization : public QObject
 public:
     explicit Organization();
     explicit Organization(int id_apartament);
+//    explicit
 
     bool New(QString name, QString bank, QString sett_account, QString inn);
     QSqlQueryModel* ModelAllOrganization();

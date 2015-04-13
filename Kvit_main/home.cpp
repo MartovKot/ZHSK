@@ -1,17 +1,12 @@
 #include "home.h"
 
-Home::Home()
-{
-    set_default();
-}
-
 void Home::set_default()
 {
     m_name = "";
     m_id = -1;
 }
 
-void Home::setId(int id)
+Home::Home(int id)
 {
     QString name;
     db.SelectFromTable( "SELECT name FROM homes WHERE id_homes = " + QString::number(id),&name );
@@ -19,16 +14,20 @@ void Home::setId(int id)
     if (name != ""){
         m_id = id;
         m_name = name;
+    }else{
+        set_default();
     }
 }
 
-void Home::setName(QString name)
+Home::Home(QString name)
 {
     QString id;
     db.SelectFromTable( "SELECT id_homes FROM homes WHERE name = '" + name + "'",&id);
     if(id != ""){
         m_id = id.toInt();
         m_name = name;
+    }else{
+        set_default();
     }
 }
 

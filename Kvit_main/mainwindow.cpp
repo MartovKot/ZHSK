@@ -145,8 +145,7 @@ void MainWindow::setVersion(QString ver)
 
 int MainWindow::isIdSelectHome()
 {
-    Home home;
-    home.setName(ui->cmBx_Home->currentText());
+    Home home(ui->cmBx_Home->currentText());
     return home.getId();
 }
 

@@ -37,7 +37,6 @@ public:
     bool isPensionerLivingAlone();
 
 private:
-    BD db;
     int m_id;
     int m_number;
     void UpdateApartament(QStringList column,QStringList value, int idapart);   //Обновление таблицы с квартирами

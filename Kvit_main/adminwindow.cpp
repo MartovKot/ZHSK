@@ -145,8 +145,7 @@ void AdminWindow::Refresh_Appartament()
 void AdminWindow::Refresh_tblView_Apartament()
 {
     MyItemDelegate * dDeleg = new MyItemDelegate ();
-    Home home;
-    home.setName(ui->lbl_HomeSelect->text());
+    Home home(ui->lbl_HomeSelect->text());
     Organization organization;
     organization.setName(ui->lbl_OrgSelect->text());
 
@@ -363,9 +362,8 @@ void AdminWindow::Refresh_Organization()
 
 void AdminWindow::Refresh_Home()
 {
-    Home home;
     delete ui->tblView_Home->model();
-    ui->tblView_Home->setModel(home.ModelAllHome());
+    ui->tblView_Home->setModel(Home::ModelAllHome());
     ui->tblView_Home->horizontalHeader()->setStretchLastSection(false);
     ui->tblView_Home->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Home->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
@@ -373,8 +371,7 @@ void AdminWindow::Refresh_Home()
 
 void AdminWindow::Refresh_Uslugi()
 {
-    Home home;
-    ui->cmBx_Home_on_Uslugi->setModel(home.ModelAllHome());
+    ui->cmBx_Home_on_Uslugi->setModel(Home::ModelAllHome());
     ui->cmBx_Home_on_Uslugi->setModelColumn(1);
 
     Organization organization;
@@ -413,8 +410,7 @@ void AdminWindow::Refresh_cmbNumApp_onUslugi()
 {   
     Organization organization;
     organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
-    Home home;
-    home.setName(ui->cmBx_Home_on_Uslugi->currentText());
+    Home home(ui->cmBx_Home_on_Uslugi->currentText());
 
     QSqlQueryModel *model;
 
@@ -428,8 +424,7 @@ void AdminWindow::Refresh_cmBx_NumApp_onApartament()
     Organization organization;
     organization.setName(ui->lbl_OrgSelect->text());
 
-    Home home;
-    home.setName(ui->lbl_HomeSelect->text());
+    Home home(ui->lbl_HomeSelect->text());
 
     Apartment apartment;
     ui->cmBx_NumAp_on_Apartament->setModel(apartment.ModelAllApartment(home.getId(),organization.getId()));
@@ -534,8 +529,7 @@ void AdminWindow::sl_DeleteHome()
         return;
     }
 
-    Home home;
-    home.setName(ui->lEdHome->text());
+    Home home(ui->lEdHome->text());
     home.deleteFromDB();
     Mode("home_default");
     Refresh_Home();                                                     //обновление таблицы
@@ -543,12 +537,9 @@ void AdminWindow::sl_DeleteHome()
 
 void AdminWindow::sl_SaveHome()
 {
-    Home home;
-    home.setId(ui->tblView_Home->model()->index(
+    Home home(ui->tblView_Home->model()->index(
                    ui->tblView_Home->currentIndex().row(),0).data().toInt());
     home.rename(ui->lEdHome->text());
-//    db.UpdateHome(ui->tblView_Home->model()->index(
-//                      ui->tblView_Home->currentIndex().row(),0).data().toInt(),ui->lEdHome->text());
     Refresh_Home();
     Mode("home_default");
 }
@@ -596,8 +587,7 @@ void AdminWindow::on_pBtn_NewApartament_clicked()
         return;
     }
 
-    Home home;
-    home.setName(ui->lbl_HomeSelect->text());
+    Home home(ui->lbl_HomeSelect->text());
     if(home.getId() == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Дом "),QMessageBox::Ok);
@@ -675,8 +665,7 @@ void AdminWindow::on_pBtn_HomeSelect_clicked()
 
 void AdminWindow::sl_SelectHome(QString home_name)
 {
-    Home home;
-    home.setName(home_name);
+    Home home(home_name);
 
     if (home.getId() != -1){
         ui->lbl_HomeSelect->setText(home_name);
@@ -712,8 +701,7 @@ void AdminWindow::on_pBtn_Save_clicked()
     organization.setName(ui->lbl_OrgSelect->text());
     id_org = organization.getId();
 
-    Home home;
-    home.setName(ui->lbl_HomeSelect->text());
+    Home home(ui->lbl_HomeSelect->text());
     id_home = home.getId();
 
     if(ui->lEd_NumApart_onApart->text()!=""){
@@ -748,7 +736,6 @@ void AdminWindow::on_cmBx_NumAp_on_Apartament_activated(int index)
 void AdminWindow::on_pBtn_DeleteApartment_clicked()
 {
     int id_org;
-    int id_home;
     Organization organization;
     organization.setName(ui->lbl_OrgSelect->text());
 
@@ -759,10 +746,8 @@ void AdminWindow::on_pBtn_DeleteApartment_clicked()
         return;
     }
 
-    Home home;
-    home.setName(ui->lbl_HomeSelect->text());
-    id_home = home.getId();
-    if(id_home == -1){
+    Home home(ui->lbl_HomeSelect->text());
+    if(home.getId() == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
                              trUtf8("Не заполнено поле Дом "),QMessageBox::Ok);
         return;
@@ -774,7 +759,7 @@ void AdminWindow::on_pBtn_DeleteApartment_clicked()
         return;
     }
 
-    Apartment apartment(id_home,id_org,ui->cmBx_NumAp_on_Apartament->currentText().toInt());
+    Apartment apartment(home.getId(),id_org,ui->cmBx_NumAp_on_Apartament->currentText().toInt());
     apartment.DeleteApartment();
 
     Refresh_cmBx_NumApp_onApartament();
@@ -785,8 +770,7 @@ void AdminWindow::Refresh_tblV_on_Uslugi()
 {
     Organization organization;
     organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
-    Home home;
-    home.setName(ui->cmBx_Home_on_Uslugi->currentText());
+    Home home(ui->cmBx_Home_on_Uslugi->currentText());
 
     Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Uslugi->currentText().toInt());
 
@@ -854,8 +838,7 @@ void AdminWindow::on_pBtnMassOperation_clicked()
 
     Organization organization;
     organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
-    Home home;
-    home.setName(ui->cmBx_Home_on_Uslugi->currentText());
+    Home home(ui->cmBx_Home_on_Uslugi->currentText());
 
     dlg->setHome(home.getId());
     dlg->setOrganization(organization.getId());

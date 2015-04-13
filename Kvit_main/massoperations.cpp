@@ -61,13 +61,11 @@ void MassOperations::on_pBtn_Delete_clicked()
        id_lau = db.is_idListAppUsluga(apartaments.at(i),id_usluga);
        db.DeleteUslugaApartament(id_lau);
     }
-
 }
 
 void MassOperations::setHome(int id_home)
 {
-    Home home;
-    home.setId(id_home);
+    Home home(id_home);
     m_id_home = id_home;
     ui->lbl_home->setText(home.getName());
 }

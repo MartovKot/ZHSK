@@ -27,7 +27,6 @@ public:
     QString getDatabaseVersion();
     void UpdateDataBase();
 
-
     QString is_NameCounter(int id_counter);
 
     // Функции перенести в класс объединяющий дом организацию
@@ -64,15 +63,15 @@ public:
 
     //----new interface
 
-    void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
-    void UpdateTable(QString table, QString column, QString value,
+    static void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
+    static void UpdateTable(QString table, QString column, QString value,
                      QString where_column1, QString where_value1, QString where_column2, QString where_value2);
-    int add(QString table, QStringList column,QStringList value, int mode = 0);
-    int add(QString table, QString column,QString value, int mode = 0);
-    QSqlError QueryExecute(QString str);
-    QSqlError DeleteLine(QString table, QString id_name ,int id_line);
+    static int add(QString table, QStringList column,QStringList value, int mode = 0);
+    static int add(QString table, QString column,QString value, int mode = 0);
+    static QSqlError QueryExecute(QString str);
+    static QSqlError DeleteLine(QString table, QString id_name ,int id_line);
 
-    QSqlError SelectFromTable(QString str, QString *var) const;
+    static QSqlError SelectFromTable(QString str, QString *var);
 private:
     QSqlDatabase db;
     LogReport LogOut;
