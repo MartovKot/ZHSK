@@ -109,17 +109,15 @@ void OperWindow::Refresh_tblVCount()
 
 void OperWindow::set_parametr(int id_org, int id_home)
 {
-    Organization organization(id_org);
     Home home(id_home);
 
     HomeID = id_home;
-    OrganizationID = id_org;
+    OrganizationID = home.organization()->getId();
 
     ui->lbl_home->setText("<font color=blue>"+home.getName()+"</font>");
-    ui->lbl_organization->setText(organization.name());
+    ui->lbl_organization->setText(home.organization()->name());
     Apartment apartment;
     ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(id_home,id_org));
-
 }
 
 void OperWindow::sl_EditPokazanie()

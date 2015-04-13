@@ -15,7 +15,6 @@
 #include "selecter_with_combobox.h"
 #include "myitemdelegate.h"
 #include "dateofunixformat.h"
-#include "organization.h"
 #include "apartment.h"
 #include "modelusliga.h"
 #include "dialog_with_lineedit.h"

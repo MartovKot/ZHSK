@@ -9,8 +9,9 @@ class Organization : public QObject
     Q_OBJECT
 
 public:
-    explicit Organization(const QString &name);
-    explicit Organization(int id_organization);
+    explicit Organization(const QString &name, QObject *parent = 0);
+    explicit Organization(int id_organization, QObject *parent = 0);
+    ~Organization();
 
     static bool New(QString name, QString bank, QString sett_account, QString inn);
     static QSqlQueryModel* ModelAllOrganization();

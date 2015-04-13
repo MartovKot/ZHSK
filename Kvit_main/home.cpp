@@ -1,6 +1,7 @@
 #include "home.h"
 
-Home::Home(int id)
+Home::Home(int id, QObject *parent):
+    QObject(parent)
 {
     BD::SelectFromTable( "SELECT name FROM homes WHERE id_homes = " + QString::number(id),&m_name );
 
@@ -11,12 +12,13 @@ Home::Home(int id)
     }
 
     QString id_org;
-    BD::SelectFromTable( "SELECT id_organiz FROM apartament WHERE id_homes = " + QString::number(m_id) + "LIMIT 1",
+    BD::SelectFromTable( "SELECT id_organiz FROM apartament WHERE id_homes = " + QString::number(m_id) + " LIMIT 1",
                          &id_org);
-//    m_organization = new Organization(id_org.toInt());
+    m_organization = new Organization(id_org.toInt(),this);
 }
 
-Home::Home(const QString &name)
+Home::Home(const QString &name, QObject *parent):
+    QObject(parent)
 {
     QString id;
     BD::SelectFromTable( "SELECT id_homes FROM homes WHERE name = '" + name + "'",&id);
@@ -30,6 +32,7 @@ Home::Home(const QString &name)
 
 Home::~Home()
 {
+//    qDebug() << "destructor Home" << this;
 //    delete m_organization;
 }
 
@@ -65,10 +68,10 @@ QSqlQueryModel* Home::ModelAllHome()
     return model;
 }
 
-//Organization *Home::organization()
-//{
-//    return m_organization;
-//}
+const Organization *Home::organization()
+{
+    return m_organization;
+}
 
 void Home::rename(QString new_name)
 {

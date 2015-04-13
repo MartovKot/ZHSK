@@ -1,6 +1,7 @@
 #include "organization.h"
 
-Organization::Organization(const QString &name)
+Organization::Organization(const QString &name,QObject *parent):
+    QObject(parent)
 {
     QString id;
     BD::SelectFromTable("SELECT id_organiz FROM organiz WHERE name = '" + name + "'",&id);
@@ -19,7 +20,8 @@ Organization::Organization(const QString &name)
 
 }
 
-Organization::Organization(int id)
+Organization::Organization(int id,QObject *parent):
+    QObject(parent)
 {
     BD::SelectFromTable("SELECT name FROM organiz WHERE id_organiz = "+QString::number(id),&m_name);
     if(m_name == ""){
@@ -31,6 +33,11 @@ Organization::Organization(int id)
     BD::SelectFromTable("SELECT inn FROM organiz WHERE id_organiz = "+QString::number(id),&m_inn);
 
     m_id = id;
+}
+
+Organization::~Organization()
+{
+//    qDebug() << "Destructor organization" << this;
 }
 
 bool Organization::New(QString name, QString bank, QString sett_account, QString inn)

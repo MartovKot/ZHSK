@@ -14,7 +14,6 @@
 #include "newcounter.h"
 #include "table_payment.h"
 
-#include "organization.h"
 #include "home.h"
 #include "apartment.h"
 #include "fast_calculation.h"

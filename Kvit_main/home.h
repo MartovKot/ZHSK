@@ -10,8 +10,8 @@ class Home : public QObject
 {
     Q_OBJECT
 public:
-    explicit Home(int id);
-    explicit Home(const QString &name);
+    explicit Home(int id, QObject *parent = 0);
+    explicit Home(const QString &name, QObject *parent = 0);
     ~Home();
 
     QString getName();
@@ -20,11 +20,11 @@ public:
     void deleteFromDB();
     void rename(QString new_name);
     static QSqlQueryModel* ModelAllHome();
-//    Organization* organization();
+    const Organization* organization();
 private:
     QString m_name;
     int m_id;
-//    Organization *m_organization;
+    Organization *m_organization;
     void set_default();
 signals:
 
