@@ -151,8 +151,7 @@ int MainWindow::isIdSelectHome()
 
 int MainWindow::isIdSelectOrganiztion()
 {
-    Organization organization;
-    organization.setName(ui->cmBx_Org->currentText());
+    Organization organization(ui->cmBx_Org->currentText());
     return organization.getId();
 }
 

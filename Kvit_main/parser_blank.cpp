@@ -190,8 +190,7 @@ void parser_blank::generating()
 
     QStringList str_L = db.sum_app(ConfData.Org_id,ConfData.Home_id);
 
-    Organization organization;
-    organization.setId(ConfData.Org_id);
+    Organization organization(ConfData.Org_id);
     Home home(ConfData.Home_id);
     str_NameFile_base = organization.name() + " " + home.getName();
 

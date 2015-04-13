@@ -72,8 +72,7 @@ void MassOperations::setHome(int id_home)
 
 void MassOperations::setOrganization(int id_org)
 {
-    Organization organization;
-    organization.setId(id_org);
+    Organization organization(id_org);
     m_id_org = id_org;
     ui->lbl_org->setText(organization.name());
 }

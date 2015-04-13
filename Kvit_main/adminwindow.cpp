@@ -19,9 +19,9 @@ AdminWindow::AdminWindow(QWidget *parent) :
     ui->setupUi(this);
 
     QRegExpValidator *only_number;
-//    QRegExpValidator *dv;
     only_number = new QRegExpValidator(QRegExp("[0-9]+"),this);                 //валидатор для цифр
-//    dv = new QRegExpValidator(QRegExp("[0-9]+[\\.|\\,]?[0-9]{,2}"),this);       //валидатор для чисел
+                                                                            //валидатор для чисел
+                                                                            //("[0-9]+[\\.|\\,]?[0-9]{,2}"),this);
 
     setLayout(ui->gridLayout);                                                  //главный слой
 
@@ -101,9 +101,7 @@ AdminWindow::~AdminWindow()
 
 void AdminWindow::sl_AddOrg()                                                  //Добавление организации
 {
-    Organization organization;
-
-    if (!organization.New(ui->lEdNameOrg->text(), ui->lEdBank->text(), ui->lEdAcc->text(), ui->lEdINN->text())){
+    if (!Organization::New(ui->lEdNameOrg->text(), ui->lEdBank->text(), ui->lEdAcc->text(), ui->lEdINN->text())){
         QMessageBox::warning(this,trUtf8("Предупреждение"),
                              trUtf8("Организация не добавлена"),QMessageBox::Ok);
         return;
@@ -146,8 +144,7 @@ void AdminWindow::Refresh_tblView_Apartament()
 {
     MyItemDelegate * dDeleg = new MyItemDelegate ();
     Home home(ui->lbl_HomeSelect->text());
-    Organization organization;
-    organization.setName(ui->lbl_OrgSelect->text());
+    Organization organization(ui->lbl_OrgSelect->text());
 
     if (apartment_for_apartment == nullptr){
         apartment_for_apartment = new Apartment(home.getId(),
@@ -349,9 +346,8 @@ void AdminWindow::TarifEdit()
 
 void AdminWindow::Refresh_Organization()
 {
-    Organization organization;
     delete ui->tblView_Organization->model();
-    ui->tblView_Organization->setModel(organization.ModelAllOrganization());
+    ui->tblView_Organization->setModel(Organization::ModelAllOrganization());
     ui->tblView_Organization->horizontalHeader()->setStretchLastSection(false);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
@@ -374,8 +370,7 @@ void AdminWindow::Refresh_Uslugi()
     ui->cmBx_Home_on_Uslugi->setModel(Home::ModelAllHome());
     ui->cmBx_Home_on_Uslugi->setModelColumn(1);
 
-    Organization organization;
-    ui->cmBx_Org_on_Uslugi->setModel(organization.ModelAllOrganization());
+    ui->cmBx_Org_on_Uslugi->setModel(Organization::ModelAllOrganization());
     ui->cmBx_Org_on_Uslugi->setModelColumn(1);
 
 
@@ -408,8 +403,7 @@ void AdminWindow::Refresh_Pensioner()
 
 void AdminWindow::Refresh_cmbNumApp_onUslugi()
 {   
-    Organization organization;
-    organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
+    Organization organization(ui->cmBx_Org_on_Uslugi->currentText());
     Home home(ui->cmBx_Home_on_Uslugi->currentText());
 
     QSqlQueryModel *model;
@@ -421,8 +415,7 @@ void AdminWindow::Refresh_cmbNumApp_onUslugi()
 
 void AdminWindow::Refresh_cmBx_NumApp_onApartament()
 {
-    Organization organization;
-    organization.setName(ui->lbl_OrgSelect->text());
+    Organization organization(ui->lbl_OrgSelect->text());
 
     Home home(ui->lbl_HomeSelect->text());
 
@@ -504,8 +497,7 @@ void AdminWindow::sl_DeleteOrg()
         return;
     }
 
-    Organization organization;
-    organization.setName(ui->lEdNameOrg->text());
+    Organization organization(ui->lEdNameOrg->text());
     organization.deleteFromDB();
     Mode("org_default");
     Refresh_Organization();                                                     //обновление таблицы
@@ -578,8 +570,7 @@ void AdminWindow::on_tblV_on_Pens_clicked(const QModelIndex &index)
 
 void AdminWindow::on_pBtn_NewApartament_clicked()
 {
-    Organization organization;
-    organization.setName(ui->lbl_OrgSelect->text());
+    Organization organization(ui->lbl_OrgSelect->text());
 
     if(organization.getId() == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
@@ -679,8 +670,7 @@ void AdminWindow::sl_SelectHome(QString home_name)
 
 void AdminWindow::sl_SelectOrg(QString org_name)
 {
-    Organization organization;
-    organization.setName(org_name);
+    Organization organization(org_name);
     if (organization.getId() != -1){
         ui->lbl_OrgSelect->setText(org_name);
     }else{
@@ -697,8 +687,7 @@ void AdminWindow::on_pBtn_Save_clicked()
     int id_home;
     int NumApart;
 
-    Organization organization;
-    organization.setName(ui->lbl_OrgSelect->text());
+    Organization organization(ui->lbl_OrgSelect->text());
     id_org = organization.getId();
 
     Home home(ui->lbl_HomeSelect->text());
@@ -736,8 +725,7 @@ void AdminWindow::on_cmBx_NumAp_on_Apartament_activated(int index)
 void AdminWindow::on_pBtn_DeleteApartment_clicked()
 {
     int id_org;
-    Organization organization;
-    organization.setName(ui->lbl_OrgSelect->text());
+    Organization organization(ui->lbl_OrgSelect->text());
 
     id_org = organization.getId();
     if(id_org == -1){
@@ -768,8 +756,7 @@ void AdminWindow::on_pBtn_DeleteApartment_clicked()
 
 void AdminWindow::Refresh_tblV_on_Uslugi()
 {
-    Organization organization;
-    organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
+    Organization organization(ui->cmBx_Org_on_Uslugi->currentText());
     Home home(ui->cmBx_Home_on_Uslugi->currentText());
 
     Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Uslugi->currentText().toInt());
@@ -836,8 +823,7 @@ void AdminWindow::on_pBtnMassOperation_clicked()
 {
     MassOperations *dlg = new MassOperations;
 
-    Organization organization;
-    organization.setName(ui->cmBx_Org_on_Uslugi->currentText());
+    Organization organization(ui->cmBx_Org_on_Uslugi->currentText());
     Home home(ui->cmBx_Home_on_Uslugi->currentText());
 
     dlg->setHome(home.getId());

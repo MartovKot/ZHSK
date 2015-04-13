@@ -109,8 +109,7 @@ void OperWindow::Refresh_tblVCount()
 
 void OperWindow::set_parametr(int id_org, int id_home)
 {
-    Organization organization;
-    organization.setId(id_org);
+    Organization organization(id_org);
     Home home(id_home);
 
     HomeID = id_home;

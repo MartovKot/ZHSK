@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSqlQueryModel>
+#include "organization.h"
 #include "bd.h"
 
 class Home : public QObject
@@ -10,7 +11,8 @@ class Home : public QObject
     Q_OBJECT
 public:
     explicit Home(int id);
-    explicit Home(QString name);
+    explicit Home(const QString &name);
+    ~Home();
 
     QString getName();
     int getId();
@@ -18,10 +20,11 @@ public:
     void deleteFromDB();
     void rename(QString new_name);
     static QSqlQueryModel* ModelAllHome();
+//    Organization* organization();
 private:
     QString m_name;
     int m_id;
-    BD db;
+//    Organization *m_organization;
     void set_default();
 signals:
 

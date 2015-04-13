@@ -1,34 +1,42 @@
 #include "home.h"
 
-void Home::set_default()
-{
-    m_name = "";
-    m_id = -1;
-}
-
 Home::Home(int id)
 {
-    QString name;
-    db.SelectFromTable( "SELECT name FROM homes WHERE id_homes = " + QString::number(id),&name );
+    BD::SelectFromTable( "SELECT name FROM homes WHERE id_homes = " + QString::number(id),&m_name );
 
-    if (name != ""){
+    if (m_name != ""){
         m_id = id;
-        m_name = name;
     }else{
         set_default();
     }
+
+    QString id_org;
+    BD::SelectFromTable( "SELECT id_organiz FROM apartament WHERE id_homes = " + QString::number(m_id) + "LIMIT 1",
+                         &id_org);
+//    m_organization = new Organization(id_org.toInt());
 }
 
-Home::Home(QString name)
+Home::Home(const QString &name)
 {
     QString id;
-    db.SelectFromTable( "SELECT id_homes FROM homes WHERE name = '" + name + "'",&id);
+    BD::SelectFromTable( "SELECT id_homes FROM homes WHERE name = '" + name + "'",&id);
     if(id != ""){
         m_id = id.toInt();
         m_name = name;
     }else{
         set_default();
     }
+}
+
+Home::~Home()
+{
+//    delete m_organization;
+}
+
+void Home::set_default()
+{
+    m_name = "";
+    m_id = -1;
 }
 
 QString Home::getName()
@@ -43,7 +51,7 @@ int Home::getId()
 
 void Home::deleteFromDB()
 {
-    db.DeleteLine("homes","id_homes",m_id);
+    BD::DeleteLine("homes","id_homes",m_id);
 }
 
 QSqlQueryModel* Home::ModelAllHome()
@@ -57,7 +65,12 @@ QSqlQueryModel* Home::ModelAllHome()
     return model;
 }
 
+//Organization *Home::organization()
+//{
+//    return m_organization;
+//}
+
 void Home::rename(QString new_name)
 {
-    db.UpdateTable("homes","name",new_name,"id_homes",QString::number(m_id));
+    BD::UpdateTable("homes","name",new_name,"id_homes",QString::number(m_id));
 }
