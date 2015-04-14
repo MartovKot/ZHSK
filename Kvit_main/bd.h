@@ -29,9 +29,6 @@ public:
 
     QString is_NameCounter(int id_counter);
 
-    // Функции перенести в класс объединяющий дом организацию
-    QStringList sum_app(int id_org, int id_home);               //Возвращает список имён квартир в доме
-    //-------------------------
 
     // объединение улуги и квартиры
     int is_idListAppUsluga(int id_apartament, int id_usluga);
@@ -42,8 +39,6 @@ public:
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
     int is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date/*qint64 unix_date*/);
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
-
-    QSqlQueryModel* Model(QString table);                                               //модель для ComboBox
 
     QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания

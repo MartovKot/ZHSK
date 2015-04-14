@@ -34,8 +34,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::Refresh_win()
 {
-    ui->cmBx_Home->setModel(db.Model("homes"));
-    ui->cmBx_Org->setModel(db.Model("organiz"));
+    ui->cmBx_Home->setModel(Home::ModelAllHomeName());
+    ui->cmBx_Org->setModel(Organization::ModelAllOrganizationName());
 }
 
 void MainWindow::Admin_mod()

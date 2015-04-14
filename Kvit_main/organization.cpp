@@ -52,7 +52,7 @@ bool Organization::New(QString name, QString bank, QString sett_account, QString
     return true;
 }
 
-QSqlQueryModel* Organization::ModelAllOrganization()
+QSqlQueryModel *Organization::ModelAllOrganizationFull()
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     model->setQuery(QSqlQuery("SELECT id_organiz, name, bank,sett_account, inn  FROM organiz"));
@@ -62,6 +62,16 @@ QSqlQueryModel* Organization::ModelAllOrganization()
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Банк"));
     model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Лицевой счёт"));
     model->setHeaderData(4,Qt::Horizontal,QObject::trUtf8("ИНН"));
+
+    return model;
+}
+
+QSqlQueryModel *Organization::ModelAllOrganizationName()
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery(QSqlQuery("SELECT name FROM organiz"));
+
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Организация"));
 
     return model;
 }

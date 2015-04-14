@@ -186,31 +186,31 @@ void parser_blank::generating()
     QString str_NameFile_base; //общая часть названия файлов
     QString str_NameFile_pach; //отличительная часть файлов
 
-    QStringList str_L = db.sum_app(ConfData.Org_id,ConfData.Home_id);
-
-    Organization organization(ConfData.Org_id);
     Home home(ConfData.Home_id);
-    str_NameFile_base = organization.name() + " " + home.getName();
+    str_NameFile_base = home.organization()->name() + " " + home.getName();
 
 
-    QProgressDialog progress(trUtf8("Создание файлов..."), trUtf8("Отмена"), 0, str_L.size()-1, this);
-//    ProgressDialog progress;
+    QProgressDialog progress(
+                trUtf8("Создание файлов..."),
+                trUtf8("Отмена"),
+                0,
+                home.apartments().count()-1,
+                this);
+
     progress.setWindowModality(Qt::WindowModal);
     progress.setWindowTitle(trUtf8("Создание файлов..."));
 
-//    progress.run();
     progress.show();
-    for(int i=0;i<str_L.size();i++){
+    for(int i=0;i<home.apartments().count();i++){
         progress.setValue(i);
         if (progress.wasCanceled())
             break;
-        str_NameFile_pach = QObject::trUtf8(" кв ") + str_L.at(i);
-        Apartment apartment(ConfData.Home_id,ConfData.Org_id,str_L.at(i).toInt());
+        str_NameFile_pach = QObject::trUtf8(" кв ") + QString::number(home.apartments().at(i)->getNumber());
         creat_blank(str_NameFile_base+str_NameFile_pach+".html",
-                    apartment,
+                    *home.apartments().at(i),
                     ConfData.date);
     }
-    progress.setValue(str_L.size()-1);
+    progress.setValue(home.apartments().count()-1);
 }
 void parser_blank::setDir(QString str_dirFolder)
 {

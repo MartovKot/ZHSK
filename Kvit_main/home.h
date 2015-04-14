@@ -20,7 +20,10 @@ public:
 
     void deleteFromDB();
     void rename(QString new_name);
-    static QSqlQueryModel* ModelAllHome();
+    static QSqlQueryModel *ModelAllHomeFull();
+    static QSqlQueryModel *ModelAllHomeName();
+    QSqlQueryModel *ModelAllApartamentNumber();
+
     const Organization* organization();
     const QList<Apartment *> apartments();
 

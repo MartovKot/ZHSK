@@ -10,17 +10,19 @@ class Apartment: public QObject
 {
     Q_OBJECT
 public:
-    explicit Apartment(int id_home,int id_org,int number);
-    explicit Apartment(int id_apartment);
+    explicit Apartment(int id_home,int id_org,int number, QObject *parent = 0);
+    explicit Apartment(int id_apartment, QObject *parent = 0);
     ~Apartment();
 
     static QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
+    static bool New(int id_home, int id_org, int number);
+    QAbstractItemModel* ModelOneApartment();     //модель для квартиры
 
     int getId() const;
     int getNumber() const;
-    bool New(int id_home, int id_org, int number);
 
-    QAbstractItemModel* ModelOneApartment(int id);     //модель для квартиры
+
+
     void DeleteApartment();
     QString is_FIO_payer() const;
     double getTotalArea() const;

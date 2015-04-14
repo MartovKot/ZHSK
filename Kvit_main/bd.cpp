@@ -277,34 +277,7 @@ QString BD::getDatabaseVersion()
     return res;
 }
 
-//======================================================================
-// Квартиры
-
-QStringList BD::sum_app(int id_org, int id_home)
-{
-    QString str;
-
-    str = "SELECT number FROM apartament WHERE id_homes=%1 AND id_organiz=%2";
-    str = str.arg(id_home)
-            .arg(id_org);
-
-    return strL_from_query(str);
-}
-
 //=====================================================================
-
-QSqlQueryModel* BD::Model(QString table)
-{
-    QSqlQueryModel *model = new QSqlQueryModel;
-    if (table =="homes"){
-        model->setQuery(QSqlQuery("SELECT name, id_homes FROM homes"));
-    }else if(table == "organiz"){
-        model->setQuery(QSqlQuery("SELECT name, id_organiz FROM organiz"));
-    }else if(table == "usluga"){
-        model->setQuery(QSqlQuery("SELECT name, id_usluga FROM usluga"));
-    }
-    return model;
-}
 
 QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
 {

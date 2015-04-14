@@ -85,7 +85,7 @@ void Home::deleteFromDB()
     BD::DeleteLine("homes","id_homes",m_id);
 }
 
-QSqlQueryModel* Home::ModelAllHome()
+QSqlQueryModel *Home::ModelAllHomeFull()
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     model->setQuery(QSqlQuery("SELECT id_homes, name  FROM homes"));
@@ -94,6 +94,21 @@ QSqlQueryModel* Home::ModelAllHome()
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Адрес"));
 
     return model;
+}
+
+QSqlQueryModel *Home::ModelAllHomeName()
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery(QSqlQuery("SELECT name  FROM homes"));
+
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Адрес"));
+
+    return model;
+}
+
+QSqlQueryModel *Home::ModelAllApartamentNumber()
+{
+    return Apartment::ModelAllApartment(m_id,m_organization->getId());
 }
 
 const Organization *Home::organization()
@@ -111,7 +126,7 @@ void Home::setApartment()
     QList<int> listIdApartment;
     listIdApartment = isListIdApartament();
     for (int i=0;i<listIdApartment.count();i++){
-        m_apartment.append(new Apartment(listIdApartment.at(i)));
+        m_apartment.append(new Apartment(listIdApartment.at(i),this));
     }
 }
 

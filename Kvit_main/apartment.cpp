@@ -1,6 +1,7 @@
 #include "apartment.h"
 
-Apartment::Apartment(int id_home, int id_org, int number)
+Apartment::Apartment(int id_home, int id_org, int number, QObject *parent):
+    QObject(parent)
 {
     m_number = number;
 
@@ -18,7 +19,8 @@ Apartment::Apartment(int id_home, int id_org, int number)
     }
 }
 
-Apartment::Apartment(int id_apartment)
+Apartment::Apartment(int id_apartment, QObject *parent):
+    QObject(parent)
 {
     QString str;
     QString number;
@@ -73,7 +75,7 @@ QSqlQueryModel* Apartment::ModelAllApartment(int id_home, int id_org)
     return model;
 }
 
-QAbstractItemModel* Apartment::ModelOneApartment(int id)
+QAbstractItemModel* Apartment::ModelOneApartment()
 {
     EditApartmentModel *model = new EditApartmentModel;
     DateOfUnixFormat date(QDate::currentDate());
@@ -84,13 +86,14 @@ QAbstractItemModel* Apartment::ModelOneApartment(int id)
                         " total_area, inhabed_area,balkon, loggia, personal_account, "
                         " mia.real_men, mia.rent_men, mia.reserv_men"
                         " FROM apartament a, men_in_apartament mia "
-                        " WHERE a.id_apartament = " + QString::number(id) + " AND "
+                        " WHERE a.id_apartament = " + QString::number(m_id) + " AND "
                         " mia.id_apartament = a.id_apartament "
                         " AND mia.date_men_in_apartament <= " + QString::number(date.Second_first_day()) + " "
                         " ORDER BY mia.date_men_in_apartament"
                     );
     model->removeColumn(0);
     sl_ModelApartamentHeaderData(model);
+
     connect(model,SIGNAL(sgn_EditApartament(int,QString)),this,SLOT(sl_EditApartament(int,QString)));
 
     return model;

@@ -14,7 +14,6 @@
 #include "table_tariff.h"
 #include "dateofunixformat.h"
 
-#include "organization.h"
 #include "home.h"
 #include "apartment.h"
 #include "fast_calculation.h"

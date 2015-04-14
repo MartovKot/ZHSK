@@ -14,7 +14,8 @@ public:
     ~Organization();
 
     static bool New(QString name, QString bank, QString sett_account, QString inn);
-    static QSqlQueryModel* ModelAllOrganization();
+    static QSqlQueryModel *ModelAllOrganizationFull();
+    static QSqlQueryModel *ModelAllOrganizationName();
 
     int getId() const;
     void deleteFromDB();
