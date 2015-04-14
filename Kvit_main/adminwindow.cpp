@@ -56,9 +56,6 @@ AdminWindow::AdminWindow(QWidget *parent) :
     //------------------------------------
 
     // настройка Квартиры
-//    apartment_for_apartment = nullptr;
-//    ui->lbl_HomeSelect->setText("");
-//    ui->lbl_OrgSelect->setText("");
     ui->tab_Appartament->setLayout(ui->verticalLayout_2);                       //Вкладка квартиры
     ui->lEd_NumApart_onApart->setValidator(only_number);
 
@@ -146,18 +143,10 @@ void AdminWindow::Refresh_tblView_Apartament()
                         organization.getId(),
                         ui->cmBx_NumAp_on_Apartament->currentText().toInt(),this);
 
-//    if (apartment_for_apartment == nullptr){
-//        apartment_for_apartment = new Apartment(home.getId(),
-//                                                organization.getId() ,
-//                                                ui->cmBx_NumAp_on_Apartament->currentText().toInt());
-//    }
-
     TransposeProxyModel *trans = new TransposeProxyModel(this);
     trans->setSourceModel(apartment->ModelOneApartment());
     ui->tblView_Apartament->setModel(trans);
     connect(apartment,SIGNAL(sgn_EditModel()),SLOT(Refresh_tblView_Apartament()));
-//    connect(ui->tblView_Apartament->model(),SIGNAL(modelReset()),SLOT(Refresh_tblView_Apartament()));
-
 
     ui->tblView_Apartament->setItemDelegate(dDeleg);
 
@@ -619,53 +608,6 @@ void AdminWindow::on_tBtn_EditSetting_clicked()
     connect(dlg,SIGNAL(s_Ok()),this,SLOT(Refresh_Settings()));
     dlg->open();
 }
-
-//void AdminWindow::on_pBtn_OrgSelect_clicked()
-//{
-//    Selecter_with_ComboBox *dlg = new Selecter_with_ComboBox(this);
-//    connect(dlg,SIGNAL(CurrentValue(QString)),SLOT(sl_SelectOrg(QString)));
-//    connect(dlg,SIGNAL(CurrentValue(QString)),dlg,SLOT(close()));
-//    dlg->setWindowTitle(trUtf8("Выбор организации"));
-//    dlg->setContentsComboBox(Organization::ModelAllOrganizationName());
-//    dlg->open();
-//}
-
-//void AdminWindow::on_pBtn_HomeSelect_clicked()
-//{
-//    Selecter_with_ComboBox *dlg = new Selecter_with_ComboBox(this);
-//    connect(dlg,SIGNAL(CurrentValue(QString)),SLOT(sl_SelectHome(QString)));
-//    connect(dlg,SIGNAL(CurrentValue(QString)),dlg,SLOT(close()));
-//    dlg->setWindowTitle(trUtf8("Выбор дома"));
-//    dlg->setContentsComboBox(Home::ModelAllHomeName());
-//    dlg->open();
-//}
-
-//void AdminWindow::sl_SelectHome(QString home_name)
-//{
-//    Home home(home_name);
-
-//    if (home.getId() != -1){
-//        ui->lbl_HomeSelect->setText(home_name);
-//    }else{
-//        ui->lbl_HomeSelect->setText(trUtf8("<font color = red>Дом не выбран</font>"));
-//    }
-//    Refresh_cmBx_NumApp_onApartament();
-//    delete ui->tblView_Apartament->model();
-//    Refresh_tblView_Apartament();
-//}
-
-//void AdminWindow::sl_SelectOrg(QString org_name)
-//{
-//    Organization organization(org_name);
-//    if (organization.getId() != -1){
-//        ui->lbl_OrgSelect->setText(org_name);
-//    }else{
-//        ui->lbl_OrgSelect->setText(trUtf8("<font color = red>Организация не выбрана</font>"));
-//    }
-//    Refresh_cmBx_NumApp_onApartament();
-//    delete ui->tblView_Apartament->model();
-//    Refresh_tblView_Apartament();
-//}
 
 void AdminWindow::on_pBtn_Save_clicked()
 {

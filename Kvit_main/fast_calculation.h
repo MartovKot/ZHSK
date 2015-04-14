@@ -21,10 +21,7 @@ public:
     static QString CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
 
 private:
-//    int m_idHome;
-//    int m_idOrganization;
     Home *home;
-//    QList<int> m_listIdApartment;
     DateOfUnixFormat m_date;
     QString calcOfService(const QStringList &row);
     QString calcOfCounters(const QStringList &row);

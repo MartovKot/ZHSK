@@ -54,7 +54,6 @@ private:
     QLineEdit *lEd_tarif;
     QLineEdit *lEd_tarif2;
     QLineEdit *lEd_norm;
-//    Apartment *apartment_for_apartment;
 
 private slots:
     void Refresh_Settings();
@@ -86,10 +85,6 @@ private slots:
     void on_tBtn_AddSetting_clicked();
     void on_tBtn_DeleteSetting_clicked();
     void on_tBtn_EditSetting_clicked();
-//    void on_pBtn_OrgSelect_clicked();
-//    void on_pBtn_HomeSelect_clicked();
-//    void sl_SelectHome(QString home_name);
-//    void sl_SelectOrg(QString org_name);
     void on_pBtn_Save_clicked();
     void on_cmBx_NumAp_on_Apartament_activated(int index);
     void on_pBtn_DeleteApartment_clicked();
