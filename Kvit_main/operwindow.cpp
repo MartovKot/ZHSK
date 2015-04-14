@@ -116,8 +116,7 @@ void OperWindow::set_parametr(int id_org, int id_home)
 
     ui->lbl_home->setText("<font color=blue>"+home.getName()+"</font>");
     ui->lbl_organization->setText(home.organization()->name());
-    Apartment apartment;
-    ui->cmBx_NumApartanent->setModel(apartment.ModelAllApartment(id_home,id_org));
+    ui->cmBx_NumApartanent->setModel(Apartment::ModelAllApartment(id_home,id_org));
 }
 
 void OperWindow::sl_EditPokazanie()
@@ -245,7 +244,7 @@ void OperWindow::sl_RefreshLabel() //обновление выводяшейся
     DateOfUnixFormat date_calc(year,month,1);
 
     if (ui->dEd_Count->date() == QDate::currentDate()){ //Расчёт производим только за текущий месяц
-        Fast_Calculation calculate(HomeID,OrganizationID,date_calc);
+        Fast_Calculation calculate(HomeID,date_calc);
         calculate.fullCalc();
     }
     ui->lblInPayment->setText(QString::number(Fast_Calculation::AmountToPay(apartment.getId(),date_calc.Second())));

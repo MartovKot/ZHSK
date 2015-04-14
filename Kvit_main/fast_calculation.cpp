@@ -1,11 +1,13 @@
 #include "fast_calculation.h"
 
-Fast_Calculation::Fast_Calculation(const int &id_home, const int &id_organization, DateOfUnixFormat date)
+Fast_Calculation::Fast_Calculation(const int &id_home/*, const int &id_organization*/, DateOfUnixFormat date)
 {
-    BD db;
-    m_idHome = id_home;
-    m_idOrganization = id_organization;
-    m_listIdApartment = db.is_ListIdApartament(m_idOrganization,m_idHome);
+    home = new Home(id_home,this);
+//    BD db;
+
+//    m_idHome = id_home;
+//    m_idOrganization = id_organization;
+//    m_listIdApartment = db.is_ListIdApartament(m_idOrganization,m_idHome);
     m_date = date;
 
 }
@@ -13,7 +15,7 @@ Fast_Calculation::Fast_Calculation(const int &id_home, const int &id_organizatio
 
 Fast_Calculation::~Fast_Calculation()
 {
-
+    delete home;
 }
 
 DateOfUnixFormat Fast_Calculation::date() const
@@ -60,8 +62,7 @@ void Fast_Calculation::fullCalc()
 QString Fast_Calculation::calcOfService(const QStringList &row)
 {
     QString out = "";
-    Apartment apartment;
-    apartment.setId(row.at(0).toInt());
+    Apartment apartment(row.at(0).toInt());
     double t;
 
     switch(row.at(2).toInt()){
@@ -86,8 +87,7 @@ QString Fast_Calculation::calcOfService(const QStringList &row)
 QString Fast_Calculation::calcOfCounters(const QStringList &row)
 {
     QString out;
-    Apartment apartment;
-    apartment.setId(row.at(0).toInt());
+    Apartment apartment(row.at(0).toInt());
 
     QString norma;
     int id_usluga;

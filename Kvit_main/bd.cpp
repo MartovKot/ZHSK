@@ -126,7 +126,6 @@ QSqlError BD::QueryExecute(QString str)
     QSqlQuery query;
     if (!query.exec(str)){
         qDebug() << "1098339a5e20736b5ba8f1eb1839f4ea" << query.lastError() << str;
-//        LogOut.logout(query.lastError().text());
     }
     return query.lastError();
 }
@@ -214,7 +213,6 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
         if (!query.exec(str))
         {
             qDebug()<<"bf206b5a653a24ca32249bfd24515d4e" <<"Eror  "<<query.lastError()<<"\n"<<str;
-//            LogOut.logout(query.lastError().text());
         }
     }
 }
@@ -238,7 +236,6 @@ void BD::UpdateTable(QString table, QString column, QString value, QString where
         if (!query.exec(str))
         {
             qDebug()<<"bf206b5a653a24ca32249bfd24515d4e" <<"Eror  "<<query.lastError()<<"\n"<<str;
-//            LogOut.logout(query.lastError().text());
         }
     }
 }
@@ -292,27 +289,6 @@ QStringList BD::sum_app(int id_org, int id_home)
             .arg(id_org);
 
     return strL_from_query(str);
-}
-
-QList<int> BD::is_ListIdApartament(int id_org, int id_home)
-{
-    QString str;
-    QList<int> out ;
-    QSqlQuery query;
-
-    str = "SELECT id_apartament FROM apartament WHERE id_homes=%1 AND id_organiz=%2";
-    str = str.arg(id_home)
-            .arg(id_org);
-    if (query.exec(str)){
-      while (query.next()){
-          out <<  query.value(0).toInt();
-      }
-    } else{
-        qDebug()<< "709737893f541e722add6cf123fad78e" << query.lastError();
-        LogOut.logout(query.lastError().text());
-    }
-
-    return out;
 }
 
 //=====================================================================

@@ -78,7 +78,7 @@ void MainWindow::Print_mod()
     date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
     DateOfUnixFormat udate(date);
 
-    Fast_Calculation fast_calculation(isIdSelectOrganiztion(),isIdSelectHome(),udate);
+    Fast_Calculation fast_calculation(isIdSelectHome(),udate);
     fast_calculation.fullCalc();
 
     VwBlank->setDate(QDate::currentDate().year(),QDate::currentDate().month());

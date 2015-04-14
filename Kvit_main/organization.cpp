@@ -37,7 +37,7 @@ Organization::Organization(int id,QObject *parent):
 
 Organization::~Organization()
 {
-//    qDebug() << "Destructor organization" << this;
+
 }
 
 bool Organization::New(QString name, QString bank, QString sett_account, QString inn)

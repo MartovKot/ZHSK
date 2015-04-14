@@ -5,11 +5,12 @@
 #include "apartment.h"
 #include "dateofunixformat.h"
 #include "service.h"
+#include "home.h"
 
-class Fast_Calculation
+class Fast_Calculation: public QObject
 {
 public:
-    Fast_Calculation(const int &id_home, const int &id_organization, DateOfUnixFormat date);
+    Fast_Calculation(const int &id_home/*, const int &id_organization*/, DateOfUnixFormat date);
     ~Fast_Calculation();
     DateOfUnixFormat date() const;
     void setDate(const DateOfUnixFormat &date);
@@ -20,9 +21,10 @@ public:
     static QString CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
 
 private:
-    int m_idHome;
-    int m_idOrganization;
-    QList<int> m_listIdApartment;
+//    int m_idHome;
+//    int m_idOrganization;
+    Home *home;
+//    QList<int> m_listIdApartment;
     DateOfUnixFormat m_date;
     QString calcOfService(const QStringList &row);
     QString calcOfCounters(const QStringList &row);

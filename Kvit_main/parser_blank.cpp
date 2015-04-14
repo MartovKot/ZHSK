@@ -70,8 +70,7 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)
     QString str_out;
     QStringList strlst_find;
     QList<int> ServiceList;
-    Apartment apartment;
-    apartment.setId(id_app);
+    Apartment apartment(id_app);
     ServiceList = apartment.getListIdServiceOutCounter();
 
 
@@ -115,8 +114,7 @@ QString parser_blank::process_schet(QString str_in_sch,const int id_apartment, Q
     QString str_out="";
     QStringList strlst_find;
     QList<int> CounterList;
-    Apartment apartment;
-    apartment.setId(id_apartment);
+    Apartment apartment(id_apartment);
     CounterList = apartment.getListIdServiceWithCounter();
 
     strlst_find<<"@Schetchik#"<<"@PokazanieEnd#"<<"@Tarif#"<<"@Tarif2#";

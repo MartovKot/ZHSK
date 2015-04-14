@@ -10,15 +10,15 @@ class Apartment: public QObject
 {
     Q_OBJECT
 public:
-    explicit Apartment();
     explicit Apartment(int id_home,int id_org,int number);
+    explicit Apartment(int id_apartment);
+    ~Apartment();
 
-    QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
+    static QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
 
     int getId() const;
     int getNumber() const;
     bool New(int id_home, int id_org, int number);
-    void setId(int id_apartment);
 
     QAbstractItemModel* ModelOneApartment(int id);     //модель для квартиры
     void DeleteApartment();
@@ -44,6 +44,7 @@ private:
     void UpdateMenInApartment(QString column,QString value, int idapart);
     void AddLineMenInApartment(int id_apartment);
     int getMenInApartment(QString typeofuse,DateOfUnixFormat date) const;
+    void setDefault();
 
 private slots:
     void sl_ModelApartamentHeaderData(QAbstractTableModel* t);

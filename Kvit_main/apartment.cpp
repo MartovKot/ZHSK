@@ -1,11 +1,5 @@
 #include "apartment.h"
 
-Apartment::Apartment()
-{
-    m_id = -1;
-    m_number = -1;
-}
-
 Apartment::Apartment(int id_home, int id_org, int number)
 {
     m_number = number;
@@ -17,8 +11,31 @@ Apartment::Apartment(int id_home, int id_org, int number)
            .arg(id_org)
            .arg(number);
     BD::SelectFromTable(str, &id);
-    m_id = id.toInt();
+    if(id == ""){
+        setDefault();
+    }else{
+        m_id = id.toInt();
+    }
+}
 
+Apartment::Apartment(int id_apartment)
+{
+    QString str;
+    QString number;
+    str = "SELECT number FROM apartament WHERE id_apartament='%1'";
+    str = str.arg(id_apartment);
+    BD::SelectFromTable(str, &number);
+    if(number == ""){
+        setDefault();
+    }else{
+        m_id = id_apartment;
+        m_number = number.toInt();
+    }
+}
+
+Apartment::~Apartment()
+{
+//    qDebug() << "delete" << this;
 }
 
 int Apartment::getId() const
@@ -216,10 +233,10 @@ int Apartment::getMenInApartment(QString typeofuse, DateOfUnixFormat date) const
     return out.toInt();
 }
 
-
-void Apartment::setId(int id_apartment)
+void Apartment::setDefault()
 {
-    m_id = id_apartment;
+    m_id = -1;
+    m_number = -1;
 }
 
 void Apartment::DeleteApartment()

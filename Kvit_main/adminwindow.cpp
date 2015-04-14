@@ -383,9 +383,8 @@ void AdminWindow::Refresh_Uslugi()
 
 void AdminWindow::Refresh_Pensioner()
 {
-    Apartment apartment;
     ui->cmBx_PensApart->setModel(
-    apartment.ModelAllApartment(
+    Apartment::ModelAllApartment(
                     ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt(),
                     ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
     ui->cmBx_PensApart->addItem("");
@@ -405,12 +404,7 @@ void AdminWindow::Refresh_cmbNumApp_onUslugi()
 {   
     Organization organization(ui->cmBx_Org_on_Uslugi->currentText());
     Home home(ui->cmBx_Home_on_Uslugi->currentText());
-
-    QSqlQueryModel *model;
-
-    Apartment apartment;
-    model = apartment.ModelAllApartment(home.getId(),organization.getId());
-    ui->cmBx_NumAp_on_Uslugi->setModel(model);
+    ui->cmBx_NumAp_on_Uslugi->setModel(Apartment::ModelAllApartment(home.getId(),organization.getId()));
 }
 
 void AdminWindow::Refresh_cmBx_NumApp_onApartament()
@@ -419,8 +413,7 @@ void AdminWindow::Refresh_cmBx_NumApp_onApartament()
 
     Home home(ui->lbl_HomeSelect->text());
 
-    Apartment apartment;
-    ui->cmBx_NumAp_on_Apartament->setModel(apartment.ModelAllApartment(home.getId(),organization.getId()));
+    ui->cmBx_NumAp_on_Apartament->setModel(Apartment::ModelAllApartment(home.getId(),organization.getId()));
 
     Mode("app_def");
 }
