@@ -32,8 +32,7 @@ Home::Home(const QString &name, QObject *parent):
 
 Home::~Home()
 {
-//    qDebug() << "destructor Home" << this;
-//    delete m_organization;
+
 }
 
 void Home::set_default()

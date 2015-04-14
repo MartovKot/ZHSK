@@ -8,9 +8,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->centralWidget->setLayout(ui->verticalLayout);
 
-    AdmWin = nullptr;
-    OperWin = nullptr;
-
     Refresh_win();
 
     ui->statusBar->showMessage(QString("Версия БД - ")+db.getDatabaseVersion());
@@ -43,22 +40,19 @@ void MainWindow::Refresh_win()
 
 void MainWindow::Admin_mod()
 {
-    if(AdmWin == nullptr){
-        AdmWin = new AdminWindow(this);
-        AdmWin->setPalette(this->palette());
-        connect(AdmWin,SIGNAL(finished(int)),SLOT(sl_AdminWinClose()));
-    }
+
+    AdmWin = new AdminWindow(this);
+    AdmWin->setPalette(this->palette());
+    connect(AdmWin,SIGNAL(finished(int)),SLOT(sl_AdminWinClose()));
     AdmWin->show();
 }
 
 void MainWindow::Oper_mod()
 {
-    if (OperWin == nullptr){
-        OperWin = new OperWindow(this);
-        OperWin->setPalette(this->palette());
+    OperWin = new OperWindow(this);
+    OperWin->setPalette(this->palette());
 
-        connect(OperWin,SIGNAL(finished(int)),SLOT(sl_OperWinClose()));
-    }
+    connect(OperWin,SIGNAL(finished(int)),SLOT(sl_OperWinClose()));
 
     if (isIdSelectOrganiztion() == -1){
         QMessageBox::warning(this,trUtf8("Не заполнены поля"),
@@ -159,12 +153,10 @@ void MainWindow::sl_OperWinClose()
 {
     Refresh_win();
     delete OperWin;
-    OperWin  = nullptr;
 }
 
 void MainWindow::sl_AdminWinClose()
 {
     Refresh_win();
     delete AdmWin;
-    AdmWin  = nullptr;
 }
