@@ -130,7 +130,7 @@ QSqlError BD::QueryExecute(QString str)
     return query.lastError();
 }
 
-int BD::add(QString table, QString column, QString value, int mode/*=0*/)
+QSqlError BD::add(QString table, QString column, QString value, int mode/*=0*/)
 {
     QStringList C_sl, V_sl;
     C_sl<<column;
@@ -138,7 +138,7 @@ int BD::add(QString table, QString column, QString value, int mode/*=0*/)
     return add(table,C_sl,V_sl,mode);
 }
 
-int BD::add(QString table,QStringList column,QStringList value, int mode/*=0*/)
+QSqlError BD::add(QString table,QStringList column,QStringList value, int mode/*=0*/)
 {
     QString strF;
     QSqlQuery query;
@@ -190,10 +190,8 @@ int BD::add(QString table,QStringList column,QStringList value, int mode/*=0*/)
 
     if (!query.exec(strF)){
         qDebug() << "3c1f9d13f59a784144a975dd9f5f1fc4" << query.lastError() << strF;
-        return query.lastError().number();
-    }else{
-        return 0;
     }
+    return query.lastError();
 }
 
 void BD::UpdateTable(QString table, QString column, QString value, QString where1, QString where2  )
@@ -289,20 +287,6 @@ QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Услуги"));
 
     return model;
-}
-
-QSqlError BD::DeletePension(int id_apart)
-{
-    QString str;
-    QSqlQuery query;
-    QSqlError out;
-
-    str = "DELETE FROM pensioner_living_alone WHERE id_apartament=%1";
-    str = str.arg(id_apart);
-    if (!query.exec(str)){
-        out = query.lastError();
-    }
-    return out;
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -526,7 +510,7 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
         value.append(QString::number(date.Second()));
         value.append(value_home);
         value.append(QString::number(0));
-        if ((id_new = add("pokazanie",column,value)) != 0){
+        if ((id_new = add("pokazanie",column,value).number()) != 0){
             return -1;
         }
     }else{//иначе

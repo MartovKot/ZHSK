@@ -15,6 +15,8 @@ public:
     ~Apartment();
 
     static QSqlQueryModel *ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
+    static QSqlQueryModel *ModelAllApartmentNumFIO(int id_home, int id_org);
+
     static QSqlQueryModel *ModelPensionerLivingAlone(int id_home, int id_org);
     static bool New(int id_home, int id_org, int number);
     QAbstractItemModel* ModelOneApartment();     //модель для квартиры
@@ -35,7 +37,10 @@ public:
     int getRealMen(DateOfUnixFormat date) const;                     //возвращает количество проживающих.
     int getRentMen(DateOfUnixFormat date) const;                     //возвращает количество снимающих
     int getReservMen(DateOfUnixFormat date) const;                   //возвращает количество на брони
-    bool isPensionerLivingAlone();
+
+
+    bool getIslivingAlonePensioner() const;
+    void setIslivingAlonePensioner(bool value);
 
 private:
     int m_id;
@@ -47,6 +52,9 @@ private:
     int getMenInApartment(QString typeofuse,DateOfUnixFormat date) const;
     void setDefault();
     bool islivingAlonePensioner;
+    bool isPensionerLivingAlone();
+    QSqlError setNoPensionerLivingAlone();
+    QSqlError setYesPensionerLivingAlone();
 
 private slots:
     void sl_ModelApartamentHeaderData(QAbstractTableModel* t);

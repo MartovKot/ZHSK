@@ -46,7 +46,7 @@ bool Organization::New(QString name, QString bank, QString sett_account, QString
 
     column << "name" << "bank" << "sett_account" << "inn";
     value << name << bank << sett_account << inn;
-    if (BD::add("organiz",column,value) != 0){
+    if (BD::add("organiz",column,value).number() != 0){
         return false;
     }
     return true;

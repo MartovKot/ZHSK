@@ -111,6 +111,11 @@ QSqlQueryModel *Home::ModelAllApartamentNumber()
     return Apartment::ModelAllApartment(m_id,m_organization->getId());
 }
 
+QSqlQueryModel *Home::ModelAllApartamentNumberWithFIO()
+{
+    return Apartment::ModelAllApartmentNumFIO(m_id,m_organization->getId());
+}
+
 const Organization *Home::organization()
 {
     return m_organization;

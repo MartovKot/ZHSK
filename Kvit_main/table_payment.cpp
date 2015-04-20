@@ -17,7 +17,7 @@ bool Table_Payment::add_line(QString id_apartament, QString y_payment, QString m
 
     column << "id_apartament" << "payment_date" << "payment";
     value << id_apartament << QString::number(date.Second()) << payment;
-    if (db.add("payment",column,value)!=0){
+    if (db.add("payment",column,value).number()!=0){
         return false;
     }
     return true;

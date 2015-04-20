@@ -23,6 +23,7 @@ public:
     static QSqlQueryModel *ModelAllHomeFull();
     static QSqlQueryModel *ModelAllHomeName();
     QSqlQueryModel *ModelAllApartamentNumber();
+    QSqlQueryModel *ModelAllApartamentNumberWithFIO();
 
     const Organization* organization();
     const QList<Apartment *> apartments();

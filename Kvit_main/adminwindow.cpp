@@ -115,7 +115,7 @@ void AdminWindow::AddHome()
     QStringList column, value;
     column<<"name";
     value<<ui->lEdHome->text();
-    if (db.add("homes",column,value) != 0){
+    if (db.add("homes",column,value).number() != 0){
         QMessageBox::warning(this,trUtf8("Предупреждение"),
                              trUtf8("Запись не создана"),QMessageBox::Ok);
         return;
@@ -372,7 +372,7 @@ void AdminWindow::Refresh_Pensioner()
     ui->cmBx_Home_on_Pens->setModel(Home::ModelAllHomeName());
     ui->cmBx_Org_on_Pens->setModel(Organization::ModelAllOrganizationName());
     Home home(ui->cmBx_Home_on_Pens->currentText());
-    ui->cmBx_PensApart->setModel(home.ModelAllApartamentNumber());
+    ui->cmBx_PensApart->setModel(home.ModelAllApartamentNumberWithFIO());
     ui->cmBx_PensApart->addItem("");
     ui->tblV_on_Pens->setModel(Apartment::ModelPensionerLivingAlone(home.getId(),home.organization()->getId()));
 
@@ -509,9 +509,9 @@ void AdminWindow::sl_SaveHome()
 
 void AdminWindow::on_pBtn_addPens_clicked()
 {
-    QString id_apart;
-    id_apart = ui->cmBx_PensApart->model()->index(ui->cmBx_PensApart->currentIndex(),1).data().toString();
-    db.add("pensioner_living_alone","id_apartament",id_apart);
+    Home home(ui->cmBx_Home_on_Pens->currentText());
+    Apartment apartment(home.getId(),home.organization()->getId(),ui->cmBx_PensApart->currentText().toInt());
+    apartment.setIslivingAlonePensioner(true);
     ui->pBtn_addPens->setEnabled(false);
     ui->pBtn_delPens->setEnabled(false);
     Refresh_Pensioner();
@@ -519,7 +519,12 @@ void AdminWindow::on_pBtn_addPens_clicked()
 
 void AdminWindow::on_pBtn_delPens_clicked()
 {
-    db.DeletePension(ui->tblV_on_Pens->model()->index(ui->tblV_on_Pens->currentIndex().row(),0).data().toInt());
+    Home home(ui->cmBx_Home_on_Pens->currentText());
+    Apartment apartment(home.getId(),
+                        home.organization()->getId(),
+                        ui->tblV_on_Pens->model()->index(ui->tblV_on_Pens->currentIndex().row(),0).data().toInt()
+                        );
+    apartment.setIslivingAlonePensioner(false);
     ui->pBtn_addPens->setEnabled(false);
     ui->pBtn_delPens->setEnabled(false);
     Refresh_Pensioner();

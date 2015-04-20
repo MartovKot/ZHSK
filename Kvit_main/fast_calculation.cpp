@@ -101,7 +101,7 @@ QString Fast_Calculation::calcOfCounters(const QStringList &row)
     tariff2 = row.at(4);
     norma = row.at(5);
     //пенсионеры
-    if (apartment.isPensionerLivingAlone()){
+    if (apartment.getIslivingAlonePensioner()){
         Service service(id_usluga);
         if (service.isElectro()){
             norma = 75;

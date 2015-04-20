@@ -45,10 +45,7 @@ public:
     QSqlQueryModel* ModelSettings();
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
 
-    //пенсионеры
-    QSqlError DeletePension(int id_apart);
     QSqlError DeleteSetting(QString name_setting);
-    //----------
 
     void new_pokazanie(int id_apartament, int month, int year);
     QString isValueSetting(QString NameSetting);
@@ -59,8 +56,8 @@ public:
     static void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     static void UpdateTable(QString table, QString column, QString value,
                      QString where_column1, QString where_value1, QString where_column2, QString where_value2);
-    static int add(QString table, QStringList column,QStringList value, int mode = 0);
-    static int add(QString table, QString column,QString value, int mode = 0);
+    static QSqlError add(QString table, QStringList column,QStringList value, int mode = 0);
+    static QSqlError add(QString table, QString column,QString value, int mode = 0);
     static QSqlError QueryExecute(QString str);
     static QSqlError DeleteLine(QString table, QString id_name ,int id_line);
 

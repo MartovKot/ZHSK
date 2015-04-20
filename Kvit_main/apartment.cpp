@@ -17,6 +17,8 @@ Apartment::Apartment(int id_home, int id_org, int number, QObject *parent):
     }else{
         m_id = id.toInt();
     }
+
+    islivingAlonePensioner = isPensionerLivingAlone();
 }
 
 Apartment::Apartment(int id_apartment, QObject *parent):
@@ -33,6 +35,7 @@ Apartment::Apartment(int id_apartment, QObject *parent):
         m_id = id_apartment;
         m_number = number.toInt();
     }
+    islivingAlonePensioner = isPensionerLivingAlone();
 }
 
 Apartment::~Apartment()
@@ -57,7 +60,7 @@ bool Apartment::New(int id_home, int id_org, int number)
     column<<"id_homes"<<"id_organiz"<<"number";
 
     value << QString::number(id_home) << QString::number(id_org) << QString::number(number);
-    if (BD::add("apartament",column,value) == 0){
+    if (BD::add("apartament",column,value).number() == 0){
         return true;
     }
     return false;
@@ -68,6 +71,19 @@ QSqlQueryModel* Apartment::ModelAllApartment(int id_home, int id_org)
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
     str = "SELECT number FROM apartament "
+            " WHERE id_homes = " + QString::number(id_home) +
+            " AND id_organiz = " + QString::number(id_org);
+    model->setQuery(QSqlQuery(str));
+
+    return model;
+}
+
+QSqlQueryModel *Apartment::ModelAllApartmentNumFIO(int id_home, int id_org)
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    QString str;
+    str = "SELECT number || ' - ' || surname || ' ' || SUBSTR(name,1,1) || '. ' || SUBSTR(patronymic,1,1) || '.'"
+            " FROM apartament "
             " WHERE id_homes = " + QString::number(id_home) +
             " AND id_organiz = " + QString::number(id_org);
     model->setQuery(QSqlQuery(str));
@@ -262,6 +278,22 @@ void Apartment::setDefault()
     m_id = -1;
     m_number = -1;
 }
+bool Apartment::getIslivingAlonePensioner() const
+{
+    return islivingAlonePensioner;
+}
+
+void Apartment::setIslivingAlonePensioner(bool value)
+{
+    if(value == false){
+        setNoPensionerLivingAlone();
+    }else{
+        setYesPensionerLivingAlone();
+    }
+    islivingAlonePensioner = isPensionerLivingAlone();
+
+}
+
 
 void Apartment::DeleteApartment()
 {
@@ -440,4 +472,14 @@ bool Apartment::isPensionerLivingAlone()
     }
 
     return false;
+}
+
+QSqlError Apartment::setNoPensionerLivingAlone()
+{
+    return BD::DeleteLine("pensioner_living_alone","id_apartament",m_id);
+}
+
+QSqlError Apartment::setYesPensionerLivingAlone()
+{
+    return BD::add("pensioner_living_alone","id_apartament",QString::number(m_id));
 }
