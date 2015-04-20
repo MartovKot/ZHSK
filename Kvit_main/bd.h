@@ -33,7 +33,6 @@ public:
     // объединение улуги и квартиры
     int is_idListAppUsluga(int id_apartament, int id_usluga);
     QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
-    QSqlQueryModel* ModelUslugiTabl(int id_apartament);                                 //услуги по квартире
     //-----------------------------
 
     int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка

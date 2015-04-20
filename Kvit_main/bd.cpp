@@ -277,20 +277,6 @@ QString BD::getDatabaseVersion()
 
 //=====================================================================
 
-QSqlQueryModel* BD::ModelUslugiTabl(int id_apartament)
-{
-    QSqlQueryModel *model = new QSqlQueryModel;
-    QString str;
-    str = "SELECT  u.name FROM list_app_usluga lau, usluga u "
-            " WHERE lau.id_apartament = "+QString::number(id_apartament)+" AND u.id_usluga=lau.id_usluga";
-    model->setQuery(QSqlQuery(str));
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Услуги"));
-
-    return model;
-}
-
-//--------------------------------------------------------------------------------------------------------
-
 QSqlError BD::DeleteUslugaApartament(int id_list_apart_usluga)
 {
     QString str;
