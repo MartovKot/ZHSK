@@ -18,8 +18,8 @@ public:
     void setName(const QString &value);
 
     bool isElectro();
-    bool isElectroDay ();
-    bool isElectroNight ();
+    bool isElectroDay();
+    bool isElectroNight();
     static QSqlQueryModel *modelServiceType();
     static QSqlQueryModel *modelService();
 

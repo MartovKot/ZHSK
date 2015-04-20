@@ -44,17 +44,16 @@ public:
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания
     QSqlQueryModel* ModelSettings();
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
-    QSqlQueryModel* ModelPensioner(int id_home, int id_org);
 
+    //пенсионеры
     QSqlError DeletePension(int id_apart);
-
     QSqlError DeleteSetting(QString name_setting);
+    //----------
 
     void new_pokazanie(int id_apartament, int month, int year);
     QString isValueSetting(QString NameSetting);
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
-
     //----new interface
 
     static void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );

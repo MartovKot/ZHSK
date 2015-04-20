@@ -369,17 +369,13 @@ void AdminWindow::Refresh_Uslugi()
 
 void AdminWindow::Refresh_Pensioner()
 {
-    ui->cmBx_PensApart->setModel(
-    Apartment::ModelAllApartment(
-                    ui->cmBx_Home_on_Pens->model()->index(ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt(),
-                    ui->cmBx_Org_on_Pens->model()->index(ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
-    ui->cmBx_PensApart->addItem("");
-    ui->cmBx_Org_on_Pens->setModel(Organization::ModelAllOrganizationName());
     ui->cmBx_Home_on_Pens->setModel(Home::ModelAllHomeName());
-    ui->tblV_on_Pens->setModel(db.ModelPensioner(ui->cmBx_Home_on_Pens->model()->index(
-                                                     ui->cmBx_Home_on_Pens->currentIndex(),1).data().toInt()
-                                                 ,ui->cmBx_Org_on_Pens->model()->index(
-                                                     ui->cmBx_Org_on_Pens->currentIndex(),1).data().toInt()));
+    ui->cmBx_Org_on_Pens->setModel(Organization::ModelAllOrganizationName());
+    Home home(ui->cmBx_Home_on_Pens->currentText());
+    ui->cmBx_PensApart->setModel(home.ModelAllApartamentNumber());
+    ui->cmBx_PensApart->addItem("");
+    ui->tblV_on_Pens->setModel(Apartment::ModelPensionerLivingAlone(home.getId(),home.organization()->getId()));
+
     ui->tblV_on_Pens->hideColumn(0);
     ui->tblV_on_Pens->horizontalHeader()->setStretchLastSection(false);
     ui->tblV_on_Pens->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);

@@ -110,6 +110,7 @@ QSqlQueryModel *Service::modelService()
 
     return model;
 }
+
 int Service::getIdService() const
 {
     return idService;

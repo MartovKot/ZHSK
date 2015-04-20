@@ -75,6 +75,27 @@ QSqlQueryModel* Apartment::ModelAllApartment(int id_home, int id_org)
     return model;
 }
 
+QSqlQueryModel *Apartment::ModelPensionerLivingAlone(int id_home, int id_org)
+{
+    QSqlQueryModel *model = new QSqlQueryModel;
+    QString str;
+
+    str = "SELECT pla.id_apartament,"
+            " a.surname || ' ' || a.name || ' ' || a.patronymic, "
+            " a.number "
+            " FROM pensioner_living_alone pla, apartament a "
+            " WHERE a.id_apartament = pla.id_apartament "
+            " AND a.id_organiz = %1"
+            " AND a.id_homes = %2";
+    str = str.arg(id_org)
+            .arg(id_home);
+    model->setQuery(QSqlQuery(str));
+    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("ID"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("ФИО"));
+    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("№ Квартиры"));
+    return model;
+}
+
 QAbstractItemModel* Apartment::ModelOneApartment()
 {
     EditApartmentModel *model = new EditApartmentModel;
