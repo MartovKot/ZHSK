@@ -32,7 +32,6 @@ void NewCounter::set_IdPokazanie(int id_pok)
 
 void NewCounter::sl_Ok()
 {   
-//    qDebug()  << id_pokazanie << ui->lEdCounter->text().toInt();
     db.UpdatePokazanieHome(id_pokazanie,ui->lEdCounter->text().toInt());
     close();
 }

@@ -203,18 +203,19 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
         if (table.at(i).at(2).toInt() == 1){
             continue;
         }
+        Apartment apartament(table.at(i).at(0).toInt());
         if (str == "") {
             str =
             " INSERT OR REPLACE INTO 'credited' (id_list_app_usluga,date_credited,credited_of_service) "
             " SELECT %1, %2, %3";
-            str = str.arg(db.is_idListAppUsluga(table.at(i).at(0).toInt(),table.at(i).at(1).toInt()))
+            str = str.arg(apartament.isIdListApartamentServise(table.at(i).at(1).toInt()))
                     .arg(m_date.Second_first_day())
                     .arg(table.at(i).at(6));
             continue;
         }
 
         str = str + " UNION SELECT %1, %2, %3 ";
-        str = str.arg(db.is_idListAppUsluga(table.at(i).at(0).toInt(),table.at(i).at(1).toInt()))
+        str = str.arg(apartament.isIdListApartamentServise(table.at(i).at(1).toInt()))
                 .arg(m_date.Second_first_day())
                 .arg(table.at(i).at(6));
     }

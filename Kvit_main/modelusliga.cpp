@@ -107,13 +107,14 @@ QVariant ModelUsliga::data(
     QSqlQuery query;
     if (index.column() == 1) {
         if (value.toInt() == 0){
-           db.DeleteLine("list_app_usluga","id_list_app_usluga",db.is_idListAppUsluga(m_IdApartment,id_usluga));
+            Apartment apartment(m_IdApartment);
+            BD::DeleteLine("list_app_usluga","id_list_app_usluga",apartment.isIdListApartamentServise(id_usluga));
         }else{
             QStringList value;
             QStringList column;
             column << "id_apartament" << "id_usluga";
             value << QString::number(m_IdApartment) << QString::number(id_usluga);
-            db.add("list_app_usluga",column,value);
+            BD::add("list_app_usluga",column,value);
         }
      }
      ok = query.exec();

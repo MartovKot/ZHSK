@@ -42,6 +42,10 @@ public:
     bool getIslivingAlonePensioner() const;
     void setIslivingAlonePensioner(bool value);
 
+    bool deleteService(QString nameService);
+    int isIdListApartamentServise(QString nameService);
+    int isIdListApartamentServise(int idService);
+
 private:
     int m_id;
     int m_number;

@@ -27,27 +27,18 @@ public:
     QString getDatabaseVersion();
     void UpdateDataBase();
 
-    QString is_NameCounter(int id_counter);
+
+    QSqlQueryModel* ModelSettings();
+    QSqlError DeleteSetting(QString name_setting);
+    QString isValueSetting(QString NameSetting);
 
 
-    // объединение улуги и квартиры
-    int is_idListAppUsluga(int id_apartament, int id_usluga);
-    QSqlError DeleteUslugaApartament(int id_list_apart_usluga);
-    //-----------------------------
-
-    int is_Pokazanie(int id_list_app_usluga, QDate date);       //для бланка
     int is_IdPokazanie(int id_list_app_usluga, DateOfUnixFormat date/*qint64 unix_date*/);
     void UpdatePokazanieHome(int id_pokazanie, int new_pokazanie);  //Изменённое показание на начало месяца
-
-    QSqlQueryModel* ModelTarifTabl(int year,int month);                                 //тарифы на месяц
     QSqlQueryModel* ModelPokazanie(int id_apartament, int month, int year );            //показания
-    QSqlQueryModel* ModelSettings();
+    QString is_NameCounter(int id_counter);  //id_pokazanie
     SqlQueryEditModel* ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
-
-    QSqlError DeleteSetting(QString name_setting);
-
     void new_pokazanie(int id_apartament, int month, int year);
-    QString isValueSetting(QString NameSetting);
     int new_pokazanie(int id_pok_old, QString value_home);                              //добавляет новое показание
                                                                                         //на сдед месяц
     //----new interface
@@ -59,7 +50,6 @@ public:
     static QSqlError add(QString table, QString column,QString value, int mode = 0);
     static QSqlError QueryExecute(QString str);
     static QSqlError DeleteLine(QString table, QString id_name ,int id_line);
-
     static QSqlError SelectFromTable(QString str, QString *var);
 private:
     QSqlDatabase db;

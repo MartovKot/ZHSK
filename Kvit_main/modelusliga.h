@@ -5,6 +5,7 @@
 #include <QTableView>
 #include <QDate>
 #include "bd.h"
+#include "apartment.h"
 
 class ModelUsliga : public QSqlQueryModel
 {

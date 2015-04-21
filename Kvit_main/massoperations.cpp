@@ -50,14 +50,9 @@ void MassOperations::on_pBtn_Add_clicked()
 
 void MassOperations::on_pBtn_Delete_clicked()
 {
-    int id_usluga;
-
-    id_usluga = ui->cmBx_Usluga->model()->index(ui->cmBx_Usluga->currentIndex(),1).data().toInt();
     Home home(m_id_home);
     for (int i=0;i<home.apartments().count();i++){
-       int id_lau;
-       id_lau = db.is_idListAppUsluga(home.apartments().at(i)->getId(),id_usluga);
-       db.DeleteUslugaApartament(id_lau);
+        home.apartments().at(i)->deleteService(ui->cmBx_Usluga->currentText());
     }
 }
 

@@ -18,6 +18,7 @@
 #include "apartment.h"
 #include "fast_calculation.h"
 #include "service.h"
+#include "indications.h"
 
 class parser_blank :public QWidget
 {

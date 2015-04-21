@@ -45,7 +45,8 @@ HEADERS += adminwindow.h \
     massoperations.h \
     progressdialog.h \
     fast_calculation.h \
-    service.h
+    service.h \
+    indications.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -82,7 +83,8 @@ SOURCES += adminwindow.cpp \
     massoperations.cpp \
     progressdialog.cpp \
     fast_calculation.cpp \
-    service.cpp
+    service.cpp \
+    indications.cpp
 
 RESOURCES += \
     qrc.qrc

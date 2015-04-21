@@ -277,20 +277,6 @@ QString BD::getDatabaseVersion()
 
 //=====================================================================
 
-QSqlError BD::DeleteUslugaApartament(int id_list_apart_usluga)
-{
-    QString str;
-    QSqlQuery query;
-    QSqlError out;
-
-    str = "DELETE FROM list_app_usluga WHERE id_list_app_usluga=%1";
-    str = str.arg(id_list_apart_usluga);
-    if (!query.exec(str)){
-        out = query.lastError();
-    }
-    return out;
-}
-
 QSqlQueryModel* BD::ModelPokazanie(int id_apartament, int month, int year)
 {
     QSqlQueryModel *model = new QSqlQueryModel;
@@ -402,20 +388,6 @@ void BD::sl_ModelPokazanieHeaderData(QAbstractTableModel *t)
     t->setHeaderData(2, Qt::Horizontal, QObject::trUtf8("Показазия текущие"));
 }
 
-int BD::is_idListAppUsluga(int id_apartament, int id_usluga)
-{
-    QString str;
-    QString out;
-
-    str = "SELECT id_list_app_usluga FROM list_app_usluga WHERE id_usluga=%1 AND id_apartament=%2";
-    str = str.arg(id_usluga)
-            .arg(id_apartament);
-
-    SelectFromTable(str, &out);
-
-    return out.toInt();
-}
-
 void BD::sl_EditPokazanie(int id_pok, QString value)
 {
     QSqlQuery query;
@@ -506,35 +478,6 @@ int BD::new_pokazanie(int id_pok_old, QString value_home)
     }
     return id_new;
 }
-
-
-
-int BD::is_Pokazanie(int id_list_app_usluga, QDate date)
-{
-    QString str;
-    QString out;
-    DateOfUnixFormat unix_date(date.addMonths(1));
-
-    str = "SELECT pokazanie_home FROM pokazanie WHERE id_list_app_usluga=%1 AND date_pokazanie=%2 ";
-    str = str.arg(id_list_app_usluga)
-            .arg(unix_date.Second());
-    SelectFromTable(str,&out);
-
-
-//    str = " SELECT u.id_usluga FROM usluga u, list_app_usluga lau "
-//            " WHERE lau.id_list_app_usluga=%1 AND lau.id_usluga = u.id_usluga";
-//    str = str.arg(id_list_app_usluga);
-//    t = SelectFromTable(str);
-//    if(!t.isNull()){
-//        if (t.toInt() == 3){
-//            out = 0;
-//        }
-//    }
-
-    return out.toInt();
-}
-
-
 
 //-------------------------------------------------------------------------------------------
 

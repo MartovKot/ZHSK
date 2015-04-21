@@ -294,6 +294,52 @@ void Apartment::setIslivingAlonePensioner(bool value)
 
 }
 
+bool Apartment::deleteService(QString nameService)
+{
+    QString str;
+
+    str = " DELETE FROM list_app_usluga WHERE  id_list_app_usluga ='%1' ";
+    str = str.arg(isIdListApartamentServise(nameService));
+
+    if (BD::QueryExecute(str).number() == 0){
+        return true;
+    }
+    return false;
+}
+
+int Apartment::isIdListApartamentServise(QString nameService)
+{
+    QString str;
+    QString out;
+
+    str =   " SELECT lau.id_list_app_usluga FROM "
+            " list_app_usluga lau, usluga u, apartament a "
+            " WHERE lau.id_apartament = a.id_apartament AND "
+            " lau.id_usluga = u.id_usluga AND "
+            " u.name = '%1' AND "
+            " a.id_apartament = '%2'";
+    str = str.arg(nameService)
+            .arg(m_id);
+
+    BD::SelectFromTable(str, &out);
+
+    return out.toInt();
+}
+
+int Apartment::isIdListApartamentServise(int idService)
+{
+    QString str;
+    QString out;
+
+    str = "SELECT id_list_app_usluga FROM list_app_usluga WHERE id_usluga=%1 AND id_apartament=%2";
+    str = str.arg(idService)
+            .arg(m_id);
+
+    BD::SelectFromTable(str, &out);
+
+    return out.toInt();
+}
+
 
 void Apartment::DeleteApartment()
 {
