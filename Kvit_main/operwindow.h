@@ -17,6 +17,7 @@
 #include "home.h"
 #include "apartment.h"
 #include "fast_calculation.h"
+#include "indications.h"
 
 namespace Ui {
     class OperWindow;

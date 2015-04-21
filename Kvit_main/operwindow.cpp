@@ -93,10 +93,10 @@ void OperWindow::Refresh_tblVCount()
 {
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
-    ui->tblV_Count->setModel(db.ModelPokazanie(apartment.getId(),
+    ui->tblV_Count->setModel(Indications::ModelPokazanie(apartment.getId(),
                                  ui->dEd_Count->date().month(),
                                  ui->dEd_Count->date().year()));
-    db.new_pokazanie(apartment.getId(),                     //новое показание на след месяц
+    Indications::New(apartment.getId(),                     //новое показание на след месяц
                      ui->dEd_Count->date().month(),
                      ui->dEd_Count->date().year());
     ui->tblV_Count->hideColumn(0);
@@ -136,7 +136,8 @@ void OperWindow::sl_EditPokazanie()
     MyItemDelegate * dDeleg = new MyItemDelegate ();
     SqlQueryEditModel *edModel;
 
-    edModel = db.ModelEditPokazanie(apartment.getId(),ui->dEd_Count->date().month(),ui->dEd_Count->date().year());
+    Indications indications;
+    edModel = indications.ModelEditPokazanie(apartment.getId(),ui->dEd_Count->date().month(),ui->dEd_Count->date().year());
 
     tbl->setModel(edModel);
     tbl->setItemDelegate(dDeleg);
@@ -318,7 +319,7 @@ void OperWindow::on_pBtn_NewCounterNext_clicked()
     }
 
     NewCounter *dlg = new NewCounter(this);
-    dlg->set_IdPokazanie(db.new_pokazanie(id_counter,"0"));
+    dlg->set_IdPokazanie(Indications::New(id_counter,"0"));
     dlg->open();
 }
 

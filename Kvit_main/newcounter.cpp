@@ -27,11 +27,13 @@ NewCounter::~NewCounter()
 void NewCounter::set_IdPokazanie(int id_pok)
 {
     id_pokazanie = id_pok;
-    ui->lblCounter->setText(db.is_NameCounter(id_pok));
+    Indications indication(id_pok);
+    ui->lblCounter->setText(indication.getNameService());
 }
 
 void NewCounter::sl_Ok()
 {   
-    db.UpdatePokazanieHome(id_pokazanie,ui->lEdCounter->text().toInt());
+    Indications indications(id_pokazanie);
+    indications.UpdateHome(ui->lEdCounter->text().toInt());
     close();
 }

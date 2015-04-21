@@ -130,9 +130,9 @@ QString parser_blank::process_schet(QString str_in_sch,const int id_apartment, Q
         }
         find_pos = str_out.indexOf(strlst_find.at(1));
         if(find_pos>=0){ //Показание
-            Indications indications(CounterList.at(i));
+            Indications indications(CounterList.at(i),apartment.getId(),date.addMonths(1));
             str_out.replace(find_pos,strlst_find.at(1).size(),
-                            QString::number(indications.valueIndicationHome(apartment.getId(),date)));
+                            QString::number(indications.valueIndicationHome()));
         }
         find_pos = str_out.indexOf(strlst_find.at(2));
         if(find_pos>=0){ //тариф

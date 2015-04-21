@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "bd.h"
+#include "indications.h"
 
 namespace Ui {
 class NewCounter;
