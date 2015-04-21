@@ -163,7 +163,8 @@ void Indications::New(int id_apartament, int month, int year)
 SqlQueryEditModel *Indications::ModelEditPokazanie(int id_apartament, int month, int year)
 {
     SqlQueryEditModel *model = new SqlQueryEditModel;
-    connect(model,SIGNAL(sgn_EditPokazanie(int,QString)),this,SLOT(slEdit(int,QString)));
+//    connect(model,SIGNAL(sgn_EditPokazanie(int,QString)),this,SLOT(slEdit(int,QString)));
+    connect(model,SIGNAL(sgn_EditPokazanie(int,QString)),SLOT(slEdit(int,QString)));
     connect(model,SIGNAL(sgn_RefreshModel(QAbstractTableModel*)),this,SLOT(slModelPokazanieHeaderData(QAbstractTableModel*)));
     QList<int> lst;
     lst << 2;
@@ -356,6 +357,7 @@ void Indications::calcSewerage(bool newIndicator)
 
 void Indications::slEdit(int id_pok, QString value)
 {
+    qDebug() << "test";
     QSqlQuery query;
     query.prepare("UPDATE pokazanie set pokazanie_end = ? WHERE id_pokazanie = ?");
     query.addBindValue(value);
@@ -370,6 +372,7 @@ void Indications::slEdit(int id_pok, QString value)
 
 void Indications::slModelPokazanieHeaderData(QAbstractTableModel *t)
 {
+    qDebug() << "test2";
     t->setHeaderData(0, Qt::Horizontal, QObject::trUtf8("№"));
     t->setHeaderData(1, Qt::Horizontal, QObject::trUtf8("Счётчик"));
     t->setHeaderData(2, Qt::Horizontal, QObject::trUtf8("Показазия текущие"));

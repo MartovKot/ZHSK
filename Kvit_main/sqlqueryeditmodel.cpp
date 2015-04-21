@@ -44,14 +44,13 @@ bool SqlQueryEditModel::setData(const QModelIndex &index, const QVariant &value,
 
 void SqlQueryEditModel::refresh()
 {
-//    qDebug() << this->headerData(2,Qt::Horizontal);
     setQuery(myQuery);
     sgn_RefreshModel(this);
-
 }
 
 bool SqlQueryEditModel::setPokazanie(int Id, const QString &value)
 {
+    qDebug() << "1" << Id << value;
     sgn_EditPokazanie(Id, value);
     return true;
 }

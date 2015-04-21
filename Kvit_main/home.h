@@ -36,9 +36,7 @@ private:
     QList<Apartment *> m_apartment;
     void set_default();
     QList<int> isListIdApartament();
-signals:
 
-public slots:
 
 };
 
