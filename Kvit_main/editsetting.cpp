@@ -21,7 +21,7 @@ void EditSetting::setNameSetting(QString NameSetting)
 {
     name_setting = NameSetting;
     ui->lEd_NameSetting->setText(name_setting);
-    ui->lEd_ValueSetting->setText(db.isValueSetting(NameSetting));
+    ui->lEd_ValueSetting->setText(Settings::Value(NameSetting));
 }
 
 void EditSetting::on_buttonBox_accepted()

@@ -5,6 +5,9 @@
 #include "bd.h"
 #include "dateofunixformat.h"
 #include "apartment.h"
+#include "sqlqueryeditmodel.h"
+#include "TransposeProxyModel.h"
+#include "dateofunixformat.h"
 
 class Indications : public QObject
 {

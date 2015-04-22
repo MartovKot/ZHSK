@@ -12,10 +12,12 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 #include <QTimer>
-#include "bd.h"
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+
+#include "bd.h"
+#include "settings.h"
 
 class Updater : public QWidget
 {

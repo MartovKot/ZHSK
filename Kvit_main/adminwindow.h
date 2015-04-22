@@ -9,7 +9,6 @@
 #include <QSqlError>
 #include <QHeaderView>
 
-#include "bd.h"
 #include "table_tariff.h"
 #include "editsetting.h"
 #include "selecter_with_combobox.h"
@@ -18,6 +17,7 @@
 #include "apartment.h"
 #include "modelusliga.h"
 #include "dialog_with_lineedit.h"
+#include "settings.h"
 
 namespace Ui {
     class AdminWindow;
@@ -33,7 +33,7 @@ public:
 
 private:
     Ui::AdminWindow *ui;
-    BD db;
+//    BD db;
     table_tariff tbl_tariff;
 
     void Mode (QString m);

@@ -22,6 +22,7 @@ public:
     void rename(QString new_name);
     static QSqlQueryModel *ModelAllHomeFull();
     static QSqlQueryModel *ModelAllHomeName();
+    static bool createNew(QString name);
     QSqlQueryModel *ModelAllApartamentNumber();
     QSqlQueryModel *ModelAllApartamentNumberWithFIO();
 

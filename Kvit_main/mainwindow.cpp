@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     Refresh_win();
 
-    ui->statusBar->showMessage(QString("Версия БД - ")+db.getDatabaseVersion());
+    ui->statusBar->showMessage(QString("Версия БД - ")+BD::getDatabaseVersion());
 
     QFile styleFile(":/style.css");
     if( styleFile.open(QFile::ReadOnly) ) {

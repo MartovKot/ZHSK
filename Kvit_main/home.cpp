@@ -106,6 +106,14 @@ QSqlQueryModel *Home::ModelAllHomeName()
     return model;
 }
 
+bool Home::createNew(QString name)
+{
+    if (BD::add("homes","name",name).number() != 0){
+        return false;
+    }
+    return true;
+}
+
 QSqlQueryModel *Home::ModelAllApartamentNumber()
 {
     return Apartment::ModelAllApartment(m_id,m_organization->getId());

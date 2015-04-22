@@ -22,6 +22,8 @@ public:
     bool isElectroNight();
     static QSqlQueryModel *modelServiceType();
     static QSqlQueryModel *modelService();
+    static bool createNew(const QString &name,const int idType);
+    bool remove();
 
     int getIdService() const;
     void setIdService(int value);

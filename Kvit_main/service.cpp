@@ -111,6 +111,25 @@ QSqlQueryModel *Service::modelService()
     return model;
 }
 
+bool Service::createNew(const QString &name, const int idType)
+{
+    QStringList column, value;
+    column << "name" << "type_usluga";
+    value << name << QString::number(idType);
+    if (BD::add("usluga",column,value).number() != 0){
+        return false;
+    }
+    return true;
+}
+
+bool Service::remove()
+{
+    if (BD::DeleteLine("usluga","id_usluga",idService).number() != 0){
+        return false;
+    }
+    return true;
+}
+
 int Service::getIdService() const
 {
     return idService;

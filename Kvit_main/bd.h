@@ -24,15 +24,15 @@ public:
     explicit BD();
     ~BD();
     bool Create();
-    QString getDatabaseVersion();
+
     void UpdateDataBase();
 
-    QSqlQueryModel* ModelSettings();
-    QSqlError DeleteSetting(QString name_setting);
-    QString isValueSetting(QString NameSetting);
+//    QSqlQueryModel* ModelSettings();
+//    QSqlError DeleteSetting(QString name_setting);
+//    QString isValueSetting(QString NameSetting);
 
     //----new interface
-
+    static QString getDatabaseVersion();
     static void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );
     static void UpdateTable(QString table, QString column, QString value,
                      QString where_column1, QString where_value1, QString where_column2, QString where_value2);

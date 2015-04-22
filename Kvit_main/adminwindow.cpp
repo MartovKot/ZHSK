@@ -5,7 +5,6 @@
 
 
 #include <qtextcodec.h>
-
 #include <QStandardItemModel>
 #include <QCheckBox>
 #include <QTableWidgetItem>
@@ -98,7 +97,7 @@ AdminWindow::~AdminWindow()
 
 void AdminWindow::sl_AddOrg()                                                  //Добавление организации
 {
-    if (!Organization::New(ui->lEdNameOrg->text(), ui->lEdBank->text(), ui->lEdAcc->text(), ui->lEdINN->text())){
+    if (Organization::New(ui->lEdNameOrg->text(), ui->lEdBank->text(), ui->lEdAcc->text(), ui->lEdINN->text())){
         QMessageBox::warning(this,trUtf8("Предупреждение"),
                              trUtf8("Организация не добавлена"),QMessageBox::Ok);
         return;
@@ -112,15 +111,12 @@ void AdminWindow::sl_AddOrg()                                                  /
 
 void AdminWindow::AddHome()
 {
-    QStringList column, value;
-    column<<"name";
-    value<<ui->lEdHome->text();
-    if (db.add("homes",column,value).number() != 0){
+    if ( Home::createNew(ui->lEdHome->text())){
         QMessageBox::warning(this,trUtf8("Предупреждение"),
                              trUtf8("Запись не создана"),QMessageBox::Ok);
         return;
     }
-    ui->lEdHome->setText("");
+//    ui->lEdHome->setText("");
     Refresh_Home();
 }
 
@@ -573,7 +569,7 @@ void AdminWindow::on_pBtn_Cancel_onApart_clicked()
 
 void AdminWindow::Refresh_Settings()
 {
-    ui->tblV_on_Settings->setModel(db.ModelSettings());
+    ui->tblV_on_Settings->setModel(Settings::Model());
 
     ui->tblV_on_Settings->horizontalHeader()->setStretchLastSection(false);
     ui->tblV_on_Settings->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -582,16 +578,13 @@ void AdminWindow::Refresh_Settings()
 
 void AdminWindow::on_tBtn_AddSetting_clicked()
 {
-    QStringList column, value;
-    column << "name_setting" << "value_setting";
-    value << "" << "";
-    db.add("settings", column, value);
+    Settings::createNew();
     Refresh_Settings();
 }
 
 void AdminWindow::on_tBtn_DeleteSetting_clicked()
 {
-    db.DeleteSetting(ui->tblV_on_Settings->model()->index(ui->tblV_on_Settings->currentIndex().row(),0).data().toString());
+    Settings::Delete(ui->tblV_on_Settings->model()->index(ui->tblV_on_Settings->currentIndex().row(),0).data().toString());
     Refresh_Settings();
 }
 
@@ -720,10 +713,7 @@ void AdminWindow::on_pBtnAddUsluga_clicked()
 
 void AdminWindow::sl_AddUsluga(const QString &usluga, const int &id_type_usluga)
 {
-    QStringList column, value;
-    column << "name" << "type_usluga";
-    value << usluga << QString::number(id_type_usluga);
-    db.add("usluga",column,value);
+    Service::createNew(usluga,id_type_usluga);
     Refresh_tblV_on_Uslugi();
 }
 
@@ -731,11 +721,12 @@ void AdminWindow::on_pBtnDeleteUsluga_clicked()
 {
     if ((QMessageBox::question(this,trUtf8("ВНИМАНИЕ УДАЛЕНИЕ"),
                                trUtf8("Действительно хотите удалить?"),
-                               QMessageBox::Yes | QMessageBox::No))==QMessageBox::No){
+                               QMessageBox::Yes | QMessageBox::No)) == QMessageBox::No){
         return;
     }else{
-        db.DeleteLine("usluga","id_usluga",ui->tblV_on_Uslugi->model()->index(
-                                                       ui->tblV_on_Uslugi->currentIndex().row(),2).data().toInt());
+        Service service(ui->tblV_on_Uslugi->model()->index(
+                        ui->tblV_on_Uslugi->currentIndex().row(),2).data().toInt());
+        service.remove();
         Refresh_tblV_on_Uslugi();
     }
 }

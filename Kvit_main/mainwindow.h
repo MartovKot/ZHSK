@@ -32,7 +32,6 @@ private:
     OperWindow *OperWin;
     AdminWindow *AdmWin;
     ViewBlank *VwBlank;
-    BD db;
     QString CurentDirArhiv;
     QString Version;
 

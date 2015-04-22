@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "bd.h"
+#include "settings.h"
 
 namespace Ui {
 class EditSetting;

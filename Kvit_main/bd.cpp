@@ -270,54 +270,6 @@ QString BD::getDatabaseVersion()
         }
     }else{
         res = "";
-        LogOut.logout(query.lastError().text());
     }
     return res;
-}
-
-
-QSqlQueryModel* BD::ModelSettings()
-{
-    QSqlQueryModel *model = new QSqlQueryModel;
-    model->setQuery(QSqlQuery("SELECT name_setting,value_setting FROM settings"));
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Название"));
-    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Значение"));
-    return model;
-}
-
-QSqlError BD::DeleteSetting(QString name_setting)
-{
-    QString str;
-    QSqlQuery query;
-    QSqlError out;
-
-    str = "DELETE FROM settings WHERE name_setting = '%1'";
-    str = str.arg(name_setting);
-    if (!query.exec(str)){
-        out = query.lastError();
-    }
-    return out;
-}
-
-QString BD::isValueSetting(QString NameSetting)
-{
-    QString out = "";
-    QString str;
-    QSqlQuery query;
-
-    str = "SELECT value_setting FROM settings WHERE name_setting = '%1'";
-    str = str.arg(NameSetting);
-
-    if (query.exec(str)){
-        if (query.next()){
-            out = query.value(0).toString();
-        }else{
-            QStringList column, value;
-            column << "name_setting" << "value_setting";
-            value << NameSetting << "";
-            add("settings", column, value);
-        }
-    }
-
-    return  out;
 }
