@@ -18,7 +18,9 @@ public:
     static double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
     static double AmountForServices(int id_apart, qint64 u_date);
     static QString Debt(int id_apart, DateOfUnixFormat date);
+
     static QString CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
+
 
 private:
     Home *home;
@@ -27,8 +29,8 @@ private:
     QString calcOfCounters(const QStringList &row);
     void createTempTableCredited(const QList<QStringList> &table);
     void recordInDB_CredOfApart(const QList<QStringList> &table);
-
     void calcOfDebt();
+    static double mDebt(int idApart, qint64 uDate);
 };
 
 #endif // FAST_CALCULATION_H

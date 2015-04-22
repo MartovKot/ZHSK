@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>464</width>
-    <height>322</height>
+    <width>551</width>
+    <height>515</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -191,7 +191,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="qrc.qrc">
+           <iconset>
             <normaloff>:/ico/leftendblue.ico</normaloff>:/ico/leftendblue.ico</iconset>
           </property>
           <property name="iconSize">
@@ -232,7 +232,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="qrc.qrc">
+           <iconset>
             <normaloff>:/ico/left_blue.ico</normaloff>:/ico/left_blue.ico</iconset>
           </property>
           <property name="iconSize">
@@ -276,7 +276,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="qrc.qrc">
+           <iconset>
             <normaloff>:/ico/right_blue.ico</normaloff>:/ico/right_blue.ico</iconset>
           </property>
           <property name="iconSize">
@@ -308,7 +308,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="qrc.qrc">
+           <iconset>
             <normaloff>:/ico/rightendblue.ico</normaloff>:/ico/rightendblue.ico</iconset>
           </property>
           <property name="iconSize">
@@ -556,7 +556,7 @@
                    <string/>
                   </property>
                   <property name="icon">
-                   <iconset resource="qrc.qrc">
+                   <iconset>
                     <normaloff>:/ico/base_calendar_32.png</normaloff>:/ico/base_calendar_32.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -868,8 +868,6 @@
   <tabstop>tblV_Count</tabstop>
   <tabstop>pBtn_EditPokazanie</tabstop>
  </tabstops>
- <resources>
-  <include location="qrc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

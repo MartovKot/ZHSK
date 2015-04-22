@@ -237,9 +237,10 @@ void Fast_Calculation::calcOfDebt()
 
     str = str.arg(m_date.Second_first_day(-1))
             .arg(m_date.Second_first_day());
-    BD db;
-    db.QueryExecute(str);
 
+    qDebug() << str;
+
+    BD::QueryExecute(str);
 }
 
 double Fast_Calculation::AmountForServices(int id_apart, qint64 u_date)
@@ -266,8 +267,7 @@ QString Fast_Calculation::Debt(int id_apart, DateOfUnixFormat date)
     str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%3";
     str = str.arg(date.Second())
             .arg(id_apart);
-    BD db;
-    db.SelectFromTable(str,&debt);
+    BD::SelectFromTable(str,&debt);
 
     if (debt.toDouble()>0.0){
         out = QObject::trUtf8("Ваш долг составляет:  ")
@@ -277,6 +277,19 @@ QString Fast_Calculation::Debt(int id_apart, DateOfUnixFormat date)
                 + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
     }
     return out;
+}
+
+double Fast_Calculation::mDebt(int idApart, qint64 uDate)
+{
+    QString str;
+    QString debt;
+
+    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%3";
+    str = str.arg(uDate)
+            .arg(idApart);
+    BD::SelectFromTable(str,&debt);
+
+    return debt.toDouble();
 }
 
 QString Fast_Calculation::CreditedForReport(int id_apartament, int id_usluga, DateOfUnixFormat date)
@@ -290,27 +303,16 @@ QString Fast_Calculation::CreditedForReport(int id_apartament, int id_usluga, Da
     str = str.arg(date.Second())
             .arg(id_apartament)
             .arg(id_usluga);
-    BD db;
-    db.SelectFromTable(str,&out);
+    BD::SelectFromTable(str,&out);
 
     return out;
 
 }
 
 double Fast_Calculation::AmountToPay(int id_apart, qint64 u_date)
-{
-    qDebug() << id_apart << u_date;
-    QString str;
+{ 
     double out;
-    QString debt;
-
-    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";
-
-    str = str.arg(u_date)
-            .arg(id_apart);
-    BD::SelectFromTable(str,&debt);
-    qDebug() << debt << AmountForServices(id_apart,u_date);
-
-    out = debt.toDouble() + AmountForServices(id_apart,u_date);
+    out = mDebt(id_apart,u_date);
+    out += AmountForServices(id_apart,u_date);
     return out;
 }
