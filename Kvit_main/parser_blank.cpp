@@ -62,7 +62,7 @@ void parser_blank::creat_blank(QString name,const Apartment & apartment, QDate d
     QTextStream out(&f_out);
     out<<str_m;                                     //записываем в него инфу
     f_out.close();
-    /*qDebug()<<*/f_out.copy(str_folder_arhiv + "/" + name); //копируем файл в архив
+    f_out.copy(str_folder_arhiv + "/" + name); //копируем файл в архив
 }
 
 QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)

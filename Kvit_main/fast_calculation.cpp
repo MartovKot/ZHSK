@@ -1,15 +1,9 @@
 #include "fast_calculation.h"
 
-Fast_Calculation::Fast_Calculation(const int &id_home/*, const int &id_organization*/, DateOfUnixFormat date)
+Fast_Calculation::Fast_Calculation(const int &id_home, DateOfUnixFormat date)
 {
     home = new Home(id_home,this);
-//    BD db;
-
-//    m_idHome = id_home;
-//    m_idOrganization = id_organization;
-//    m_listIdApartment = db.is_ListIdApartament(m_idOrganization,m_idHome);
     m_date = date;
-
 }
 
 
@@ -305,6 +299,7 @@ QString Fast_Calculation::CreditedForReport(int id_apartament, int id_usluga, Da
 
 double Fast_Calculation::AmountToPay(int id_apart, qint64 u_date)
 {
+    qDebug() << id_apart << u_date;
     QString str;
     double out;
     QString debt;
@@ -313,8 +308,8 @@ double Fast_Calculation::AmountToPay(int id_apart, qint64 u_date)
 
     str = str.arg(u_date)
             .arg(id_apart);
-    BD db;
-    db.SelectFromTable(str,&debt);
+    BD::SelectFromTable(str,&debt);
+    qDebug() << debt << AmountForServices(id_apart,u_date);
 
     out = debt.toDouble() + AmountForServices(id_apart,u_date);
     return out;

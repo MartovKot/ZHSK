@@ -50,7 +50,6 @@ void SqlQueryEditModel::refresh()
 
 bool SqlQueryEditModel::setPokazanie(int Id, const QString &value)
 {
-    qDebug() << "1" << Id << value;
     sgn_EditPokazanie(Id, value);
     return true;
 }

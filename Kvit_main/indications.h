@@ -18,9 +18,10 @@ public:
     explicit Indications(QObject *parent = 0);
     int valueIndicationHome();
     void UpdateHome(int newValue);
+    void UpdateEnd(int newValue);
     static int New(int id_pok_old, QString value_home);
     static void New(int id_apartament, int month, int year);
-    SqlQueryEditModel *ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
+    static SqlQueryEditModel *ModelEditPokazanie(int id_apartament, int month, int year);      //редактируемые показания
     static QSqlQueryModel *ModelPokazanie(int id_apartament, int month, int year );            //показания
     QString getNameService();
     ~Indications();
@@ -33,9 +34,7 @@ private:
     void calcSewerage(bool New = false);
 
 signals:
-private slots:
-    void slEdit(int id_pok, QString value);
-    void slModelPokazanieHeaderData(QAbstractTableModel* t);
+
 
 public slots:
 };

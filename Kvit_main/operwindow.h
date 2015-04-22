@@ -10,7 +10,7 @@
 #include <QHBoxLayout>
 
 #include "bd.h"
-#include "tableviewpokazanie.h"
+
 #include "newcounter.h"
 #include "table_payment.h"
 
@@ -18,6 +18,7 @@
 #include "apartment.h"
 #include "fast_calculation.h"
 #include "indications.h"
+#include "editindicationscounter.h"
 
 namespace Ui {
     class OperWindow;
@@ -35,7 +36,6 @@ public:
 private:
     Ui::OperWindow *ui;
     void Refresh_tblVPayment(int ApartamentID);
-    TableViewPokazanie *tbl;
     QDialog *dlg;
     int HomeID;
     int OrganizationID;

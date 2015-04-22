@@ -10,7 +10,7 @@
 class Fast_Calculation: public QObject
 {
 public:
-    Fast_Calculation(const int &id_home/*, const int &id_organization*/, DateOfUnixFormat date);
+    Fast_Calculation(const int &id_home, DateOfUnixFormat date);
     ~Fast_Calculation();
     DateOfUnixFormat date() const;
     void setDate(const DateOfUnixFormat &date);

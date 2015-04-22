@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>747</width>
-    <height>537</height>
+    <width>464</width>
+    <height>322</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>731</width>
-     <height>521</height>
+     <x>30</x>
+     <y>30</y>
+     <width>391</width>
+     <height>491</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="mainLayout">
@@ -407,12 +407,12 @@
           <property name="checkable">
            <bool>false</bool>
           </property>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
-             <x>20</x>
-             <y>20</y>
-             <width>611</width>
+             <x>60</x>
+             <y>10</y>
+             <width>531</width>
              <height>190</height>
             </rect>
            </property>
@@ -752,7 +752,7 @@
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
              <x>110</x>

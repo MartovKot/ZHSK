@@ -47,14 +47,16 @@ HEADERS += adminwindow.h \
     fast_calculation.h \
     service.h \
     indications.h \
-    settings.h
+    settings.h \
+    editindicationscounter.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
     editsetting.ui \
     selecter_with_combobox.ui \
     dialog_with_lineedit.ui \
-    massoperations.ui
+    massoperations.ui \
+    editindicationscounter.ui
 SOURCES += adminwindow.cpp \
            bd.cpp \
            main.cpp \
@@ -86,7 +88,8 @@ SOURCES += adminwindow.cpp \
     fast_calculation.cpp \
     service.cpp \
     indications.cpp \
-    settings.cpp
+    settings.cpp \
+    editindicationscounter.cpp
 
 RESOURCES += \
     qrc.qrc

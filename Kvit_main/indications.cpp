@@ -1,5 +1,7 @@
 #include "indications.h"
 
+#include <QDebug>
+
 Indications::Indications(int idService, int idApartment, QDate date, QObject *parent) : QObject(parent)
 {
     QString str;
@@ -23,7 +25,7 @@ Indications::Indications(int idIndication, QObject *parent): QObject(parent)
     QString val;
     str = "SELECT COUNT(*) FROM pokazanie WHERE id_pokazanie = %1";
     str = str.arg(idIndication);
-    if(BD::SelectFromTable(str,&val).number() == 0){
+    if(BD::SelectFromTable(str,&val).type() <= 0){
         if(val.toInt() != 0){
             m_id = idIndication;
         }else{
@@ -35,7 +37,7 @@ Indications::Indications(int idIndication, QObject *parent): QObject(parent)
         return;
     }
 
-    str = "SELECT date_pokazanie FROM pakazanie WHERE id_pokazanie = %1";
+    str = "SELECT date_pokazanie FROM pokazanie WHERE id_pokazanie = %1";
     str = str.arg(idIndication);
     BD::SelectFromTable(str,&val);
     m_Udate = val.toULongLong();
@@ -45,10 +47,12 @@ Indications::Indications(int idIndication, QObject *parent): QObject(parent)
             " WHERE p.id_pokazanie = '%1' AND "
             " lau.id_list_app_usluga = p.id_list_app_usluga AND "
             " a.id_apartament = lau.id_apartament ";
+    str = str.arg(idIndication);
     BD::SelectFromTable(str,&val);
+
     m_idApartment = val.toInt();
 
-    str =   " SELECT u.id_usluga "
+    str =   " SELECT lau.id_usluga "
             " FROM pokazanie p, apartament a, list_app_usluga lau "
             " WHERE p.id_pokazanie = '%1' AND "
             " lau.id_list_app_usluga = p.id_list_app_usluga AND "
@@ -83,6 +87,17 @@ void Indications::UpdateHome(int newValue)
                     QString::number(newValue),
                     "id_pokazanie",QString::number(m_id));
     calcSewerage(true);
+}
+
+void Indications::UpdateEnd(int newValue)
+{
+    BD::UpdateTable("pokazanie",
+                    "pokazanie_end",
+                    QString::number(newValue),
+                    "id_pokazanie",
+                    QString::number(m_id));
+    calcSewerage(false);
+    New(m_id, QString::number(newValue));
 }
 
 int Indications::New(int id_pok_old, QString value_home)
@@ -163,9 +178,6 @@ void Indications::New(int id_apartament, int month, int year)
 SqlQueryEditModel *Indications::ModelEditPokazanie(int id_apartament, int month, int year)
 {
     SqlQueryEditModel *model = new SqlQueryEditModel;
-//    connect(model,SIGNAL(sgn_EditPokazanie(int,QString)),this,SLOT(slEdit(int,QString)));
-    connect(model,SIGNAL(sgn_EditPokazanie(int,QString)),SLOT(slEdit(int,QString)));
-    connect(model,SIGNAL(sgn_RefreshModel(QAbstractTableModel*)),this,SLOT(slModelPokazanieHeaderData(QAbstractTableModel*)));
     QList<int> lst;
     lst << 2;
     model->setEditColumn(lst);
@@ -184,7 +196,6 @@ SqlQueryEditModel *Indications::ModelEditPokazanie(int id_apartament, int month,
             " AND t.tariff_date=p.date_pokazanie "
             " AND p.date_pokazanie="+QString::number(date.Second());
     model->setMyQuery(str);
-    slModelPokazanieHeaderData(model);
     return model;
 }
 
@@ -193,16 +204,16 @@ QSqlQueryModel *Indications::ModelPokazanie(int id_apartament, int month, int ye
     QSqlQueryModel *model = new QSqlQueryModel;
     QString str;
     DateOfUnixFormat date(year,month,1);
-    str = "SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end, t.tariff, t.tariff2, t.norm "
-            "FROM list_app_usluga lau, usluga u, tariff t, pokazanie p "
-            "WHERE "
-            "lau.id_usluga=u.id_usluga "
-            "AND t.id_usluga=u.id_usluga "
-            "AND u.type_usluga=1 "
-            "AND lau.id_apartament="+QString::number(id_apartament)+" "
-            "AND p.id_list_app_usluga=lau.id_list_app_usluga "
-            "AND t.tariff_date=p.date_pokazanie "
-            "AND p.date_pokazanie="+QString::number(date.Second());
+    str = " SELECT p.id_pokazanie, u.name, p.pokazanie_home, p.pokazanie_end, t.tariff, t.tariff2, t.norm "
+            " FROM list_app_usluga lau, usluga u, tariff t, pokazanie p "
+            " WHERE "
+            " lau.id_usluga=u.id_usluga "
+            " AND t.id_usluga=u.id_usluga "
+            " AND u.type_usluga=1 "
+            " AND lau.id_apartament="+QString::number(id_apartament)+" "
+            " AND p.id_list_app_usluga=lau.id_list_app_usluga "
+            " AND t.tariff_date=p.date_pokazanie "
+            " AND p.date_pokazanie="+QString::number(date.Second());
     model->setQuery(QSqlQuery(str));
 
     if(model->lastError().number() != -1){
@@ -312,8 +323,9 @@ void Indications::calcSewerage(bool newIndicator)
     str = str.arg(m_Udate)
                 .arg(m_idApartment);
 
+//    qDebug() << m_Udate << m_idApartment;
     QString out;
-    if(BD::SelectFromTable(str,&out).number() != 0 ){
+    if(BD::SelectFromTable(str,&out).type() > 0 ){
         return;
     }
 
@@ -353,28 +365,5 @@ void Indications::calcSewerage(bool newIndicator)
     }else{
         qDebug()<<query.lastError();
     }
-}
-
-void Indications::slEdit(int id_pok, QString value)
-{
-    qDebug() << "test";
-    QSqlQuery query;
-    query.prepare("UPDATE pokazanie set pokazanie_end = ? WHERE id_pokazanie = ?");
-    query.addBindValue(value);
-    query.addBindValue(id_pok);
-    if (!query.exec())
-    {
-        qDebug()<<query.lastError()<<"\n";
-    }
-    calcSewerage(id_pok); //канализация
-    New(id_pok,value); //новое показание на след месяц
-}
-
-void Indications::slModelPokazanieHeaderData(QAbstractTableModel *t)
-{
-    qDebug() << "test2";
-    t->setHeaderData(0, Qt::Horizontal, QObject::trUtf8("№"));
-    t->setHeaderData(1, Qt::Horizontal, QObject::trUtf8("Счётчик"));
-    t->setHeaderData(2, Qt::Horizontal, QObject::trUtf8("Показазия текущие"));
 }
 

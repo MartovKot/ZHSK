@@ -122,43 +122,17 @@ void OperWindow::set_parametr(int id_org, int id_home)
 void OperWindow::sl_EditPokazanie()
 {
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
-
-    //Новое окно редактирования
-    dlg = new QDialog(this);
-
+    EditIndicationsCounter *dlg = new EditIndicationsCounter(apartment.getId(),
+                                                             ui->dEd_Count->date().month(),
+                                                             ui->dEd_Count->date().year(),
+                                                             this);
     dlg->setModal(true);
     dlg->setPalette(this->palette());
-    dlg->setWindowTitle(trUtf8("Редактирование показаний"));
-
-    QVBoxLayout *main_lay = new QVBoxLayout;
-    QHBoxLayout *lay_1 = new QHBoxLayout;
-    tbl = new TableViewPokazanie(this);
-    MyItemDelegate * dDeleg = new MyItemDelegate ();
-    SqlQueryEditModel *edModel;
-
-    Indications indications;
-    edModel = indications.ModelEditPokazanie(apartment.getId(),ui->dEd_Count->date().month(),ui->dEd_Count->date().year());
-
-    tbl->setModel(edModel);
-    tbl->setItemDelegate(dDeleg);
-
-    connect(tbl,SIGNAL(closing()),dlg,SLOT(close()));
+    connect(dlg,SIGNAL(finished(int)),dlg,SLOT(deleteLater()));
     connect(dlg,SIGNAL(finished(int)),SLOT(Refresh_tblVCount()));
     connect(dlg,SIGNAL(finished(int)),SLOT(sl_RefreshLabel()));
 
-    tbl->horizontalHeader()->setStretchLastSection(false);
 
-    tbl->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tbl->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-    if(tbl->model()->columnCount()>3){
-        tbl->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive);
-    }
-
-    lay_1->addWidget(tbl);
-    main_lay->addLayout(lay_1);
-
-    dlg->setLayout(main_lay);
-    dlg->resize(main_lay->sizeHint().width()+50,main_lay->sizeHint().height());
     dlg->show();
 
 }

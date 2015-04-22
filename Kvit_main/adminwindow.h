@@ -33,7 +33,6 @@ public:
 
 private:
     Ui::AdminWindow *ui;
-//    BD db;
     table_tariff tbl_tariff;
 
     void Mode (QString m);
