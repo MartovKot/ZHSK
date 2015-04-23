@@ -169,8 +169,8 @@ void parser_blank::generating()
         dir.setPath("./");
         dir.mkdir(str_folder);//создали новый каталог
     }else{
-        QMessageBox::warning(this,trUtf8("Предупреждение"),
-                             QObject::trUtf8("Формирование уже производилось"),QMessageBox::Ok);
+//        QMessageBox::warning(this,trUtf8("Предупреждение"),
+//                             QObject::trUtf8("Формирование уже производилось"),QMessageBox::Ok);
 //        return;
     }
     dir.setPath("./arhiv/");

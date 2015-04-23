@@ -24,13 +24,7 @@ public:
     explicit BD();
     ~BD();
     bool Create();
-
     void UpdateDataBase();
-
-//    QSqlQueryModel* ModelSettings();
-//    QSqlError DeleteSetting(QString name_setting);
-//    QString isValueSetting(QString NameSetting);
-
     //----new interface
     static QString getDatabaseVersion();
     static void UpdateTable(QString table, QString column,QString value, QString where1, QString where2 );

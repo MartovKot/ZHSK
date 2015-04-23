@@ -3,13 +3,10 @@
 #include "mainwindow.h"
 #include "massoperations.h"
 
-
 #include <qtextcodec.h>
 #include <QStandardItemModel>
 #include <QCheckBox>
 #include <QTableWidgetItem>
-
-
 
 AdminWindow::AdminWindow(QWidget *parent) :
     QDialog(parent),
