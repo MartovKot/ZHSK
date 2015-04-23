@@ -24,7 +24,6 @@ private slots:
 private:
     Ui::EditSetting *ui;
     QString  name_setting;
-    BD db;
 signals:
     void s_Ok();
 };

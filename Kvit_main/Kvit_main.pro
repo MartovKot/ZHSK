@@ -117,5 +117,7 @@ OTHER_FILES += \
 
 DISTFILES += \
     update_db/01_07_003.sql \
-    update_db/01_07_004.sql
+    update_db/01_07_004.sql \
+    update_db/01_07_005.sql \
+    update_db/01_07_006.sql
 

@@ -27,13 +27,13 @@ void Fast_Calculation::fullCalc()
     QString str;
     QList<QStringList> result_tabl;
 
-    str = "SELECT a.id_apartament, u.id_usluga, u.type_usluga, t.tariff, t.tariff2, t.norm "
+    str = " SELECT a.id_apartament, u.id_usluga, u.type_usluga, t.tariff, t.tariff2, t.norm "
           " FROM apartament a, usluga u, list_app_usluga lau, tariff t "
           " WHERE a.id_apartament = lau.id_apartament "
           " AND u.id_usluga = lau.id_usluga "
           " AND t.id_usluga = u.id_usluga "
           " AND t.tariff_date = '%1' ";
-    str = str.arg(m_date.Second_first_day());
+    str = str.arg(m_date.Second_first_day(-1));
 
     QSqlQuery query;
     if (query.exec(str)){
@@ -49,7 +49,9 @@ void Fast_Calculation::fullCalc()
         QString t = calcOfService(result_tabl.at(i));
         result_tabl[i][6] = t;
     }
-    recordInDB_CredOfApart(result_tabl);
+    // resul_tabl таблица с данными по оплатам
+
+    recordInDB_CredOfApart(result_tabl); //запись в БД
     calcOfDebt(); // Расчёт долга
 }
 
@@ -174,7 +176,6 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
 
     str = str +
             " SELECT "
-            " NULL AS 'id_credited_of_apartament', "
             " '" + QString::number(list.at(0)) + "' AS 'id_apartament', "
             " '" + QString::number(m_date.Second_first_day()) + "' AS 'date_credited_of_apartament', "
             " '" + hash_tabl.value(list.at(0)).at(0) + "' AS 'credited_with_counter', "
@@ -183,14 +184,12 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
     for (int i=1;i<list.size();i++){
         str = str +
             " UNION SELECT "
-            " NULL, "
             " '" + QString::number(list.at(i)) + "', "
             " '" + QString::number(m_date.Second_first_day()) + "', "
             " '" + hash_tabl.value(list.at(i)).at(0) + "', "
             " '" + hash_tabl.value(list.at(i)).at(1) + "' ";
     }
-    BD db;
-    db.QueryExecute(str);
+    BD::QueryExecute(str);
 
     str = "";
     for (int i=0;i<table.size();i++){
@@ -213,32 +212,34 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
                 .arg(m_date.Second_first_day())
                 .arg(table.at(i).at(6));
     }
-    db.QueryExecute(str);
+    BD::QueryExecute(str);
 }
 
 void Fast_Calculation::calcOfDebt()
 {
     QString str;
+    DateOfUnixFormat date(m_date.year(),m_date.month(),25);
 
-    str =
-    " INSERT OR REPLACE INTO 'debt' (debt) "
-    " SELECT "
-            " d.debt + credited_with_counter + CASE "
-                " WHEN  (EXISTS( SELECT payment FROM payment WHERE payment_date >= '%1' AND payment_date <= '%2'))"
-                    " THEN (SELECT SUM(payment) FROM payment WHERE payment_date >= '%1' AND payment_date <= '%2')"
-                    " ELSE '0'"
-                " END as pay"
-    " FROM debt d, credited_of_apartament coa, payment p "
-    " WHERE  d.date_debt = '%1'"
-        " AND date_credited_of_apartament = '%2'"
-        " AND d.id_apartament = coa.id_apartament"
-        " AND d.id_apartament = p.id_apartament"
-    " GROUP BY pay";
+    str = " INSERT OR REPLACE INTO 'debt' (date_debt, id_apartament, debt) "
+          " SELECT  '%4', d.id_apartament, d.debt + "
+                        " credited_with_counter + "
+                        " credited_out_counter - "
+                        " CASE  WHEN  (EXISTS( "
+                            " SELECT payment FROM payment "
+                            " WHERE payment_date >= '%1' AND payment_date <= '%2')) "
+                            " THEN (SELECT SUM(payment) "
+                                    " FROM payment "
+                                    " WHERE payment_date >= '%1' AND payment_date <= '%2')"
+                            " ELSE '0' END "
+           " FROM debt d, credited_of_apartament coa "
+           " WHERE  d.date_debt = '%3' "
+           " AND date_credited_of_apartament = '%4' "
+           " AND d.id_apartament = coa.id_apartament ";
 
-    str = str.arg(m_date.Second_first_day(-1))
+    str = str.arg(date.Second(-1))
+            .arg(date.Second())
+            .arg(m_date.Second_first_day(-1))
             .arg(m_date.Second_first_day());
-
-    qDebug() << str;
 
     BD::QueryExecute(str);
 }
@@ -264,7 +265,7 @@ QString Fast_Calculation::Debt(int id_apart, DateOfUnixFormat date)
     QString debt;
     QString out= "" ;
 
-    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%3";
+    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";
     str = str.arg(date.Second())
             .arg(id_apart);
     BD::SelectFromTable(str,&debt);
@@ -284,7 +285,7 @@ double Fast_Calculation::mDebt(int idApart, qint64 uDate)
     QString str;
     QString debt;
 
-    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%3";
+    str="SELECT debt FROM debt WHERE  date_debt=%1 AND id_apartament=%2";
     str = str.arg(uDate)
             .arg(idApart);
     BD::SelectFromTable(str,&debt);
