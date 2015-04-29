@@ -86,6 +86,8 @@ private:
     int p_id_pokazanie;
     int p_pokazanie;
     void Refresh_lbl_Payer();
+    int isIdSelectHome();
+    int isIdSelectOrganiztion();
 
 private slots:
     void sl_Admin_mod();

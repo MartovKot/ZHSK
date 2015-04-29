@@ -154,51 +154,32 @@ MainWindow::~MainWindow()
 
 void MainWindow::sl_Admin_mod()
 {
-
-//    AdmWin = new AdminWindow(this);
-//    AdmWin->setPalette(this->palette());
-//    connect(AdmWin,SIGNAL(finished(int)),SLOT(sl_AdminWinClose()));
-//    AdmWin->show();
+    ui->frame_admin->setHidden(false);
+    ui->frame_obrabotka->setHidden(true);
 }
 
 void MainWindow::sl_Oper_mod()
 {
-//    OperWin = new OperWindow(this);
-//    OperWin->setPalette(this->palette());
-
-//    connect(OperWin,SIGNAL(finished(int)),SLOT(sl_OperWinClose()));
-
-//    if (isIdSelectOrganiztion() == -1){
-//        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-//                             trUtf8("Не выбрана организация"),QMessageBox::Ok);
-//        return;
-//    }
-//    if (isIdSelectHome() == -1){
-//        QMessageBox::warning(this,trUtf8("Не заполнены поля"),
-//                             trUtf8("Не выбран дом"),QMessageBox::Ok);
-//        return;
-//    }
-
-//    OperWin->set_parametr(isIdSelectOrganiztion(),isIdSelectHome());
-//    OperWin->setWindowTitle(ui->pBtnOper->text());
-//    OperWin->show();
+    ui->frame_admin->setHidden(true);
+    ui->frame_obrabotka->setHidden(false);
+    this->adjustSize();
 }
 
 void MainWindow::sl_Print_mod()
 {
-//    VwBlank = new ViewBlank(this);
+    VwBlank = new ViewBlank(this);
 
-//    QDate date;
-//    date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
-//    DateOfUnixFormat udate(date);
+    QDate date;
+    date.setDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
+    DateOfUnixFormat udate(date);
 
-//    Fast_Calculation fast_calculation(isIdSelectHome(),udate);
-//    fast_calculation.fullCalc();
+    Fast_Calculation fast_calculation(isIdSelectHome(),udate);
+    fast_calculation.fullCalc();
 
-//    VwBlank->setDate(QDate::currentDate().year(),QDate::currentDate().month());
-//    VwBlank->setInfo(isIdSelectHome(),isIdSelectOrganiztion());
-//    VwBlank->generate();
-//    VwBlank->show();
+    VwBlank->setDate(QDate::currentDate().year(),QDate::currentDate().month());
+    VwBlank->setInfo(isIdSelectHome(),isIdSelectOrganiztion());
+    VwBlank->generate();
+    VwBlank->show();
 }
 
 void MainWindow::sl_OpenArhiv()
@@ -1298,4 +1279,14 @@ int MainWindow::idCurrentCounter()
         return -1;
     }
     return ui->tblV_Count->model()->index(row,0).data().toInt(); //ID Показания Счётчика
+}
+
+int MainWindow::isIdSelectHome()
+{
+    return 0;
+}
+
+int MainWindow::isIdSelectOrganiztion()
+{
+    return 0;
 }
