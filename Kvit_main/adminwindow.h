@@ -1,59 +1,38 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef ADMINWINDOW_H
+#define ADMINWINDOW_H
 
-#include <QMainWindow>
-#include <QFile>
-#include <QDebug>
+#include <QDialog>
+#include <QMessageBox>
+#include <QSpacerItem>
+#include <QHBoxLayout>
+#include <QLineEdit>
+#include <QSqlError>
+#include <QHeaderView>
 
-#include <QImageReader>
-#include <QProgressDialog>
-#include <QComboBox>
-#include <QKeyEvent>
-#include <QCalendarWidget>
-
-#include "viewblank.h"
-#include "bd.h"
 #include "table_tariff.h"
 #include "editsetting.h"
 #include "selecter_with_combobox.h"
 #include "myitemdelegate.h"
 #include "dateofunixformat.h"
-#include "organization.h"
 #include "apartment.h"
 #include "modelusliga.h"
 #include "dialog_with_lineedit.h"
-#include "tableviewpokazanie.h"
-#include "table_payment.h"
-#include "newcounter.h"
-#include "home.h"
-#include "editindicationscounter.h"
 #include "settings.h"
-#include "fast_calculation.h"
 
 namespace Ui {
-    class MainWindow;
+    class AdminWindow;
 }
 
-class MainWindow : public QMainWindow
+class AdminWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    void setVersion(QString ver);
+    explicit AdminWindow(QWidget *parent = 0);
+    ~AdminWindow();
 
 private:
-    int HomeID;
-    int OrganizationID;
-    Ui::MainWindow *ui;
-    ViewBlank *VwBlank;
-    Selecter_with_ComboBox *dlgSelCmBx_org;
-    Selecter_with_ComboBox *dlgSelCmBx_home;
-    BD db;
-    QString CurentDirArhiv;
-    QString Version;
-
+    Ui::AdminWindow *ui;
     table_tariff tbl_tariff;
 
     void Mode (QString m);
@@ -69,36 +48,15 @@ private:
     void Refresh_Uslugi();
     void Refresh_Pensioner();
 
-    void Refresh_tblV_on_Uslugi();
-
     QList<QHBoxLayout> list;
     QDialog *dlg;
     QLineEdit *lEd_tarif;
     QLineEdit *lEd_tarif2;
     QLineEdit *lEd_norm;
-    Apartment *apartment_for_apartment;
-
-    void Refresh_tblVPayment(int id_apartment);
-    void Refresh_tblVCount();
-    void Refresh_LabelPayAndDebt();
-
-    TableViewPokazanie *tbl;
-    int p_id_pokazanie;
-    int p_pokazanie;
-    void Refresh_lbl_Payer();
 
 private slots:
-    void sl_Admin_mod();
-    void sl_Oper_mod();
-    void sl_Print_mod();
-    void sl_ArhivKvit();  //Архив квитанций
-    void sl_setCurDirArh(QString CurDir);
-    void sl_OpenArhiv();
-    void sl_Refresh_tblVCount();
-    void sl_RefreshFull();
-    int idCurrentCounter();
-
     void Refresh_Settings();
+    void Refresh_tblV_on_Uslugi();
     void sl_AddOrg();                                  // добавление организации
     void AddHome();                                    // добавление дома
     void sl_AddUsluga(const QString &usluga, const int &id_type_usluga);
@@ -106,7 +64,6 @@ private slots:
     void Refresh_cmbNumApp_onUslugi();
     void Refresh_cmBx_NumApp_onApartament();
     void Refresh_tblView_Apartament();
-    void TarifRequest();
     void TarifEdit();
     void SaveTarif();
     void FillTarif();
@@ -135,30 +92,8 @@ private slots:
     void on_cmBx_NumAp_on_Uslugi_activated(const QString &arg1);
     void on_pBtnAddUsluga_clicked();
     void on_pBtnDeleteUsluga_clicked();
-    void sl_addPayment();
-
-
-    void sl_EditPokazanie();
-    void sl_DeletePayment();
-    void sl_Calendar();
-
-    void sl_ApartFirst();
-    void sl_ApartLast();
-    void sl_ApartNext();
-    void sl_ApartPrevious();
-    void sl_NewCounter();               //вызывается когда происходит смена счётчика
-    void sl_Refresh_cmBx_NumApartanent();
-
-    void on_pBtn_NewCounterNext_clicked();
-
-    void on_tBtn_org_clicked();
-
-    void on_tBtn_Home_clicked();
-
-    void on_cmBx_NumApartanent_currentIndexChanged(const QString &arg1);
-
-protected:
-    void keyPressEvent(QKeyEvent *event);
+    void on_pBtnMassOperation_clicked();
+    void on_pBtn_Tarif_request_clicked();
 };
 
-#endif // MAINWINDOW_H
+#endif // ADMINWINDOW_H

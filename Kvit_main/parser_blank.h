@@ -8,15 +8,17 @@
 #include <QDateTime>
 #include <QMessageBox>
 #include <QProgressDialog>
-#include <QSqlQueryModel>
+#include <QThread>
 
 #include "bd.h"
 #include "table_tariff.h"
 #include "dateofunixformat.h"
 
-#include "organization.h"
 #include "home.h"
 #include "apartment.h"
+#include "fast_calculation.h"
+#include "service.h"
+#include "indications.h"
 
 class parser_blank :public QWidget
 {

@@ -10,26 +10,55 @@ class Apartment: public QObject
 {
     Q_OBJECT
 public:
-    explicit Apartment();
-    explicit Apartment(int id_home,int id_org,int number);
+    explicit Apartment(int id_home,int id_org,int number, QObject *parent = 0);
+    explicit Apartment(int id_apartment, QObject *parent = 0);
+    ~Apartment();
+
+    static QSqlQueryModel *ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
+    static QSqlQueryModel *ModelAllApartmentNumFIO(int id_home, int id_org);
+
+    static QSqlQueryModel *ModelPensionerLivingAlone(int id_home, int id_org);
+    static bool New(int id_home, int id_org, int number);
+    QAbstractItemModel* ModelOneApartment();     //модель для квартиры
 
     int getId() const;
-    bool New(int id_home, int id_org, int number);
-    void setIdAndNum(int id_home, int id_org, int number);
-    static QSqlQueryModel* ModelAllApartment(int id_home, int id_org); //модель квартир для ComboBox
-    QAbstractItemModel* ModelOneApartment(int id);     //модель для квартиры
+    int getNumber() const;
+
     void DeleteApartment();
     QString is_FIO_payer() const;
-//    static QStringList AllApartmentNumber(int id_org, int id_home);
+    double getTotalArea() const;
+    double getLivedArea() const;
+    double getBalkon() const;
+    double getLodjia() const;
+    int getPersonalAccount() const;  //возвращает лицевой счёт квартиры
+    QList<int> getListIdServiceWithCounter();
+    QList<int> getListIdServiceOutCounter();
+    QList<int> getListIdServiceFull();                              //Возвращает список ид услуг по квартире
+    int getRealMen(DateOfUnixFormat date) const;                     //возвращает количество проживающих.
+    int getRentMen(DateOfUnixFormat date) const;                     //возвращает количество снимающих
+    int getReservMen(DateOfUnixFormat date) const;                   //возвращает количество на брони
+
+
+    bool getIslivingAlonePensioner() const;
+    void setIslivingAlonePensioner(bool value);
+
+    bool deleteService(QString nameService);
+    int isIdListApartamentServise(QString nameService);
+    int isIdListApartamentServise(int idService);
 
 private:
-    BD db;
     int m_id;
     int m_number;
     void UpdateApartament(QStringList column,QStringList value, int idapart);   //Обновление таблицы с квартирами
     void UpdateApartament(QString column,QString value, int idapart);           //Обновление таблицы с квартирами
     void UpdateMenInApartment(QString column,QString value, int idapart);
     void AddLineMenInApartment(int id_apartment);
+    int getMenInApartment(QString typeofuse,DateOfUnixFormat date) const;
+    void setDefault();
+    bool islivingAlonePensioner;
+    bool isPensionerLivingAlone();
+    QSqlError setNoPensionerLivingAlone();
+    QSqlError setYesPensionerLivingAlone();
 
 private slots:
     void sl_ModelApartamentHeaderData(QAbstractTableModel* t);

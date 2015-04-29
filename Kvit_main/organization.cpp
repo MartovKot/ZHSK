@@ -1,17 +1,43 @@
 #include "organization.h"
 
-Organization::Organization()
+Organization::Organization(const QString &name,QObject *parent):
+    QObject(parent)
 {
-    m_id = -1;
-    m_name = "";
-    m_bank = "";
-    m_sett_account = "";
-    m_inn = "";
+    QString id;
+    BD::SelectFromTable("SELECT id_organiz FROM organiz WHERE name = '" + name + "'",&id);
+    if (id.toInt() == -1){
+        setDefault();
+        return;
+    }
+    m_id = id.toInt();
+
+    m_name = name;
+
+    BD::SelectFromTable("SELECT bank FROM organiz WHERE name = '" + name + "'",&m_bank);
+    BD::SelectFromTable("SELECT sett_account FROM organiz WHERE name = '" + name + "'",&m_sett_account);
+    BD::SelectFromTable("SELECT inn FROM organiz WHERE name = '" + name + "'",&m_inn);
+
+
 }
 
-Organization::Organization(int id_apartament)
+Organization::Organization(int id,QObject *parent):
+    QObject(parent)
 {
-    setId( db.SelectFromTable("SELECT id_organiz FROM apartament WHERE id_apartament = "+QString::number(id_apartament)).toInt() );
+    BD::SelectFromTable("SELECT name FROM organiz WHERE id_organiz = "+QString::number(id),&m_name);
+    if(m_name == ""){
+        setDefault();
+        return;
+    }
+    BD::SelectFromTable("SELECT bank FROM organiz WHERE id_organiz = "+QString::number(id),&m_bank);
+    BD::SelectFromTable("SELECT sett_account FROM organiz WHERE id_organiz = "+QString::number(id),&m_sett_account);
+    BD::SelectFromTable("SELECT inn FROM organiz WHERE id_organiz = "+QString::number(id),&m_inn);
+
+    m_id = id;
+}
+
+Organization::~Organization()
+{
+
 }
 
 bool Organization::New(QString name, QString bank, QString sett_account, QString inn)
@@ -20,13 +46,13 @@ bool Organization::New(QString name, QString bank, QString sett_account, QString
 
     column << "name" << "bank" << "sett_account" << "inn";
     value << name << bank << sett_account << inn;
-    if (db.add("organiz",column,value) != 0){
+    if (BD::add("organiz",column,value).number() != 0){
         return false;
     }
     return true;
 }
 
-QSqlQueryModel* Organization::ModelAllOrganization()
+QSqlQueryModel *Organization::ModelAllOrganizationFull()
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     model->setQuery(QSqlQuery("SELECT id_organiz, name, bank,sett_account, inn  FROM organiz"));
@@ -40,69 +66,53 @@ QSqlQueryModel* Organization::ModelAllOrganization()
     return model;
 }
 
-QSqlQueryModel* Organization::ModelAllOrganizationOnlyName()
+QSqlQueryModel *Organization::ModelAllOrganizationName()
 {
     QSqlQueryModel *model = new QSqlQueryModel;
     model->setQuery(QSqlQuery("SELECT name FROM organiz"));
 
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("Организация"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Организация"));
 
     return model;
 }
 
-QString Organization::getBank()
-{
-    return m_bank + " " + m_sett_account;
-}
-
-QString Organization::getName()
-{
-    return m_name;
-}
-
-QString Organization::getINN()
-{
-    return m_inn;
-}
-int Organization::getId()
+int Organization::getId() const
 {
     return m_id;
 }
 
-void Organization::setId(int id)
-{
-    m_name = db.SelectFromTable("SELECT name FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
-    m_bank = db.SelectFromTable("SELECT bank FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
-    m_sett_account = db.SelectFromTable("SELECT sett_account FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
-    m_inn = db.SelectFromTable("SELECT inn FROM organiz WHERE id_organiz = "+QString::number(id)).toString();
-    m_id = id;
-}
-
-void Organization::setName(QString NameOrganization)
-{
-    QVariant anydata;
-    m_name = NameOrganization;
-    m_bank = db.SelectFromTable("SELECT bank FROM organiz WHERE name = '" + NameOrganization + "'").toString();
-    m_sett_account = db.SelectFromTable("SELECT sett_account FROM organiz WHERE name = '" + NameOrganization + "'").toString();
-    m_inn = db.SelectFromTable("SELECT inn FROM organiz WHERE name = '" + NameOrganization + "'").toString();
-
-    anydata = db.SelectFromTable("SELECT id_organiz FROM organiz WHERE name = '" + NameOrganization + "'");
-    if(!anydata.isValid()){
-        m_id = -1;
-    }else{
-        m_id = anydata.toInt();
-    }
-}
-
 void Organization::deleteFromDB()
 {
-    db.DeleteLine("organiz","id_organiz", m_id);
+    BD::DeleteLine("organiz","id_organiz", m_id);
 }
 
 void Organization::Update(QString name, QString bank, QString acc, QString inn)
 {
-    db.UpdateTable("organiz", "name", name, "id_organiz", QString::number(m_id));
-    db.UpdateTable("organiz", "bank", bank, "id_organiz", QString::number(m_id));
-    db.UpdateTable("organiz", "sett_account", acc, "id_organiz", QString::number(m_id));
-    db.UpdateTable("organiz", "inn", inn, "id_organiz", QString::number(m_id));
+    BD::UpdateTable("organiz", "name", name, "id_organiz", QString::number(m_id));
+    BD::UpdateTable("organiz", "bank", bank, "id_organiz", QString::number(m_id));
+    BD::UpdateTable("organiz", "sett_account", acc, "id_organiz", QString::number(m_id));
+    BD::UpdateTable("organiz", "inn", inn, "id_organiz", QString::number(m_id));
+}
+QString Organization::inn() const
+{
+    return m_inn;
+}
+
+QString Organization::bank() const
+{
+    return m_bank + " " + m_sett_account;
+}
+
+QString Organization::name() const
+{
+    return m_name;
+}
+
+void Organization::setDefault()
+{
+    m_id = -1;
+    m_name = "";
+    m_bank = "";
+    m_sett_account = "";
+    m_inn = "";
 }

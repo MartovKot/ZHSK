@@ -1068,7 +1068,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="tabsClosable">
          <bool>false</bool>
@@ -1367,36 +1367,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="lbl_HomeSelect">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pBtn_HomeSelect">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Выбрать</string>
-               </property>
-              </widget>
+              <widget class="QComboBox" name="cmBx_Home_on_Apartment"/>
              </item>
             </layout>
            </item>
@@ -1419,36 +1390,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="lbl_OrgSelect">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pBtn_OrgSelect">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Выбрать</string>
-               </property>
-              </widget>
+              <widget class="QComboBox" name="cmBx_Org_on_Apartment"/>
              </item>
             </layout>
            </item>

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "bd.h"
+#include "settings.h"
 
 namespace Ui {
 class EditSetting;
@@ -17,14 +18,12 @@ public:
     ~EditSetting();
     void setNameSetting(QString NameSetting);
 
-
 private slots:
     void on_buttonBox_accepted();
 
 private:
     Ui::EditSetting *ui;
     QString  name_setting;
-    BD db;
 signals:
     void s_Ok();
 };

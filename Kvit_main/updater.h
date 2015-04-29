@@ -12,10 +12,12 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 #include <QTimer>
-#include "bd.h"
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+
+#include "bd.h"
+#include "settings.h"
 
 class Updater : public QWidget
 {
@@ -33,7 +35,7 @@ private:
     QNetworkAccessManager m_manager_download;
     QNetworkAccessManager *m_manager_json;
     QFile *file;
-    QProgressDialog *progressDialog;
+    QProgressDialog progressDialog;
     bool httpRequestAborted;
     BD db;
 

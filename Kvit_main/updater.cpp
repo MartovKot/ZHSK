@@ -5,10 +5,10 @@ Updater::Updater(QWidget *parent) :
     QWidget(parent)
 {
     //настройки прокси вынести отдельно
-    if (db.isValueSetting("proxy_HostName") != "" || db.isValueSetting("proxy_Port") != ""){
+    if (Settings::Value("proxy_HostName") != "" || Settings::Value("proxy_Port") != ""){
         proxy.setType(QNetworkProxy::HttpProxy);
-        proxy.setHostName(db.isValueSetting("proxy_HostName"));
-        proxy.setPort(db.isValueSetting("proxy_Port").toInt());
+        proxy.setHostName(Settings::Value("proxy_HostName"));
+        proxy.setPort(Settings::Value("proxy_Port").toInt());
         m_manager_download.setProxy(proxy);
     }
     //
@@ -29,7 +29,7 @@ Updater::~Updater()
 void Updater::RunUpdate()
 {
     QString m_url = "https://api.github.com/repos/MartovKot/ZHSK/releases";
-    progressDialog = new QProgressDialog(this);
+//    progressDialog = new QProgressDialog(this);
     m_manager_json = new QNetworkAccessManager(this);
 
     m_manager_json->setProxy(proxy);
@@ -125,8 +125,8 @@ void Updater::downloadFile(QUrl url)
         return;
     }
 
-    progressDialog->setWindowTitle(tr("HTTP"));
-    progressDialog->setLabelText(tr("Downloading %1.").arg(fileName));
+    progressDialog.setWindowTitle(tr("HTTP"));
+    progressDialog.setLabelText(tr("Downloading %1.").arg(fileName));
 
     // schedule the request
     httpRequestAborted = false;
@@ -140,7 +140,7 @@ void Updater::startRequest(QUrl url)
 //    QFileInfo fileInfo(m_url.path());
 //    QString fileName = fileInfo.fileName();
 
-    progressDialog->open();
+    progressDialog.open();
     reply_download = m_manager_download.get(QNetworkRequest(url));
 
     connect(reply_download, SIGNAL(finished()),
@@ -163,11 +163,11 @@ void Updater::httpFinished()  //Завершение загрузки
             file = 0;
         }
         reply_download->deleteLater();
-        progressDialog->hide();
+        progressDialog.hide();
         return;
     }
 
-    progressDialog->hide();
+    progressDialog.hide();
     file->flush();
     file->close();
 
@@ -222,8 +222,8 @@ void Updater::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
 {
     if (httpRequestAborted)
         return;
-    progressDialog->setMaximum(totalBytes);
-    progressDialog->setValue(bytesRead);
+    progressDialog.setMaximum(totalBytes);
+    progressDialog.setValue(bytesRead);
 }
 
 #ifndef QT_NO_SSL

@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QAbstractButton>
 
-#include "bd.h"
+#include "service.h"
 
 namespace Ui {
 class Dialog_with_LineEdit;
@@ -20,7 +20,6 @@ public:
 
 private:
     Ui::Dialog_with_LineEdit *ui;
-    BD db;
 
 signals:
     void sgn_string(QString str,int id_type_usluga);
