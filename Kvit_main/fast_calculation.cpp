@@ -34,24 +34,36 @@ void Fast_Calculation::fullCalc()
           " AND u.id_usluga = lau.id_usluga "
           " AND t.id_usluga = u.id_usluga "
           " AND t.tariff_date = '%1' ";
-    str = str.arg(m_date.Second_first_day(-1));
+    str = str.arg(m_date.Second_first_day());
+    qDebug() << str;
 
     QSqlQuery query;
     if (query.exec(str)){
+        qDebug() << "start";
         while (query.next()){
+            qDebug() << "test";
             QStringList list;
-            list << query.value(0).toString() << query.value(1).toString() << query.value(2).toString()
-                 << query.value(3).toString() << query.value(4).toString() << query.value(5).toString() << "";
+            list << query.value(0).toString() << query.value(1).toString();
+            if(query.value(1).toInt() != '1'){
+                list << query.value(2).toString();
+            }else{
+                list << QString::number(table_tariff::is_Tariff(query.value(1).toInt(),m_date.Second_first_day(-1)));
+            }
+            list << query.value(3).toString() << query.value(4).toString() << query.value(5).toString() << "";
+            qDebug() << list.size();
             result_tabl.append(list);
         }
+    }else{
+        qDebug() << query.lastError();
     }
 
     for(int i=0;i<result_tabl.size();i++){
         QString t = calcOfService(result_tabl.at(i));
         result_tabl[i][6] = t;
     }
-    qDebug() << result_tabl[0];
+//    qDebug() << result_tabl[0];
     // resul_tabl таблица с данными по оплатам
+    qDebug() << "z" << result_tabl.size();
 
     recordInDB_CredOfApart(result_tabl); //запись в БД
     calcOfDebt(); // Расчёт долга
@@ -147,6 +159,7 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
 {
 
     QHash<int, QStringList> hash_tabl;
+    qDebug() << table.size() << table;
 
     for (int i=0;i<table.size();i++){
 
@@ -166,7 +179,7 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
             hash_tabl.insert(table.at(i).at(0).toInt(),val);
         }
     }
-
+    qDebug() << "t" << hash_tabl.size();
     if(hash_tabl.size() <= 0){
         return;
     }
@@ -191,6 +204,7 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
             " '" + hash_tabl.value(list.at(i)).at(0) + "', "
             " '" + hash_tabl.value(list.at(i)).at(1) + "' ";
     }
+    qDebug() << str;
     BD::QueryExecute(str);
 
     str = "";
@@ -244,7 +258,7 @@ void Fast_Calculation::calcOfDebt()
             .arg(date.Second())
             .arg(m_date.Second_first_day(-1))
             .arg(m_date.Second_first_day());
-    qDebug()<< str;
+//    qDebug()<< str;
 
 
     BD::QueryExecute(str);
@@ -259,8 +273,9 @@ double Fast_Calculation::AmountForServices(int id_apart, qint64 u_date)
           "WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
     str = str.arg(u_date)
             .arg(id_apart);
-    BD db;
-    db.SelectFromTable(str, &out);
+    BD::SelectFromTable(str, &out);
+
+    qDebug() << id_apart << out.toDouble() << u_date;
 
     return out.toDouble();
 }
