@@ -4,6 +4,7 @@ Fast_Calculation::Fast_Calculation(const int &id_home, DateOfUnixFormat date)
 {
     home = new Home(id_home,this);
     m_date = date;
+    qDebug()<< date;
 }
 
 
@@ -49,6 +50,7 @@ void Fast_Calculation::fullCalc()
         QString t = calcOfService(result_tabl.at(i));
         result_tabl[i][6] = t;
     }
+    qDebug() << result_tabl[0];
     // resul_tabl таблица с данными по оплатам
 
     recordInDB_CredOfApart(result_tabl); //запись в БД
@@ -225,11 +227,13 @@ void Fast_Calculation::calcOfDebt()
                         " credited_with_counter + "
                         " credited_out_counter - "
                         " CASE  WHEN  (EXISTS( "
-                            " SELECT payment FROM payment "
-                            " WHERE payment_date >= '%1' AND payment_date <= '%2')) "
+                            " SELECT payment FROM payment p"
+                            " WHERE payment_date >= '%1' AND payment_date <= '%2' "
+                                " AND p.id_apartament=d.id_apartament)) "
                             " THEN (SELECT SUM(payment) "
-                                    " FROM payment "
-                                    " WHERE payment_date >= '%1' AND payment_date <= '%2')"
+                                    " FROM payment p"
+                                    " WHERE payment_date >= '%1' AND payment_date <= '%2'"
+                                        " AND p.id_apartament=d.id_apartament)"
                             " ELSE '0' END "
            " FROM debt d, credited_of_apartament coa "
            " WHERE  d.date_debt = '%3' "
@@ -240,6 +244,8 @@ void Fast_Calculation::calcOfDebt()
             .arg(date.Second())
             .arg(m_date.Second_first_day(-1))
             .arg(m_date.Second_first_day());
+    qDebug()<< str;
+
 
     BD::QueryExecute(str);
 }
