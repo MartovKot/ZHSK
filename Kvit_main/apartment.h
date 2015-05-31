@@ -46,6 +46,8 @@ public:
     int isIdListApartamentServise(QString nameService);
     int isIdListApartamentServise(int idService);
 
+    int getIdOrganization() const;
+
 private:
     int m_id;
     int m_number;

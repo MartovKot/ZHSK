@@ -128,6 +128,7 @@ QSqlError BD::QueryExecute(QString str)
         qDebug() << "1098339a5e20736b5ba8f1eb1839f4ea" << query.lastError() << str;
     }
     return query.lastError();
+    qDebug()<<"";
 }
 
 QSqlError BD::add(QString table, QString column, QString value, int mode/*=0*/)

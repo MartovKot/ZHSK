@@ -4,7 +4,8 @@ Fast_Calculation::Fast_Calculation(const int &id_home, DateOfUnixFormat date)
 {
     home = new Home(id_home,this);
     m_date = date;
-    qDebug()<< date;
+//    qDebug()<< date;
+//    m_date.setDate(2015,05,31);
 }
 
 
@@ -34,23 +35,20 @@ void Fast_Calculation::fullCalc()
           " AND u.id_usluga = lau.id_usluga "
           " AND t.id_usluga = u.id_usluga "
           " AND t.tariff_date = '%1' ";
-    str = str.arg(m_date.Second_first_day());
-    qDebug() << str;
+    str = str.arg(m_date.Second_first_day(-1));
+
 
     QSqlQuery query;
     if (query.exec(str)){
-        qDebug() << "start";
         while (query.next()){
-            qDebug() << "test";
             QStringList list;
-            list << query.value(0).toString() << query.value(1).toString();
-            if(query.value(1).toInt() != '1'){
-                list << query.value(2).toString();
+            list << query.value(0).toString() << query.value(1).toString() << query.value(2).toString();;
+            if(query.value(2).toInt() == '1'){
+                list << query.value(3).toString();
             }else{
-                list << QString::number(table_tariff::is_Tariff(query.value(1).toInt(),m_date.Second_first_day(-1)));
+                list << QString::number(table_tariff::is_Tariff(query.value(1).toInt(),m_date.Second_first_day()));
             }
-            list << query.value(3).toString() << query.value(4).toString() << query.value(5).toString() << "";
-            qDebug() << list.size();
+            list << query.value(4).toString() << query.value(5).toString() << "";
             result_tabl.append(list);
         }
     }else{
@@ -60,10 +58,13 @@ void Fast_Calculation::fullCalc()
     for(int i=0;i<result_tabl.size();i++){
         QString t = calcOfService(result_tabl.at(i));
         result_tabl[i][6] = t;
+//        if (result_tabl[i][0].toInt() == 1){
+//            qDebug()<<result_tabl[i];
+//        }
     }
 //    qDebug() << result_tabl[0];
     // resul_tabl таблица с данными по оплатам
-    qDebug() << "z" << result_tabl.size();
+//    qDebug() << "z" << result_tabl.size();
 
     recordInDB_CredOfApart(result_tabl); //запись в БД
     calcOfDebt(); // Расчёт долга
@@ -158,17 +159,23 @@ QString Fast_Calculation::calcOfCounters(const QStringList &row)
 void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
 {
 
-    QHash<int, QStringList> hash_tabl;
-    qDebug() << table.size() << table;
+    QHash<int, QStringList> hash_tabl; //таблица ид квартиры оплата за счётчики, оплата за услуги
+
 
     for (int i=0;i<table.size();i++){
 
         QStringList val;
-        if(table.at(i).at(1).toInt() == 1){
+        //  Val суммирование значений к оплате
+        //  0 - для счётчиков
+        //  1 - для услуг без счётчиков
+        if(table.at(i).at(2).toInt() == 1){
             val << table.at(i).at(6) << "";
         }else{
             val << "" << table.at(i).at(6);
         }
+//        if(table.at(i).at(0).toInt() == 1){
+//            qDebug() << val;
+//        }
 
         if(hash_tabl.contains(table.at(i).at(0).toInt())){
             QStringList lst = hash_tabl.value(table.at(i).at(0).toInt());
@@ -179,11 +186,12 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
             hash_tabl.insert(table.at(i).at(0).toInt(),val);
         }
     }
-    qDebug() << "t" << hash_tabl.size();
+
     if(hash_tabl.size() <= 0){
         return;
     }
 
+    // запись в базу сумм к оплате за счётчики и усдуги
     QString str;
     str = "INSERT OR REPLACE INTO 'credited_of_apartament' ";
     QList<int> list;
@@ -204,15 +212,17 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
             " '" + hash_tabl.value(list.at(i)).at(0) + "', "
             " '" + hash_tabl.value(list.at(i)).at(1) + "' ";
     }
-    qDebug() << str;
     BD::QueryExecute(str);
 
     str = "";
     for (int i=0;i<table.size();i++){
-        if (table.at(i).at(2).toInt() == 1){
+        if (table.at(i).at(2).toInt() == 1){  //пропускаем счётчики
             continue;
         }
         Apartment apartament(table.at(i).at(0).toInt());
+//        if (apartament.getId() == 1){
+//            qDebug() << apartament.isIdListApartamentServise(table.at(i).at(1).toInt()) << m_date.Second_first_day() << table.at(i).at(6);
+//        }
         if (str == "") {
             str =
             " INSERT OR REPLACE INTO 'credited' (id_list_app_usluga,date_credited,credited_of_service) "
@@ -223,11 +233,12 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
             continue;
         }
 
-        str = str + " UNION SELECT %1, %2, %3 ";
-        str = str.arg(apartament.isIdListApartamentServise(table.at(i).at(1).toInt()))
-                .arg(m_date.Second_first_day())
-                .arg(table.at(i).at(6));
+        str = str + " UNION SELECT "
+                " '" + QString::number(apartament.isIdListApartamentServise(table.at(i).at(1).toInt())) + "', "
+                " '" + QString::number(m_date.Second_first_day()) + "', "
+                " '" + table.at(i).at(6) + "' ";
     }
+//    qDebug() << str;
     BD::QueryExecute(str);
 }
 
@@ -238,8 +249,8 @@ void Fast_Calculation::calcOfDebt()
 
     str = " INSERT OR REPLACE INTO 'debt' (date_debt, id_apartament, debt) "
           " SELECT  '%4', d.id_apartament, d.debt + "
-                        " credited_with_counter + "
-                        " credited_out_counter - "
+                        " coa.credited_with_counter + "
+                        " coa_old.credited_out_counter - "
                         " CASE  WHEN  (EXISTS( "
                             " SELECT payment FROM payment p"
                             " WHERE payment_date >= '%1' AND payment_date <= '%2' "
@@ -249,10 +260,12 @@ void Fast_Calculation::calcOfDebt()
                                     " WHERE payment_date >= '%1' AND payment_date <= '%2'"
                                         " AND p.id_apartament=d.id_apartament)"
                             " ELSE '0' END "
-           " FROM debt d, credited_of_apartament coa "
+           " FROM debt d, credited_of_apartament coa, credited_of_apartament coa_old "
            " WHERE  d.date_debt = '%3' "
-           " AND date_credited_of_apartament = '%4' "
-           " AND d.id_apartament = coa.id_apartament ";
+           " AND coa.date_credited_of_apartament = '%4' "
+           " AND d.id_apartament = coa.id_apartament "
+           " AND d.id_apartament = coa_old.id_apartament "
+           " AND coa_old.date_credited_of_apartament = '%3' ";
 
     str = str.arg(date.Second(-1))
             .arg(date.Second())
@@ -275,7 +288,7 @@ double Fast_Calculation::AmountForServices(int id_apart, qint64 u_date)
             .arg(id_apart);
     BD::SelectFromTable(str, &out);
 
-    qDebug() << id_apart << out.toDouble() << u_date;
+//    qDebug() << id_apart << out.toDouble() << u_date;
 
     return out.toDouble();
 }
@@ -291,10 +304,10 @@ QString Fast_Calculation::Debt(int id_apart, DateOfUnixFormat date)
             .arg(id_apart);
     BD::SelectFromTable(str,&debt);
 
-    if (debt.toDouble()>0.0){
+    if (debt.toDouble()>=0.01){
         out = QObject::trUtf8("Ваш долг составляет:  ")
                 + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
-    }else if(debt<0){
+    }else if(debt.toDouble()<=-0.01){
         out = QObject::trUtf8("Ваша переплата составляет:  ")
                 + QString::number(debt.toDouble(),'f',2) + QObject::trUtf8(" p. ");
     }
