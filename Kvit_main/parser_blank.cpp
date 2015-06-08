@@ -52,7 +52,7 @@ void parser_blank::creat_blank(QString name,const Apartment & apartment, QDate d
             name.replace(i, 1, " ");
         }
     }
-    QString  str_file;                          //имя выходного файла
+    QString  str_file;                           //имя выходного файла
     str_file = str_folder +"/" +name;
 
 
@@ -265,7 +265,7 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
     QString str_out;
     QStringList strL_find, strL_replace;
 
-    Organization organization(apartment.getId());
+    Organization organization(apartment.getIdOrganization());
     Home home(ConfData.Home_id);
 
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>551</width>
-    <height>515</height>
+    <width>659</width>
+    <height>577</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -191,7 +191,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="qrc.qrc">
             <normaloff>:/ico/leftendblue.ico</normaloff>:/ico/leftendblue.ico</iconset>
           </property>
           <property name="iconSize">
@@ -232,7 +232,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="qrc.qrc">
             <normaloff>:/ico/left_blue.ico</normaloff>:/ico/left_blue.ico</iconset>
           </property>
           <property name="iconSize">
@@ -276,7 +276,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="qrc.qrc">
             <normaloff>:/ico/right_blue.ico</normaloff>:/ico/right_blue.ico</iconset>
           </property>
           <property name="iconSize">
@@ -308,7 +308,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="qrc.qrc">
             <normaloff>:/ico/rightendblue.ico</normaloff>:/ico/rightendblue.ico</iconset>
           </property>
           <property name="iconSize">
@@ -378,7 +378,13 @@
       </property>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>10</number>
+        </property>
         <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
          <number>5</number>
         </property>
         <property name="rightMargin">
@@ -410,10 +416,10 @@
           <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
-             <x>60</x>
-             <y>10</y>
-             <width>531</width>
-             <height>190</height>
+             <x>10</x>
+             <y>40</y>
+             <width>710</width>
+             <height>256</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
@@ -556,7 +562,7 @@
                    <string/>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="qrc.qrc">
                     <normaloff>:/ico/base_calendar_32.png</normaloff>:/ico/base_calendar_32.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -740,6 +746,9 @@
         </property>
         <item>
          <widget class="QGroupBox" name="groupBox_2">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -868,6 +877,8 @@
   <tabstop>tblV_Count</tabstop>
   <tabstop>pBtn_EditPokazanie</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="qrc.qrc"/>
+ </resources>
  <connections/>
 </ui>

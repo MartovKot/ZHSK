@@ -6,6 +6,7 @@
 #include "dateofunixformat.h"
 #include "service.h"
 #include "home.h"
+#include "table_tariff.h"
 
 class Fast_Calculation: public QObject
 {

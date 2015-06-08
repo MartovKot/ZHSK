@@ -340,6 +340,19 @@ int Apartment::isIdListApartamentServise(int idService)
     return out.toInt();
 }
 
+int Apartment::getIdOrganization() const
+{
+    QString str;
+    QString out;
+
+    str = "SELECT id_organiz FROM apartament WHERE id_apartament=%1";
+    str = str.arg(m_id);
+
+    BD::SelectFromTable(str, &out);
+
+    return out.toInt();
+}
+
 
 void Apartment::DeleteApartment()
 {

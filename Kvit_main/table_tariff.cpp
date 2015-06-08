@@ -29,10 +29,34 @@ double table_tariff::is_Tariff(int usluga, QDate date, int tariff/*=1*/)
     str += "FROM tariff WHERE id_usluga=%2  AND tariff_date=%1 ";
     strF = str.arg(t_date.Second())
             .arg(usluga);
-    db.SelectFromTable(strF,&out);
+    BD::SelectFromTable(strF,&out);
 
     return QString::number(out.toDouble(),'f',2).toDouble();
 
+}
+
+double table_tariff::is_Tariff(int usluga, qint64 date, int tariff)
+{
+    QString str, strF;
+    QString out;
+//    DateOfUnixFormat t_date(date.year(),date.month(),1);
+
+    switch (tariff) {
+    case 1:
+        str = "SELECT tariff ";
+        break;
+    case 2:
+        str = "SELECT tariff2 ";
+        break;
+    default:
+        break;
+    }
+    str += "FROM tariff WHERE id_usluga=%2  AND tariff_date=%1 ";
+    strF = str.arg(date)
+            .arg(usluga);
+    BD::SelectFromTable(strF,&out);
+
+    return QString::number(out.toDouble(),'f',2).toDouble();
 }
 
 QSqlQueryModel* table_tariff::ModelTarifTabl(int year, int month)
@@ -60,9 +84,9 @@ QSqlQueryModel* table_tariff::ModelTarifTabl(int year, int month)
 //-----------------------------------------------------------------------------------------------------
 void table_tariff::UpdateTarif(QString tarif, QString tarif2, QString norma, int idtarif)
 {
-    db.UpdateTable("tariff","tariff",tarif,"id_tariff",QString::number(idtarif));
-    db.UpdateTable("tariff","tariff2",tarif2,"id_tariff",QString::number(idtarif));
-    db.UpdateTable("tariff","norm",norma,"id_tariff",QString::number(idtarif));
+    BD::UpdateTable("tariff","tariff",tarif,"id_tariff",QString::number(idtarif));
+    BD::UpdateTable("tariff","tariff2",tarif2,"id_tariff",QString::number(idtarif));
+    BD::UpdateTable("tariff","norm",norma,"id_tariff",QString::number(idtarif));
 }
 
 int table_tariff::FillTarif(int month, int year)
@@ -90,7 +114,7 @@ int table_tariff::FillTarif(int month, int year)
                   column << "tariff" <<"tariff2" <<"norm"<<"id_usluga"<<"tariff_date";
                   value << query.value(0).toString() << query.value(1).toString() << query.value(2).toString()
                            << query.value(3).toString() << QString::number(date.Second());
-                  db.add("tariff",column,value);
+                  BD::add("tariff",column,value);
               }
             } else{
                 qDebug()<<"02e81a7a2124e38f486e726ea5422e69"<<query2.lastError();
@@ -115,15 +139,15 @@ QSqlError table_tariff::AddLineTariffNewMonth(DateOfUnixFormat date)
 
     str = " SELECT COUNT() FROM tariff "
           " WHERE tariff_date = " + QString::number(date.Second());
-    db.SelectFromTable(str,&count_tariff);
+    BD::SelectFromTable(str,&count_tariff);
 
     str = "SELECT COUNT() FROM usluga";
-    db.SelectFromTable(str,&count_tariff_used);
+    BD::SelectFromTable(str,&count_tariff_used);
 
     if(count_tariff.toInt()== 0 || count_tariff_used.toInt()== 0 || count_tariff.toInt() != count_tariff_used.toInt() ){
         QString str2 = "INSERT OR IGNORE INTO tariff(id_usluga, tariff_date) SELECT id_usluga, %1 FROM usluga";
         str2 = str2.arg(QString::number(date.Second()));
-        error = db.QueryExecute(str2);
+        error = BD::QueryExecute(str2);
     }
 
     return error;
