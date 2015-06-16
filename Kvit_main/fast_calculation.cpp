@@ -58,13 +58,7 @@ void Fast_Calculation::fullCalc()
     for(int i=0;i<result_tabl.size();i++){
         QString t = calcOfService(result_tabl.at(i));
         result_tabl[i][6] = t;
-//        if (result_tabl[i][0].toInt() == 1){
-//            qDebug()<<result_tabl[i];
-//        }
     }
-//    qDebug() << result_tabl[0];
-    // resul_tabl таблица с данными по оплатам
-//    qDebug() << "z" << result_tabl.size();
 
     recordInDB_CredOfApart(result_tabl); //запись в БД
     calcOfDebt(); // Расчёт долга
@@ -115,11 +109,11 @@ QString Fast_Calculation::calcOfCounters(const QStringList &row)
     if (apartment.getIslivingAlonePensioner()){
         Service service(id_usluga);
         if (service.isElectro()){
-            norma = 75;
+            norma = "75";
         }else if(service.isElectroDay()){
-            norma = 55;
+            norma = "55";
         }else if(service.isElectroNight()){
-            norma = 20;
+            norma = "20";
         }
     }
 
@@ -173,10 +167,6 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
         }else{
             val << "" << table.at(i).at(6);
         }
-//        if(table.at(i).at(0).toInt() == 1){
-//            qDebug() << val;
-//        }
-
         if(hash_tabl.contains(table.at(i).at(0).toInt())){
             QStringList lst = hash_tabl.value(table.at(i).at(0).toInt());
             val[0] = QString::number(val.at(0).toDouble() + lst.at(0).toDouble());
@@ -220,9 +210,6 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
             continue;
         }
         Apartment apartament(table.at(i).at(0).toInt());
-//        if (apartament.getId() == 1){
-//            qDebug() << apartament.isIdListApartamentServise(table.at(i).at(1).toInt()) << m_date.Second_first_day() << table.at(i).at(6);
-//        }
         if (str == "") {
             str =
             " INSERT OR REPLACE INTO 'credited' (id_list_app_usluga,date_credited,credited_of_service) "
@@ -238,7 +225,6 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
                 " '" + QString::number(m_date.Second_first_day()) + "', "
                 " '" + table.at(i).at(6) + "' ";
     }
-//    qDebug() << str;
     BD::QueryExecute(str);
 }
 
@@ -271,8 +257,6 @@ void Fast_Calculation::calcOfDebt()
             .arg(date.Second())
             .arg(m_date.Second_first_day(-1))
             .arg(m_date.Second_first_day());
-//    qDebug()<< str;
-
 
     BD::QueryExecute(str);
 }
@@ -287,8 +271,6 @@ double Fast_Calculation::AmountForServices(int id_apart, qint64 u_date)
     str = str.arg(u_date)
             .arg(id_apart);
     BD::SelectFromTable(str, &out);
-
-//    qDebug() << id_apart << out.toDouble() << u_date;
 
     return out.toDouble();
 }
