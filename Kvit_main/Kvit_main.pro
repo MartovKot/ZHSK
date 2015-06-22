@@ -113,8 +113,12 @@ DISTFILES += \
     update_db/01_07_004.sql \
     update_db/01_07_005.sql \
     update_db/01_07_006.sql \
+    update_db/01_07_003.sql \
+    update_db/01_07_004.sql \
+    update_db/01_07_005.sql \
+    update_db/01_07_006.sql \
     blank/blank_main.html \
     blank/blank_s.html \
-    blank/blank_u.html
+    blank/blank_u.html \
 
 

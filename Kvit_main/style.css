@@ -89,12 +89,12 @@ QPushButton:hover, QToolButton:hover, QTabBar::tab:hover {
                                     stop: 0.6 rgba(113, 113, 113, 255),
                                     stop: 0.8 rgba(55, 55, 55, 255),
                                     stop: 1 rgba(15, 15, 15, 255));
-    border-left-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                                    stop: 0 rgba(200, 200, 200, 70),
-                                    stop: 0.2 rgba(210, 210, 210, 70),
-                                    stop: 0.4 rgba(220, 220, 220, 70),
-                                    stop: 0.6 rgba(210, 210, 210, 70),
-                                    stop: 0.8 rgba(195, 195, 195, 70),
+    border-right-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                    stop: 0 rgba(200, 200, 200, 100),
+                                    stop: 0.2 rgba(210, 210, 210, 100),
+                                    stop: 0.4 rgba(220, 220, 220, 100),
+                                    stop: 0.6 rgba(210, 210, 210, 100),
+                                    stop: 0.8 rgba(195, 195, 195, 100),
                                     stop: 1 rgba(150, 150, 150, 10));
 
     border-bottom-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -104,7 +104,7 @@ QPushButton:hover, QToolButton:hover, QTabBar::tab:hover {
                                     stop: 0.6 rgba(36, 36, 36, 255),
                                     stop: 0.8 rgba(37, 37, 37, 255),
                                     stop: 1 rgba(38, 38, 38, 255));
-    border-right-color: qlineargradient(x1: 1, y1: 0, x2: 0, y2: 0,
+    border-left-color: qlineargradient(x1: 1, y1: 0, x2: 0, y2: 0,
                                     stop: 0 rgba(0, 0, 0, 200),
                                     stop: 0.2 rgba(0, 0, 0, 190),
                                     stop: 0.4 rgba(0, 0, 0, 170),
