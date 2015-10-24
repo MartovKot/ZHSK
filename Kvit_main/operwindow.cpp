@@ -58,15 +58,15 @@ void OperWindow::Refresh_tblVPayment(int ApartamenID)
 
 void OperWindow::sl_addPayment()
 {
-    QString Payment;
+
     int day, month,year;
 
     Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
 
-    Payment = ui->lEd_Sum->text();
-    if (Payment == ""){
+    if (ui->lEd_Sum->text() == ""){
         return;
     }
+
     day = ui->dEd_Payment->date().day();
     month = ui->dEd_Payment->date().month();
     year = ui->dEd_Payment->date().year();
@@ -82,8 +82,14 @@ void OperWindow::sl_addPayment()
                              trUtf8("Уже изобрели машину времени? \nПроверте дату ;)"),QMessageBox::Ok);
         return;
     }
+    QString Payment;
+    Payment = ui->lEd_Sum->text().replace(",",".");
     Table_Payment t_payment;
-    t_payment.add_line(QString::number(apartment.getId()),QString::number(year),QString::number(month),QString::number(day),Payment);
+    t_payment.add_line(QString::number(apartment.getId()),
+                       QString::number(year),
+                       QString::number(month),
+                       QString::number(day),
+                       Payment);
 
     Refresh_tblVPayment(apartment.getId());
 }

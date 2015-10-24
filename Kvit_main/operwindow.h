@@ -60,7 +60,6 @@ private slots:
 
     void on_pBtn_NewCounterNext_clicked();
 
-
 protected:
     void keyPressEvent(QKeyEvent *event);
 

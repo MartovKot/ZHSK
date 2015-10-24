@@ -234,7 +234,7 @@ void Fast_Calculation::calcOfDebt()
     DateOfUnixFormat date(m_date.year(),m_date.month(),25);
 
     str = " INSERT OR REPLACE INTO 'debt' (date_debt, id_apartament, debt) "
-          " SELECT  '%4', d.id_apartament, d.debt + "
+          " SELECT  '%4', d.id_apartament, ROUND(d.debt,2) + "
                         " coa.credited_with_counter + "
                         " coa_old.credited_out_counter - "
                         " CASE  WHEN  (EXISTS( "
