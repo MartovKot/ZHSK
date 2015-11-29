@@ -109,9 +109,9 @@ QString Fast_Calculation::calcOfCounters(const QStringList &row)
     if (apartment.getIslivingAlonePensioner()){
         Service service(id_usluga);
         if (service.isElectro()){
-            norma = "75";
+            norma = "85";
         }else if(service.isElectroDay()){
-            norma = "55";
+            norma = "65";
         }else if(service.isElectroNight()){
             norma = "20";
         }
