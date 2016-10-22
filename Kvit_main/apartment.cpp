@@ -40,7 +40,6 @@ Apartment::Apartment(int id_apartment, QObject *parent):
 
 Apartment::~Apartment()
 {
-//    qDebug() << "delete" << this;
 }
 
 int Apartment::getId() const
@@ -110,151 +109,6 @@ QSqlQueryModel *Apartment::ModelPensionerLivingAlone(int id_home, int id_org)
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("ФИО"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("№ Квартиры"));
     return model;
-}
-
-QAbstractItemModel* Apartment::ModelOneApartment()
-{
-    EditApartmentModel *model = new EditApartmentModel;
-    DateOfUnixFormat date(QDate::currentDate());
-
-    model->setQuery(" SELECT "
-                        " max(mia.date_men_in_apartament),"
-                        " number, surname, name, patronymic, "
-                        " total_area, inhabed_area,balkon, loggia, personal_account, "
-                        " mia.real_men, mia.rent_men, mia.reserv_men"
-                        " FROM apartament a, men_in_apartament mia "
-                        " WHERE a.id_apartament = " + QString::number(m_id) + " AND "
-                        " mia.id_apartament = a.id_apartament "
-                        " AND mia.date_men_in_apartament <= " + QString::number(date.Second_first_day()) + " "
-                        " ORDER BY mia.date_men_in_apartament"
-                    );
-    model->removeColumn(0);
-    sl_ModelApartamentHeaderData(model);
-
-    connect(model,SIGNAL(sgn_EditApartament(int,QString)),this,SLOT(sl_EditApartament(int,QString)));
-
-    return model;
-
-}
-
-
-void Apartment::sl_ModelApartamentHeaderData(QAbstractTableModel *model)
-{
-    model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
-    model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Фамилия"));
-    model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Имя"));
-    model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Отчество"));
-    model->setHeaderData(4,Qt::Horizontal,QObject::trUtf8("Общ. Площадь"));
-    model->setHeaderData(5,Qt::Horizontal,QObject::trUtf8("Жил. Площадь"));
-    model->setHeaderData(6,Qt::Horizontal,QObject::trUtf8("Балкон"));
-    model->setHeaderData(7,Qt::Horizontal,QObject::trUtf8("Лоджия"));
-    model->setHeaderData(8,Qt::Horizontal,QObject::trUtf8("Личн. счёт"));
-    model->setHeaderData(9,Qt::Horizontal,QObject::trUtf8("Проживает"));
-    model->setHeaderData(10,Qt::Horizontal,QObject::trUtf8("Снимает"));
-    model->setHeaderData(11,Qt::Horizontal,QObject::trUtf8("Бронь"));
-
-}
-
-void Apartment::sl_EditApartament(int col,QString val)
-{
-    switch(col){
-    case 0:
-        UpdateApartament("number",val,m_id);
-        break;
-    case 1:
-        UpdateApartament("surname",val,m_id);
-        break;
-    case 2:
-        UpdateApartament("name",val,m_id);
-        break;
-    case 3:
-        UpdateApartament("patronymic",val,m_id);
-        break;
-    case 4:
-        UpdateApartament("total_area",val,m_id);
-        break;
-    case 5:
-        UpdateApartament("inhabed_area",val,m_id);
-        break;
-    case 6:
-        UpdateApartament("balkon",val,m_id);
-        break;
-    case 7:
-        UpdateApartament("loggia",val,m_id);
-        break;
-    case 8:
-        UpdateApartament("personal_account",val,m_id);
-        break;
-    case 9:
-        UpdateMenInApartment("real_men",val,m_id);
-        break;
-    case 10:
-        UpdateMenInApartment("rent_men",val,m_id);
-        break;
-    case 11:
-        UpdateMenInApartment("reserv_men",val,m_id);
-        break;
-    }
-
-    emit sgn_EditModel();
-}
-
-void Apartment::UpdateApartament(QStringList column, QStringList value, int idapart)
-{
-    for(int i=0; i<column.count();i++ ){
-        BD::UpdateTable("apartament",column[i],value[i],"id_apartament", QString::number(idapart));
-    }
-}
-
-void Apartment::UpdateApartament(QString column, QString value, int idapart)
-{
-    BD::UpdateTable("apartament",column,value,"id_apartament", QString::number(idapart));
-}
-
-void Apartment::UpdateMenInApartment(QString column, QString value, int idapart)
-{
-    QString str;
-    DateOfUnixFormat date(QDate::currentDate());
-
-
-    str = "SELECT COUNT(*) FROM men_in_apartament WHERE id_apartament = %1 AND date_men_in_apartament = %2";
-    str = str.arg(idapart)
-            .arg(date.Second_first_day());
-
-    QString count = 0;
-    BD::SelectFromTable(str,&count);
-
-    if (count.toInt() == 0){//если записей за текущий месяц нету
-        AddLineMenInApartment(idapart); //добавим запись
-    }
-    BD::UpdateTable("men_in_apartament",column,value,
-                   "date_men_in_apartament",QString::number(date.Second_first_day()),
-                   "id_apartament", QString::number(idapart));
-
-}
-void Apartment::AddLineMenInApartment(int id_apartment)
-{
-    QString str;
-    DateOfUnixFormat date_now(QDate::currentDate());
-
-    str = "SELECT max(date_men_in_apartament) FROM men_in_apartament WHERE id_apartament = %1";
-    str = str.arg(id_apartment);
-    QString date;
-    BD::SelectFromTable(str,&date);
-    QString str2;
-
-    str2 = " INSERT INTO men_in_apartament (id_apartament, real_men, rent_men, reserv_men, date_men_in_apartament ) "
-            " SELECT id_apartament, real_men, rent_men, reserv_men, %1 "
-            " FROM men_in_apartament"
-            " WHERE date_men_in_apartament = %2 AND id_apartament = %3";
-
-    str2 = str2.arg(QString::number(date_now.Second_first_day()))
-            .arg(date)
-            .arg(id_apartment);
-    BD::QueryExecute(str2);
-//    }else{
-//        qDebug() << "need add code";
-    //    }
 }
 
 int Apartment::getMenInApartment(QString typeofuse, DateOfUnixFormat date) const
@@ -379,6 +233,23 @@ double Apartment::getTotalArea() const
     QString out;
 
     str = "SELECT total_area FROM apartament WHERE id_apartament=%1";
+    str = str.arg(m_id);
+
+    BD::SelectFromTable(str,&out);
+
+    return out.toDouble();
+}
+
+double Apartment::getHeatedArea() const
+{
+    QString str;
+    QString out;
+
+    str = "SELECT total_area + balkon * heated FROM \
+            (SELECT total_area, balkon, CASE WHEN hl.id_apartament IS NULL THEN 0 ELSE 1 END as heated \
+            FROM apartament a \
+            LEFT JOIN heated_loggia hl ON hl.id_apartament = a.id_apartament  \
+            WHERE a.id_apartament = %1)";
     str = str.arg(m_id);
 
     BD::SelectFromTable(str,&out);

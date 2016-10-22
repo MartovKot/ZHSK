@@ -18,6 +18,7 @@
 #include "modelusliga.h"
 #include "dialog_with_lineedit.h"
 #include "settings.h"
+#include "modelapartament.h"
 
 namespace Ui {
     class AdminWindow;

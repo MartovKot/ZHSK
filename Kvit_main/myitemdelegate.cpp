@@ -1,6 +1,7 @@
 #include "myitemdelegate.h"
 #include <QLineEdit>
 #include <QRegExp>
+#include <QDebug>
 
 MyItemDelegate::MyItemDelegate(QObject *parent)
     : QItemDelegate (parent)

@@ -3,9 +3,9 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "ZHSK"
-!define PRODUCT_VERSION "1.7.9.3"
+!define PRODUCT_VERSION "1.7.9.4"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kvit.exe"
-!define QT_INSTALL "D:\Qt\Qt5.4.1\5.4\mingw491_32"
+!define QT_INSTALL "E:\Qt\Qt5.5.1\5.5\mingw492_32"
 ;!define QT_INSTALL "E:\Qt\Qt5.4.0\5.4\mingw491_32"
 
 ; MUI 1.67 compatible ------
@@ -89,7 +89,7 @@ Section "zhsk" SEC01
 ;File "D:\Qt-project\build-Kvit_main-Desktop_Qt_5_2_1_MinGW_32bit-Release\release\kvit.exe"
   ;File "E:\QT-sourse\build-Kvit_main-Desktop_Qt_5_3_MinGW_32bit-Release\release\kvit.exe"
 ;  File "E:\QT-sourse\build-ZHSK-Desktop_Qt_5_4_0_MinGW_32bit-Release\Kvit_main\release\kvit.exe"
-  File "D:\Qt-project\build-ZHSK-Desktop_Qt_5_4_1_MinGW_32bit-Release\Kvit_main\release\kvit.exe"
+  File "E:\Qt-project\build-ZHSK-Desktop_Qt_5_5_1_MinGW_32bit-Release\Kvit_main\release\kvit.exe"
   
   CreateDirectory "$SMPROGRAMS\ZHSK"
   CreateShortCut "$SMPROGRAMS\ZHSK\ZHSK.lnk" "$INSTDIR\kvit.exe"
@@ -144,9 +144,9 @@ Section "libs" SEC02
   File "${QT_INSTALL}\bin\libgcc_s_dw2-1.dll"
   File "${QT_INSTALL}\bin\libwinpthread-1.dll"
   File "${QT_INSTALL}\bin\libstdc++-6.dll"
-  File "${QT_INSTALL}\bin\icuin53.dll"
-  File "${QT_INSTALL}\bin\icuuc53.dll"
-  File "${QT_INSTALL}\bin\icudt53.dll"
+  File "${QT_INSTALL}\bin\icuin54.dll"
+  File "${QT_INSTALL}\bin\icuuc54.dll"
+  File "${QT_INSTALL}\bin\icudt54.dll"
 
   SetOutPath "$INSTDIR\bearer"
   

@@ -88,7 +88,6 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
 AdminWindow::~AdminWindow()
 {
-//    delete apartment_for_apartment;
     delete ui;
 }
 
@@ -130,16 +129,18 @@ void AdminWindow::Refresh_Appartament()
 void AdminWindow::Refresh_tblView_Apartament()
 {
     MyItemDelegate * dDeleg = new MyItemDelegate ();
-    Home home(ui->cmBx_Home_on_Apartment->currentText());
-    Organization organization(ui->cmBx_Org_on_Apartment->currentText());
-    Apartment *apartment = new Apartment(home.getId(),
-                        organization.getId(),
-                        ui->cmBx_NumAp_on_Apartament->currentText().toInt(),this);
 
-    TransposeProxyModel *trans = new TransposeProxyModel(this);
-    trans->setSourceModel(apartment->ModelOneApartment());
+    Organization organization(ui->cmBx_Org_on_Apartment->currentText());
+    Home home(ui->cmBx_Home_on_Apartment->currentText());
+    Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Apartament->currentText().toInt());
+
+
+    ModelApartament *model = new ModelApartament(this);
+    TransposeProxyModel *trans = new TransposeProxyModel(model);
+
+    model->setIdApartment(apartment.getId());
+    trans->setSourceModel(model);
     ui->tblView_Apartament->setModel(trans);
-    connect(apartment,SIGNAL(sgn_EditModel()),SLOT(Refresh_tblView_Apartament()));
 
     ui->tblView_Apartament->setItemDelegate(dDeleg);
 

@@ -6,15 +6,12 @@
 ModelUsliga::ModelUsliga(QObject *parent)
                  : QSqlQueryModel(parent) {
     m_IdApartment = -1;
-//    refresh();
 }
 
 Qt::ItemFlags ModelUsliga::flags(
     const QModelIndex &index) const {
 
      Qt::ItemFlags flags = QSqlQueryModel::flags(index);
-//     if (index.column() >= 1 && index.column() < 4)
-//         flags |= Qt::ItemIsEditable;
      if (index.column() == 1)
          flags |= Qt::ItemIsUserCheckable;
      return flags;
@@ -25,20 +22,15 @@ QVariant ModelUsliga::data(
              int role) const {
 
      QVariant value = QSqlQueryModel::data(index, role);
-
-
-//     if (index.column() == 1){
-//         qDebug() << value.toInt() << role;
-//     }
      switch (role) {
 
-     case Qt::DisplayRole: // Данные для отображения
-     case Qt::EditRole:    // Данные для редактирования
-         if (index.column() == 1){
-             return value.toInt() != 0 ? tr("Подключено") : tr("Не подключено");
-         }else {
-             return value;
-         }
+         case Qt::DisplayRole: // Данные для отображения
+         case Qt::EditRole:    // Данные для редактирования
+             if (index.column() == 1){
+                 return value.toInt() != 0 ? tr("Подключено") : tr("Не подключено");
+             }else {
+                 return value;
+             }
 
 //     case Qt::TextColorRole: // Цвет текста
 //         if(index.column() == 1)

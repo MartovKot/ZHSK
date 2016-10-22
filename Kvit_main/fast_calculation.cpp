@@ -4,8 +4,6 @@ Fast_Calculation::Fast_Calculation(const int &id_home, DateOfUnixFormat date)
 {
     home = new Home(id_home,this);
     m_date = date;
-//    qDebug()<< date;
-//    m_date.setDate(2015,05,31);
 }
 
 
@@ -75,7 +73,11 @@ QString Fast_Calculation::calcOfService(const QStringList &row)
         out = calcOfCounters(row);
         break;
     case 2: //на кв метр
-        t = row.at(3).toDouble() * apartment.getTotalArea();
+        if (row.at(1).toInt() == 12){
+            t = row.at(3).toDouble() * apartment.getHeatedArea();
+        }else{
+            t = row.at(3).toDouble() * apartment.getTotalArea();
+        }
         out = QString::number(t);
         break;
     case 3: //на человека
@@ -322,7 +324,7 @@ QString Fast_Calculation::CreditedForReport(int id_apartament, int id_usluga, Da
             .arg(id_usluga);
     BD::SelectFromTable(str,&out);
 
-    return out;
+    return QString::number(out.toDouble());
 
 }
 

@@ -4,7 +4,6 @@
 #include <QObject>
 #include "bd.h"
 
-#include "editapartmentmodel.h"
 
 class Apartment: public QObject
 {
@@ -19,7 +18,6 @@ public:
 
     static QSqlQueryModel *ModelPensionerLivingAlone(int id_home, int id_org);
     static bool New(int id_home, int id_org, int number);
-    QAbstractItemModel* ModelOneApartment();     //модель для квартиры
 
     int getId() const;
     int getNumber() const;
@@ -27,6 +25,7 @@ public:
     void DeleteApartment();
     QString is_FIO_payer() const;
     double getTotalArea() const;
+    double getHeatedArea() const;
     double getLivedArea() const;
     double getBalkon() const;
     double getLodjia() const;
@@ -51,23 +50,12 @@ public:
 private:
     int m_id;
     int m_number;
-    void UpdateApartament(QStringList column,QStringList value, int idapart);   //Обновление таблицы с квартирами
-    void UpdateApartament(QString column,QString value, int idapart);           //Обновление таблицы с квартирами
-    void UpdateMenInApartment(QString column,QString value, int idapart);
-    void AddLineMenInApartment(int id_apartment);
     int getMenInApartment(QString typeofuse,DateOfUnixFormat date) const;
     void setDefault();
     bool islivingAlonePensioner;
     bool isPensionerLivingAlone();
     QSqlError setNoPensionerLivingAlone();
     QSqlError setYesPensionerLivingAlone();
-
-private slots:
-    void sl_ModelApartamentHeaderData(QAbstractTableModel* t);
-    void sl_EditApartament(int,QString);
-
-signals:
-    void sgn_EditModel();
 
 };
 

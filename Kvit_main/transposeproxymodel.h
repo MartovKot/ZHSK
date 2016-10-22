@@ -9,6 +9,7 @@ class TransposeProxyModel : public QAbstractProxyModel
 public:
     TransposeProxyModel(QObject *parent = 0);
 
+
     virtual QModelIndex mapFromSource( const QModelIndex& sourceIndex) const;
     virtual QModelIndex mapToSource( const QModelIndex& proxyIndex) const;
     virtual QModelIndex index(int, int, const QModelIndex& parent = QModelIndex()) const;

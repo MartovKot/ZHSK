@@ -9,7 +9,7 @@
 
 class ModelUsliga : public QSqlQueryModel
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
     ModelUsliga (QObject *parent = 0);
     Qt::ItemFlags flags(const QModelIndex &index) const;

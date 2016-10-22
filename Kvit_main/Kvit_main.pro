@@ -39,7 +39,6 @@ HEADERS += adminwindow.h \
     organization.h \
     home.h \
     apartment.h \
-    editapartmentmodel.h \
     modelusliga.h \
     dialog_with_lineedit.h \
     massoperations.h \
@@ -48,7 +47,8 @@ HEADERS += adminwindow.h \
     service.h \
     indications.h \
     settings.h \
-    editindicationscounter.h
+    editindicationscounter.h \
+    modelapartament.h
 FORMS += adminwindow.ui mainwindow.ui operwindow.ui \
     newcounter.ui \
     authenticationdialog.ui \
@@ -80,7 +80,6 @@ SOURCES += adminwindow.cpp \
     organization.cpp \
     home.cpp \
     apartment.cpp \
-    editapartmentmodel.cpp \
     modelusliga.cpp \
     dialog_with_lineedit.cpp \
     massoperations.cpp \
@@ -89,7 +88,8 @@ SOURCES += adminwindow.cpp \
     service.cpp \
     indications.cpp \
     settings.cpp \
-    editindicationscounter.cpp
+    editindicationscounter.cpp \
+    modelapartament.cpp
 
 RESOURCES += \
     qrc.qrc
@@ -119,6 +119,7 @@ DISTFILES += \
     update_db/01_07_006.sql \
     blank/blank_main.html \
     blank/blank_s.html \
-    blank/blank_u.html
+    blank/blank_u.html \
+    update_db/01_07_007.sql
 
 

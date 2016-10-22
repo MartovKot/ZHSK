@@ -49,5 +49,7 @@ QVariant TransposeProxyModel::headerData(int section, Qt::Orientation orientatio
     if (orientation == Qt::Horizontal)
         return sourceModel()->headerData(section, Qt::Vertical, role);
     else
-    return sourceModel()->headerData(section, Qt::Horizontal, role);
+        return sourceModel()->headerData(section, Qt::Horizontal, role);
 }
+
+
