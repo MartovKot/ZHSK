@@ -19,8 +19,11 @@ public:
     static double AmountToPay(int id_apart, qint64 u_date);                                       //сумма к оплате
     static double AmountForServices(int id_apart, qint64 u_date);
     static QString Debt(int id_apart, DateOfUnixFormat date);
+    static QString Volume(int id_apartament, int id_usluga,  DateOfUnixFormat date);
+    static QString Unit(int id_apartament, int id_usluga,  DateOfUnixFormat date);
 
     static QString CreditedForReport(int id_apartament, int id_usluga,  DateOfUnixFormat date);
+
 
 
 private:
@@ -28,6 +31,7 @@ private:
     DateOfUnixFormat m_date;
     QString calcOfService(const QStringList &row);
     QString calcOfCounters(const QStringList &row);
+    static QString serviceVolume_type1(int id_apartament, int id_usluga,  DateOfUnixFormat date);
     void createTempTableCredited(const QList<QStringList> &table);
     void recordInDB_CredOfApart(const QList<QStringList> &table);
     void calcOfDebt();

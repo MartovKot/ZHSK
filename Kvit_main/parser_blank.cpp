@@ -71,10 +71,12 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)
     QStringList strlst_find;
     QList<int> ServiceList;
     Apartment apartment(id_app);
-    ServiceList = apartment.getListIdServiceOutCounter();
+    //ServiceList = apartment.getListIdServiceOutCounter();
+    ServiceList = apartment.getListIdServiceFull();
 
-
-    strlst_find << "@Usliga#"<<"@Tarif#"<<"@Nachisl#"<<"@Pererasch#"<<"@ItogUsluga#";
+    strlst_find << "@Usliga#" << "@Tarif#" << "@Tarif2#" << "@Volume#"
+                << "@Unit#" << "@PokazanieCurrent#" << "@PokazanieEnd#" << "@Nachisl#"
+                << "@Pererasch#" << "@ItogUsluga#";
     str_out = "";
 
 
@@ -84,27 +86,76 @@ QString parser_blank::process_usluga(QString str_in_usl, int id_app, QDate date)
         Service service(ServiceList.at(i));
         str_out = str_out + str_in_usl;
         find_pos = str_out.indexOf(strlst_find.at(0));
-        if(find_pos>=0){
+        if(find_pos>=0){  //Наименование
             str_out.replace(find_pos,strlst_find.at(0).size(), service.getName());
         }
         find_pos = str_out.indexOf(strlst_find.at(1));
-        if(find_pos>=0){
+        if(find_pos>=0){   //Тариф
             str_out.replace(find_pos,strlst_find.at(1).size(),
                             QString::number(tbl_tariff.is_Tariff(ServiceList.at(i),date)));
         }
         find_pos = str_out.indexOf(strlst_find.at(2));
-        if(find_pos>=0){
-            str_out.replace(find_pos,strlst_find.at(2).size(),
-                            Fast_Calculation::CreditedForReport(id_app,ServiceList.at(i),date));
+        if(find_pos>=0){ //Тариф2
+            double t2 = tbl_tariff.is_Tariff(ServiceList.at(i),date,2);
+            if (t2!=0.0 ){
+                str_out.replace(find_pos,strlst_find.at(2).size(), " / "+QString::number(t2));
+            }else{
+                str_out.replace(find_pos,strlst_find.at(2).size(), "");
+            }
         }
+
         find_pos = str_out.indexOf(strlst_find.at(3));
-        if(find_pos>=0){
-            str_out.replace(find_pos,strlst_find.at(3).size(), "0");
+        if(find_pos>=0){  //объём
+            str_out.replace(find_pos,strlst_find.at(3).size(),
+                            Fast_Calculation::Volume(id_app,ServiceList.at(i),date));
         }
         find_pos = str_out.indexOf(strlst_find.at(4));
-        if(find_pos>=0){
+        if(find_pos>=0){  //единицы измерения
             str_out.replace(find_pos,strlst_find.at(4).size(),
-                            Fast_Calculation::CreditedForReport(id_app,ServiceList.at(i),date));
+                            Fast_Calculation::Unit(id_app,ServiceList.at(i),date));
+        }
+
+        find_pos = str_out.indexOf(strlst_find.at(5));
+        if(find_pos>=0){ //Показание конец месяца
+            QString t;
+            Indications indications(ServiceList.at(i),apartment.getId(),date.addMonths(1));
+            if ( service.getIdType() == 1) {
+                t = QString::number(indications.valueIndicationHome());
+            }else{
+                t = "-";
+            }
+
+            str_out.replace(find_pos,strlst_find.at(5).size(), t);
+        }
+
+        find_pos = str_out.indexOf(strlst_find.at(6));
+        if(find_pos>=0){ //Показание начало месяца
+            QString t;
+            Indications indications(ServiceList.at(i),apartment.getId(),date.addMonths(0));
+            if ( service.getIdType() == 1) {
+                t = QString::number(indications.valueIndicationHome());
+            }else{
+                t = "-";
+            }
+            str_out.replace(find_pos,strlst_find.at(6).size(), t);
+        }
+        find_pos = str_out.indexOf(strlst_find.at(7));
+        if(find_pos>=0){
+            QString t;
+            t = Fast_Calculation::CreditedForReport(id_app,ServiceList.at(i),date);
+            str_out.replace(find_pos,strlst_find.at(7).size(),t);
+        }
+
+        find_pos = str_out.indexOf(strlst_find.at(8));
+        if(find_pos>=0){ //Перерасчёт
+            str_out.replace(find_pos,strlst_find.at(8).size(), "0");
+        }
+
+        find_pos = str_out.indexOf(strlst_find.at(9));
+        if(find_pos>=0){
+            QString t;
+            t = Fast_Calculation::CreditedForReport(id_app,ServiceList.at(i),date);
+            str_out.replace(find_pos,strlst_find.at(9).size(),t);
         }
     }
     return str_out;
@@ -117,7 +168,7 @@ QString parser_blank::process_schet(QString str_in_sch,const int id_apartment, Q
     Apartment apartment(id_apartment);
     CounterList = apartment.getListIdServiceWithCounter();
 
-    strlst_find<<"@Schetchik#"<<"@PokazanieEnd#"<<"@Tarif#"<<"@Tarif2#";
+    strlst_find<<"@Schetchik#"<<"@PokazanieEnd#"<<"@Tarif#"<<"@Tarif2#" << "@PokazanieCurrent#";
 
 
     for(int i=0;i<CounterList.size();i++){
@@ -147,6 +198,13 @@ QString parser_blank::process_schet(QString str_in_sch,const int id_apartment, Q
             }else{
                 str_out.replace(find_pos,strlst_find.at(3).size(), "");
             }
+        }
+        
+        find_pos = str_out.indexOf(strlst_find.at(4));
+        if(find_pos>=0){ //Показание текущие
+            Indications indications2(CounterList.at(i),apartment.getId(),date.addMonths(1));
+            str_out.replace(find_pos,strlst_find.at(1).size(),
+                            QString::number(indications2.valueIndicationHome()));
         }
 
     }
@@ -285,7 +343,8 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
               << "@prKOpl#"
               << "@ItogKOpl#"
               << "@INN#"
-              << "@Bank#";
+              << "@Bank#"
+              << "@DateEndOpl#";
 
     DateOfUnixFormat u_date(ConfData.date);
     strL_replace << organization.name()     << apartment.is_FIO_payer()
@@ -308,7 +367,8 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
                  << QString::number(Fast_Calculation::AmountForServices(apartment.getId(), u_date.Second()))
                  << QString::number(Fast_Calculation::AmountForServices(apartment.getId(), u_date.Second()))
                  << QObject::trUtf8(" ИНН ") + organization.inn()
-                 << organization.bank();
+                 << organization.bank()
+                 << "10." + nextMonth(ConfData.date.month()) + "." + QString::number(ConfData.date.year()) ;
 
     str_out = str_in;
     for (int i=0; i<strL_find.size(); i++){
@@ -321,4 +381,23 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
     }
 
     return str_out;
+}
+
+QString parser_blank::nextMonth(int month)
+{
+    QString out = "";
+    if (month < 1 || month > 12){
+        return out;
+    }else {
+        month = month + 1;
+        if (month == 13) {
+            out = "01";
+        }
+        if (month < 10){
+            out = "0" + QString::number(month);
+        }else{
+            out = QString::number(month);
+        }
+    }
+    return  out;
 }

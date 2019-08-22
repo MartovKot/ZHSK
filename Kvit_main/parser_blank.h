@@ -46,6 +46,7 @@ private:
     QString process_usluga(QString str_in_usl, int id_app, QDate date);
     QString process_schet(QString str_in_sch, const int id_app, QDate date);
     QString process_main(QString str_in, const Apartment & apartment);
+    QString nextMonth(int month);
 
 };
 

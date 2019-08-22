@@ -6,7 +6,7 @@
 #include "dateofunixformat.h"
 #include "apartment.h"
 #include "sqlqueryeditmodel.h"
-#include "TransposeProxyModel.h"
+#include "transposeproxymodel.h"
 #include "dateofunixformat.h"
 
 class Indications : public QObject

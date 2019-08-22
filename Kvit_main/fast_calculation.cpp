@@ -133,7 +133,7 @@ QString Fast_Calculation::calcOfCounters(const QStringList &row)
     if (query.exec(str)){
         if (query.next()){
             int count = query.value(0).toInt() - query.value(1).toInt();
-            if (count <= norma.toDouble() * apartment.getRealMen(m_date) || norma.toDouble() == 0){
+            if (count <= norma.toDouble() * apartment.getRealMen(m_date) || norma.toDouble() == 0.0){
                 double t;
                 t = tariff.toDouble() * count;
                 out = QString::number(t);
@@ -144,6 +144,32 @@ QString Fast_Calculation::calcOfCounters(const QStringList &row)
                 out = QString::number(t);
             }
 
+        }
+    }else{
+        qDebug()<<"91748951796616cc5b01273b7a07c8f7"<<query.lastError();
+    }
+
+    return out;
+}
+
+QString Fast_Calculation::serviceVolume_type1(int id_apartament, int id_usluga, DateOfUnixFormat date)
+{
+    QString str;
+    QSqlQuery query;
+    QString out = "";
+
+    str =   " SELECT p.pokazanie_end, p.pokazanie_home FROM pokazanie p, apartament a, list_app_usluga lau "
+            " WHERE date_pokazanie = '%1' "
+            " AND a.id_apartament = '%2' "
+            " AND p.id_list_app_usluga = lau.id_list_app_usluga "
+            " AND a.id_apartament = lau.id_apartament "
+            " AND lau.id_usluga = '%3' ";
+    str = str.arg(date.Second_first_day())
+            .arg(id_apartament)
+            .arg(id_usluga);
+    if (query.exec(str)){
+        if (query.next()){
+            out = QString::number(query.value(0).toInt() - query.value(1).toInt());
         }
     }else{
         qDebug()<<"91748951796616cc5b01273b7a07c8f7"<<query.lastError();
@@ -183,7 +209,7 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
         return;
     }
 
-    // запись в базу сумм к оплате за счётчики и усдуги
+    // запись в базу сумм к оплате за счётчики и услуги
     QString str;
     str = "INSERT OR REPLACE INTO 'credited_of_apartament' ";
     QList<int> list;
@@ -208,9 +234,9 @@ void Fast_Calculation::recordInDB_CredOfApart(const QList<QStringList> &table)
 
     str = "";
     for (int i=0;i<table.size();i++){
-        if (table.at(i).at(2).toInt() == 1){  //пропускаем счётчики
-            continue;
-        }
+        //if (table.at(i).at(2).toInt() == 1){  //пропускаем счётчики
+        //    continue;
+        //}
         Apartment apartament(table.at(i).at(0).toInt());
         if (str == "") {
             str =
@@ -298,6 +324,92 @@ QString Fast_Calculation::Debt(int id_apart, DateOfUnixFormat date)
     return out;
 }
 
+QString Fast_Calculation::Volume(int id_apartament, int id_usluga, DateOfUnixFormat date)
+{
+    QString str;
+    Apartment apartment(id_apartament);
+
+    QString volume = "0.0";
+
+    str = " SELECT u.type_usluga, t.tariff, t.tariff2, t.norm "
+          " FROM apartament a, usluga u, list_app_usluga lau, tariff t "
+          " WHERE a.id_apartament = lau.id_apartament "
+          " AND u.id_usluga = lau.id_usluga "
+          " AND t.id_usluga = u.id_usluga "
+          " AND t.tariff_date = '%1' "
+          " AND a.id_apartament = '%2' "
+          " AND u.id_usluga = '%3' ";
+    str = str.arg(date.Second_first_day())
+            .arg(QString::number(id_apartament))
+            .arg(QString::number(id_usluga));
+
+
+    QSqlQuery query;
+    if (query.exec(str)){
+        while (query.next()){
+           switch(query.value(0).toInt()){
+           case 1: //счётчики
+               volume = serviceVolume_type1(id_apartament, id_usluga, date);
+               break;
+           case 2: //на кв метр
+               if (id_usluga == 12){
+                    volume = QString::number(apartment.getHeatedArea());
+               }else{
+                    volume = QString::number(apartment.getTotalArea());
+               }
+               break;
+           case 3: //на человека
+               volume = QString::number(apartment.getRealMen(date));
+               break;
+           case 4: //на квартиру
+               volume = "1";
+               break;
+           }
+        }
+    }
+
+    return volume;
+}
+
+QString Fast_Calculation::Unit(int id_apartament, int id_usluga, DateOfUnixFormat date)
+{
+    QString str;
+    QString out;
+
+    str = " SELECT u.type_usluga "
+          " FROM apartament a, usluga u, list_app_usluga lau, tariff t "
+          " WHERE a.id_apartament = lau.id_apartament "
+          " AND u.id_usluga = lau.id_usluga "
+          " AND t.id_usluga = u.id_usluga "
+          " AND t.tariff_date = '%1' "
+          " AND a.id_apartament = '%2' "
+          " AND u.id_usluga = '%3' ";
+    str = str.arg(date.Second_first_day())
+            .arg(QString::number(id_apartament))
+            .arg(QString::number(id_usluga));
+    QSqlQuery query;
+    if (query.exec(str)){
+        if (query.next()){
+            switch(query.value(0).toInt()){
+            case 1: //счётчики
+                out = "м<sup>3</sup>";
+                break;
+            case 2: //на кв метр
+                out = "м<sup>2</sup>";
+                break;
+            case 3: //на человека
+                out = "чел. ";
+                break;
+            case 4: //на квартиру
+                out = "кв. ";
+                break;
+            }
+        }
+    }
+
+    return out;
+}
+
 double Fast_Calculation::mDebt(int idApart, qint64 uDate)
 {
     QString str;
@@ -335,3 +447,5 @@ double Fast_Calculation::AmountToPay(int id_apart, qint64 u_date)
     out += AmountForServices(id_apart,u_date);
     return out;
 }
+
+
