@@ -35,12 +35,11 @@ void Fast_Calculation::fullCalc()
           " AND t.tariff_date = '%1' ";
     str = str.arg(m_date.Second_first_day(-1));
 
-
     QSqlQuery query;
     if (query.exec(str)){
         while (query.next()){
             QStringList list;
-            list << query.value(0).toString() << query.value(1).toString() << query.value(2).toString();;
+            list << query.value(0).toString() << query.value(1).toString() << query.value(2).toString();
             if(query.value(2).toInt() == '1'){
                 list << query.value(3).toString();
             }else{
@@ -56,6 +55,7 @@ void Fast_Calculation::fullCalc()
     for(int i=0;i<result_tabl.size();i++){
         QString t = calcOfService(result_tabl.at(i));
         result_tabl[i][6] = t;
+        //qDebug () << i << " - " << t;
     }
 
     recordInDB_CredOfApart(result_tabl); //запись в БД
@@ -285,7 +285,7 @@ void Fast_Calculation::calcOfDebt()
             .arg(date.Second())
             .arg(m_date.Second_first_day(-1))
             .arg(m_date.Second_first_day());
-
+    //qDebug() << str;
     BD::QueryExecute(str);
 }
 
@@ -294,10 +294,11 @@ double Fast_Calculation::AmountForServices(int id_apart, qint64 u_date)
     QString str;
     QString out;
 
-    str = "SELECT credited_out_counter FROM credited_of_apartament "
+    str = "SELECT credited_out_counter + credited_with_counter FROM credited_of_apartament "
           "WHERE date_credited_of_apartament='%1' AND id_apartament=%2";
     str = str.arg(u_date)
             .arg(id_apart);
+    //qDebug() << str;
     BD::SelectFromTable(str, &out);
 
     return out.toDouble();
