@@ -263,9 +263,9 @@ void Fast_Calculation::calcOfDebt()
 
     str = " INSERT OR REPLACE INTO 'debt' (date_debt, id_apartament, debt) "
           " SELECT  '%4', d.id_apartament, ROUND(d.debt,2) + "
-                        " coa.credited_with_counter + "
-                        " coa_old.credited_out_counter - "
-                        " CASE  WHEN  (EXISTS( "
+                        " coa_old.credited_with_counter "
+                        " + coa_old.credited_out_counter"
+                        " - CASE  WHEN  (EXISTS( "
                             " SELECT payment FROM payment p"
                             " WHERE payment_date >= '%1' AND payment_date <= '%2' "
                                 " AND p.id_apartament=d.id_apartament)) "
@@ -285,7 +285,6 @@ void Fast_Calculation::calcOfDebt()
             .arg(date.Second())
             .arg(m_date.Second_first_day(-1))
             .arg(m_date.Second_first_day());
-    //qDebug() << str;
     BD::QueryExecute(str);
 }
 
