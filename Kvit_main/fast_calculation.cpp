@@ -392,7 +392,11 @@ QString Fast_Calculation::Unit(int id_apartament, int id_usluga, DateOfUnixForma
         if (query.next()){
             switch(query.value(0).toInt()){
             case 1: //счётчики
-                out = "м<sup>3</sup>";
+                if (id_usluga == 4 || id_usluga == 6 || id_usluga == 7 || id_usluga == 17) {
+                    out = "кВт*ч";
+                } else {
+                    out = "м<sup>3</sup>";
+                }
                 break;
             case 2: //на кв метр
                 out = "м<sup>2</sup>";
