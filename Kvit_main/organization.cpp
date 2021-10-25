@@ -31,6 +31,7 @@ Organization::Organization(int id,QObject *parent):
     BD::SelectFromTable("SELECT bank FROM organiz WHERE id_organiz = "+QString::number(id),&m_bank);
     BD::SelectFromTable("SELECT sett_account FROM organiz WHERE id_organiz = "+QString::number(id),&m_sett_account);
     BD::SelectFromTable("SELECT inn FROM organiz WHERE id_organiz = "+QString::number(id),&m_inn);
+    BD::SelectFromTable("SELECT bik FROM organiz WHERE id_organiz = "+QString::number(id),&m_bik);
 
     m_id = id;
 }
@@ -55,13 +56,15 @@ bool Organization::New(QString name, QString bank, QString sett_account, QString
 QSqlQueryModel *Organization::ModelAllOrganizationFull()
 {
     QSqlQueryModel *model = new QSqlQueryModel;
-    model->setQuery(QSqlQuery("SELECT id_organiz, name, bank,sett_account, inn  FROM organiz"));
+    model->setQuery(QSqlQuery("SELECT id_organiz, name, bank,sett_account, inn, bik  FROM organiz"));
 
     model->setHeaderData(0,Qt::Horizontal,QObject::trUtf8("№"));
     model->setHeaderData(1,Qt::Horizontal,QObject::trUtf8("Организация"));
     model->setHeaderData(2,Qt::Horizontal,QObject::trUtf8("Банк"));
     model->setHeaderData(3,Qt::Horizontal,QObject::trUtf8("Лицевой счёт"));
     model->setHeaderData(4,Qt::Horizontal,QObject::trUtf8("ИНН"));
+    model->setHeaderData(5,Qt::Horizontal,QObject::trUtf8("БИК"));
+
 
     return model;
 }
@@ -86,12 +89,13 @@ void Organization::deleteFromDB()
     BD::DeleteLine("organiz","id_organiz", m_id);
 }
 
-void Organization::Update(QString name, QString bank, QString acc, QString inn)
+void Organization::Update(QString name, QString bank, QString acc, QString inn, QString bik)
 {
     BD::UpdateTable("organiz", "name", name, "id_organiz", QString::number(m_id));
     BD::UpdateTable("organiz", "bank", bank, "id_organiz", QString::number(m_id));
     BD::UpdateTable("organiz", "sett_account", acc, "id_organiz", QString::number(m_id));
     BD::UpdateTable("organiz", "inn", inn, "id_organiz", QString::number(m_id));
+    BD::UpdateTable("organiz", "bik", bik, "id_organiz", QString::number(m_id));
 }
 QString Organization::inn() const
 {
@@ -108,6 +112,11 @@ QString Organization::name() const
     return m_name;
 }
 
+QString Organization::bik() const
+{
+    return m_bik;
+}
+
 void Organization::setDefault()
 {
     m_id = -1;
@@ -115,4 +124,5 @@ void Organization::setDefault()
     m_bank = "";
     m_sett_account = "";
     m_inn = "";
+    m_bik = "";
 }

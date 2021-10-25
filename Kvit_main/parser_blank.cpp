@@ -344,7 +344,9 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
               << "@ItogKOpl#"
               << "@INN#"
               << "@Bank#"
-              << "@DateEndOpl#";
+              << "@DateEndOpl#"
+              << "@BIK#"
+              << "@DatePokazanie#";
 
     DateOfUnixFormat u_date(ConfData.date);
     strL_replace << organization.name()     << apartment.is_FIO_payer()
@@ -368,8 +370,13 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
                  << QString::number(Fast_Calculation::AmountForServices(apartment.getId(), u_date.Second()))
                  << QObject::trUtf8(" ИНН ") + organization.inn()
                  << organization.bank()
-                 << "10." + nextMonth(ConfData.date.month()) + "." + QString::number(ConfData.date.year()) ;
+                 << "10." + nextMonth(ConfData.date.month()) + "." + QString::number(ConfData.date.year())
+                 << QObject::trUtf8(" БИК ") + organization.bik()
+                 << QDate::longMonthName(nextMonthN(ConfData.date.month()))
+                    + "  " + QString::number(ConfData.date.year()) + QObject::trUtf8(" г.");
 
+    qDebug()<< QDate::longMonthName(nextMonthN(ConfData.date.month()))
+              + "  " + QString::number(ConfData.date.year()) + QObject::trUtf8(" г.");
     str_out = str_in;
     for (int i=0; i<strL_find.size(); i++){
         int find_pos;
@@ -400,4 +407,11 @@ QString parser_blank::nextMonth(int month)
         }
     }
     return  out;
+}
+
+int parser_blank::nextMonthN(int month) {
+    if (month >= 12) {
+        return 1;
+    }
+    return month + 1;
 }

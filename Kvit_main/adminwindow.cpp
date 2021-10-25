@@ -217,6 +217,7 @@ void AdminWindow::Mode(QString m)
         ui->lEdBank->setText("");
         ui->lEdAcc->setText("");
         ui->lEdINN->setText("");
+        ui->lEdBIK->setText("");
         ui->tblView_Organization->setEnabled(true);
         ui->pBtn_addOrg->setHidden(false);
 
@@ -338,6 +339,7 @@ void AdminWindow::Refresh_Organization()
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Interactive);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
     ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(3,QHeaderView::ResizeToContents);
+    ui->tblView_Organization->horizontalHeader()->setSectionResizeMode(4,QHeaderView::ResizeToContents);
 }
 
 void AdminWindow::Refresh_Home()
@@ -430,6 +432,7 @@ void AdminWindow::sl_OrgEdit(QModelIndex model)
     ui->lEdBank->setText(ui->tblView_Organization->model()->index(model.row(),2).data().toString());
     ui->lEdAcc->setText(ui->tblView_Organization->model()->index(model.row(),3).data().toString());
     ui->lEdINN->setText(ui->tblView_Organization->model()->index(model.row(),4).data().toString());
+    ui->lEdBIK->setText(ui->tblView_Organization->model()->index(model.row(),5).data().toString());
     Mode("org_edit");
 
 }
@@ -449,7 +452,8 @@ void AdminWindow::sl_SaveOrg()
     organization.Update(ui->lEdNameOrg->text(),
                         ui->lEdBank->text(),
                         ui->lEdAcc->text(),
-                        ui->lEdINN->text());
+                        ui->lEdINN->text(),
+                        ui->lEdBIK->text());
 
     Refresh_Organization(); //обновление таблицы
     Mode("org_default");

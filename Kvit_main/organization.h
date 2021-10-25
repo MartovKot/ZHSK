@@ -19,10 +19,11 @@ public:
 
     int getId() const;
     void deleteFromDB();
-    void Update(QString name = "", QString bank="", QString acc="", QString inn="");
+    void Update(QString name = "", QString bank="", QString acc="", QString inn="", QString BIK="");
     QString inn() const;
     QString bank() const;
     QString name() const;
+    QString bik() const;
 
 private:
     int m_id;
@@ -30,6 +31,7 @@ private:
     QString m_bank;
     QString m_sett_account;
     QString m_inn;
+    QString m_bik;
     void setDefault();
 };
 
