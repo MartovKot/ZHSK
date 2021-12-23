@@ -370,13 +370,11 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
                  << QString::number(Fast_Calculation::AmountForServices(apartment.getId(), u_date.Second()))
                  << QObject::trUtf8(" ИНН ") + organization.inn()
                  << organization.bank()
-                 << "10." + nextMonth(ConfData.date.month()) + "." + QString::number(ConfData.date.year())
+                 << "10." + nextMonth(ConfData.date.month()) + "." + QString::number(nextYearN(ConfData.date.year()))
                  << QObject::trUtf8(" БИК ") + organization.bik()
                  << QDate::longMonthName(nextMonthN(ConfData.date.month()))
-                    + "  " + QString::number(ConfData.date.year()) + QObject::trUtf8(" г.");
+                    + "  " + QString::number(nextYearN(ConfData.date.year())) + QObject::trUtf8(" г.");
 
-    qDebug()<< QDate::longMonthName(nextMonthN(ConfData.date.month()))
-              + "  " + QString::number(ConfData.date.year()) + QObject::trUtf8(" г.");
     str_out = str_in;
     for (int i=0; i<strL_find.size(); i++){
         int find_pos;
@@ -399,6 +397,7 @@ QString parser_blank::nextMonth(int month)
         month = month + 1;
         if (month == 13) {
             out = "01";
+            month = 1;
         }
         if (month < 10){
             out = "0" + QString::number(month);
@@ -414,4 +413,11 @@ int parser_blank::nextMonthN(int month) {
         return 1;
     }
     return month + 1;
+}
+
+int parser_blank::nextYearN(int year) {
+    if (ConfData.date.month() == 12) {
+        return year + 1;
+    }
+    return year;
 }

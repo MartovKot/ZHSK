@@ -49,6 +49,7 @@ private:
     QString nextMonth(int month);
     int nextMonthN(int month);
 
+    int nextYearN(int year);
 };
 
 #endif // PARSER_BLANK_H
