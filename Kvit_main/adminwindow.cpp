@@ -76,6 +76,7 @@ AdminWindow::AdminWindow(QWidget *parent) :
 
 
     ui->tab_Pensioner->setLayout(ui->mainLay_Pens);
+    ui->lblFIO->setText("");
     Refresh_Pensioner();
     //----------------------------------------
 
@@ -365,11 +366,11 @@ void AdminWindow::Refresh_Uslugi()
 
 void AdminWindow::Refresh_Pensioner()
 {
+
     ui->cmBx_Home_on_Pens->setModel(Home::ModelAllHomeName());
     ui->cmBx_Org_on_Pens->setModel(Organization::ModelAllOrganizationName());
     Home home(ui->cmBx_Home_on_Pens->currentText());
-    ui->cmBx_PensApart->setModel(home.ModelAllApartamentNumberWithFIO());
-    ui->cmBx_PensApart->addItem("");
+    ui->cmBx_PensApart->setModel(home.ModelAllApartamentNumber());
     ui->tblV_on_Pens->setModel(Apartment::ModelPensionerLivingAlone(home.getId(),home.organization()->getId()));
 
     ui->tblV_on_Pens->hideColumn(0);
@@ -765,4 +766,12 @@ void AdminWindow::on_pBtn_Tarif_request_clicked()
     ui->tblV_on_Tarif->setModel(
                 tbl_tariff.ModelTarifTabl(ui->lEd_Tarif_year->text().toInt(),ui->lEd_Tarif_month->text().toInt()));
     ui->tblV_on_Tarif->hideColumn(0);
+}
+
+void AdminWindow::on_cmBx_PensApart_currentTextChanged(const QString &arg1)
+{
+    Organization organization(ui->cmBx_Org_on_Pens->currentText());
+    Home home(ui->cmBx_Home_on_Pens->currentText());
+    Apartment apartment(home.getId(),organization.getId(),arg1.toInt());
+    ui->lblFIO->setText(apartment.is_FIO_payer());
 }

@@ -95,6 +95,7 @@ private slots:
     void on_pBtnDeleteUsluga_clicked();
     void on_pBtnMassOperation_clicked();
     void on_pBtn_Tarif_request_clicked();
+    void on_cmBx_PensApart_currentTextChanged(const QString &arg1);
 };
 
 #endif // ADMINWINDOW_H

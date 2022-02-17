@@ -81,7 +81,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <property name="tabsClosable">
        <bool>false</bool>
@@ -986,9 +986,22 @@
             <widget class="QComboBox" name="cmBx_PensApart"/>
            </item>
            <item>
+            <widget class="QLabel" name="lblFIO">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QPushButton" name="pBtn_addPens">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="text">
               <string>Добавить</string>
