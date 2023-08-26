@@ -61,7 +61,7 @@ void OperWindow::sl_addPayment()
 
     int day, month,year;
 
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText());
 
     if (ui->lEd_Sum->text() == ""){
         return;
@@ -97,7 +97,7 @@ void OperWindow::sl_addPayment()
 //------------------------------------------------------------------------------------------------------------
 void OperWindow::Refresh_tblVCount()
 {
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText());
 
     ui->tblV_Count->setModel(Indications::ModelPokazanie(apartment.getId(),
                                  ui->dEd_Count->date().month(),
@@ -127,7 +127,7 @@ void OperWindow::set_parametr(int id_org, int id_home)
 
 void OperWindow::sl_EditPokazanie()
 {
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText());
     EditIndicationsCounter *dlg = new EditIndicationsCounter(apartment.getId(),
                                                              ui->dEd_Count->date().month(),
                                                              ui->dEd_Count->date().year(),
@@ -185,7 +185,7 @@ void OperWindow::sl_DeletePayment()
                     QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
         QString err;
         Table_Payment t_payment;
-        Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+        Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText());
         err = t_payment.delete_Payment(
                     apartment.getId(),
                     ui->tblV_Payment->model()->index(row,2).data().toInt(),
@@ -218,7 +218,7 @@ void OperWindow::sl_Calendar()
 void OperWindow::sl_RefreshLabel() //обновление выводяшейся оплаты и долга
 {
 
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText());
 
     int month = ui->dEd_Count->date().month();
     int year = ui->dEd_Count->date().year();
@@ -269,7 +269,7 @@ void OperWindow::sl_ApartPrevious()
 
 void OperWindow::sl_RefreshFull()
 {
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText());
 
     Refresh_tblVPayment(apartment.getId());
     Refresh_tblVCount();
@@ -305,7 +305,7 @@ void OperWindow::on_pBtn_NewCounterNext_clicked()
 
 void OperWindow::Refresh_lbl_Payer()
 {
-    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText().toInt());
+    Apartment apartment(HomeID,OrganizationID,ui->cmBx_NumApartanent->currentText());
 
     ui->lbl_Payer->setText(apartment.is_FIO_payer());
 }

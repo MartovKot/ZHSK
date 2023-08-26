@@ -263,7 +263,7 @@ void parser_blank::generating()
         progress.setValue(i);
         if (progress.wasCanceled())
             break;
-        str_NameFile_pach = QObject::trUtf8(" кв ") + QString::number(home.apartments().at(i)->getNumber());
+        str_NameFile_pach = QObject::trUtf8(" кв ") + home.apartments().at(i)->getNumber();
         creat_blank(str_NameFile_base+str_NameFile_pach+".html",
                     *home.apartments().at(i),
                     ConfData.date);
@@ -359,7 +359,7 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
                  << QString::number(apartment.getBalkon())       << QString::number(apartment.getLodjia())
                  << home.getName()
                     + QObject::trUtf8(" кв. ")
-                    + QString::number(apartment.getNumber())
+                    + apartment.getNumber()
                  << QString::number(ConfData.date.month())
                     + " / " + QString::number(ConfData.date.year())
                  << QDate::longMonthName(ConfData.date.month())
@@ -374,6 +374,9 @@ QString parser_blank::process_main(QString str_in, const Apartment & apartment)
                  << QObject::trUtf8(" БИК ") + organization.bik()
                  << QDate::longMonthName(nextMonthN(ConfData.date.month()))
                     + "  " + QString::number(nextYearN(ConfData.date.year())) + QObject::trUtf8(" г.");
+    qDebug()<< "process_main - " <<home.getName()
+              + QObject::trUtf8(" кв. ")
+              + apartment.getNumber();
 
     str_out = str_in;
     for (int i=0; i<strL_find.size(); i++){

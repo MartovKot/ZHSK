@@ -133,7 +133,7 @@ void AdminWindow::Refresh_tblView_Apartament()
 
     Organization organization(ui->cmBx_Org_on_Apartment->currentText());
     Home home(ui->cmBx_Home_on_Apartment->currentText());
-    Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Apartament->currentText().toInt());
+    Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Apartament->currentText());
 
 
     ModelApartament *model = new ModelApartament(this);
@@ -509,7 +509,7 @@ void AdminWindow::sl_SaveHome()
 void AdminWindow::on_pBtn_addPens_clicked()
 {
     Home home(ui->cmBx_Home_on_Pens->currentText());
-    Apartment apartment(home.getId(),home.organization()->getId(),ui->cmBx_PensApart->currentText().toInt());
+    Apartment apartment(home.getId(),home.organization()->getId(),ui->cmBx_PensApart->currentText());
     apartment.setIslivingAlonePensioner(true);
     ui->pBtn_addPens->setEnabled(false);
     ui->pBtn_delPens->setEnabled(false);
@@ -521,7 +521,7 @@ void AdminWindow::on_pBtn_delPens_clicked()
     Home home(ui->cmBx_Home_on_Pens->currentText());
     Apartment apartment(home.getId(),
                         home.organization()->getId(),
-                        ui->tblV_on_Pens->model()->index(ui->tblV_on_Pens->currentIndex().row(),0).data().toInt()
+                        ui->tblV_on_Pens->model()->index(ui->tblV_on_Pens->currentIndex().row(),0).data().toString()
                         );
     apartment.setIslivingAlonePensioner(false);
     ui->pBtn_addPens->setEnabled(false);
@@ -664,7 +664,7 @@ void AdminWindow::on_pBtn_DeleteApartment_clicked()
         return;
     }
 
-    Apartment apartment(home.getId(), organization.getId(), ui->cmBx_NumAp_on_Apartament->currentText().toInt());
+    Apartment apartment(home.getId(), organization.getId(), ui->cmBx_NumAp_on_Apartament->currentText());
     apartment.DeleteApartment();
 
     Refresh_cmBx_NumApp_onApartament();
@@ -676,7 +676,7 @@ void AdminWindow::Refresh_tblV_on_Uslugi()
     Organization organization(ui->cmBx_Org_on_Uslugi->currentText());
     Home home(ui->cmBx_Home_on_Uslugi->currentText());
 
-    Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Uslugi->currentText().toInt());
+    Apartment apartment(home.getId(),organization.getId(),ui->cmBx_NumAp_on_Uslugi->currentText());
 
     ModelUsliga *model = new ModelUsliga;
     model->setIdApartment(apartment.getId());
@@ -772,6 +772,6 @@ void AdminWindow::on_cmBx_PensApart_currentTextChanged(const QString &arg1)
 {
     Organization organization(ui->cmBx_Org_on_Pens->currentText());
     Home home(ui->cmBx_Home_on_Pens->currentText());
-    Apartment apartment(home.getId(),organization.getId(),arg1.toInt());
+    Apartment apartment(home.getId(),organization.getId(),arg1);
     ui->lblFIO->setText(apartment.is_FIO_payer());
 }

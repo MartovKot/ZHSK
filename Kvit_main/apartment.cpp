@@ -1,6 +1,6 @@
 #include "apartment.h"
 
-Apartment::Apartment(int id_home, int id_org, int number, QObject *parent):
+Apartment::Apartment(int id_home, int id_org, QString number, QObject *parent):
     QObject(parent)
 {
     m_number = number;
@@ -33,7 +33,7 @@ Apartment::Apartment(int id_apartment, QObject *parent):
         setDefault();
     }else{
         m_id = id_apartment;
-        m_number = number.toInt();
+        m_number = number;
     }
     islivingAlonePensioner = isPensionerLivingAlone();
 }
@@ -47,8 +47,9 @@ int Apartment::getId() const
     return m_id;
 }
 
-int Apartment::getNumber() const
+QString Apartment::getNumber() const
 {
+    qDebug()<<"getNumber - " << m_number;
     return m_number;
 }
 
@@ -130,7 +131,7 @@ int Apartment::getMenInApartment(QString typeofuse, DateOfUnixFormat date) const
 void Apartment::setDefault()
 {
     m_id = -1;
-    m_number = -1;
+    m_number = "";
 }
 bool Apartment::getIslivingAlonePensioner() const
 {

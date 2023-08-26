@@ -9,7 +9,7 @@ class Apartment: public QObject
 {
     Q_OBJECT
 public:
-    explicit Apartment(int id_home,int id_org,int number, QObject *parent = 0);
+    explicit Apartment(int id_home,int id_org,QString number, QObject *parent = 0);
     explicit Apartment(int id_apartment, QObject *parent = 0);
     ~Apartment();
 
@@ -20,7 +20,7 @@ public:
     static bool New(int id_home, int id_org, int number);
 
     int getId() const;
-    int getNumber() const;
+    QString getNumber() const;
 
     void DeleteApartment();
     QString is_FIO_payer() const;
@@ -49,7 +49,7 @@ public:
 
 private:
     int m_id;
-    int m_number;
+    QString m_number;
     int getMenInApartment(QString typeofuse,DateOfUnixFormat date) const;
     void setDefault();
     bool islivingAlonePensioner;
